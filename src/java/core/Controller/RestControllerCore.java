@@ -43,9 +43,7 @@ public class RestControllerCore {
          
         Soporte Soporte = new Soporte();
         String[] las_sqlAcciones = Soporte.ArraySQLAccionesTablas(AccionesTabla);
-        CrudGenerico Crud = new CrudGenerico();
-        Integer estado=0;
-        estado=Crud.ejecutarSQL(las_sqlAcciones);
+        CrudGenerico.ejecutarSQL(las_sqlAcciones);
        
         return AccionesTabla;
     }

@@ -7,8 +7,6 @@ package core.Config;
 
 
 import core.Objects.obj_acciones_array_tablas;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -89,6 +87,11 @@ public class Soporte {
                 ls_sql=ls_sql+setColumns+ls_sql_where;
                 resp[li_pos]=ls_sql;
                 li_pos++;
+            }
+            
+            /*ACCIONES INSERSIÓN*/
+            for (int a = 0; a < AccionesTabla.getTablaBDD().get(i).getFilasEliminadas().size(); a++) {
+                String codigoPK = "";
             }
         }
         borrarGarbage();

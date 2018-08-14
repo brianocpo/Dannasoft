@@ -655,8 +655,7 @@ function busquedaTabla()
 }
 /*----------------------------CARGAR DETALLE TABLA----------------------------*/
 function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
-{
-    
+{    
     JsonTablaH = jQuery.parseJSON(JsonTablaHija);
     JsonTablaH.ls_where = JsonTablaH.ls_where.toString().replace("0", valorFK);
     NomTabla_hija = JsonTablaH.ls_name_tabla.toString();
@@ -674,7 +673,7 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
 
 
     if (valorFKAnterior != valorFK)
-    {
+    {   console.log("carga detalle tabla");
         if (JsonTablaH.ls_IdDivTabla.length)
         {
 
@@ -715,8 +714,7 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
     } else {
 
         removeLoad();
-    }
-    valorFKAnterior = valorFK;
+    }    
 }
 /*---------------------------------CONFIRM GUARDADO DE DATOS-------------------*/
 $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
@@ -1021,8 +1019,8 @@ function insertRow()
 
             }
         }
-        addFilasInsertadas(ls_nombreTabla, FilaInsertadas);        
-        
+        addFilasInsertadas(ls_nombreTabla, FilaInsertadas);                
+        console.log(filaSelectID);
         nuevaFila += "</tr>";
         // Agreabamos una Fila nueva a la tabla.
         $("#" + IdTabla).append(nuevaFila);
@@ -1246,8 +1244,9 @@ function setToolTip(element, title_tool)
 }
 function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1)
 {   //Guarda el PK de la fila seleccionada para cada tabla
+    //valorFKAnterior=filaSelectID[ordenTB];
     filaSelectID[ordenTB] = IdRowFocu;
-
+    console.log("entro row "+IdRowFocu);
     ClassRow = ClassRow1;
     ElementFilaSeleccionada = ElementoSeleccionad;
     CodigoCampoPKTB = IdRowFocu;
@@ -1257,14 +1256,21 @@ function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows
     }
 }
 function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB)
-{
+{   
+   
+    NomelementColumnAnterior = "";
     /*Control de varificación de cambios pantalla doble*/
     if (TablaSeleccionada != nombreTabla && parseInt(ordenTB) < parseInt(ls_ordenTB))
     {  
-        if (verificarCambiosTablas() == 1)
-        { 
-            GuardarDataConfirm("Guardar Cambios", "Por favor, guarde los cambios realizados antes de cambiar fila.",ordenTB);
-        } 
+        if (filaSelectID[ordenTB] != valorFKAnterior) {
+           console.log(filaSelectID[ordenTB]);
+           console.log(valorFKAnterior);
+        }
+        
+//        if (verificarCambiosTablas() == 1)
+//        { 
+//            GuardarDataConfirm("Guardar Cambios", "Por favor, guarde los cambios realizados antes de cambiar fila.",ordenTB);
+//        } 
     }
     /*Setear los valores iniciales al seleccionar la columna*/
     if (inicializarTabla(IdTabla1, NombreCampPK, jsonRows, jsonColumns, nombreTabla, ordenTB) === 1)
@@ -1280,38 +1286,41 @@ function getRowNueva(idNuevaFila1, ordenTB, classNuevaFila1, NombreCampoPKTB1, l
 {
     ls_ordenTB = ordenTB;
     classFilaSelectID[ls_ordenTB] = classNuevaFila1;
-    RowsTable = RowsTableTEMP[ls_ordenTB];
-    ColumnsTable = ColumnsTableTEMP[ls_ordenTB];
+    RowsTable = RowsTableTEMP[ordenTB];
+    ColumnsTable = ColumnsTableTEMP[ordenTB];
     NombreCampoPKTB = NombreCampoPKTB1;
     ls_nombreTabla = ls_nombreTabla1;
     IdTabla = IdTabla1;
+
     //Se verifica si la fila selecionada es diferente borra el detalle de la tabla
-    if (filaSelectID[ordenTB] != idNuevaFila1) {
+    if (filaSelectID[ordenTB] != valorFKAnterior) {
         eliminarDetalleSelectN();
-        filaSelectID[ordenTB] = idNuevaFila1;
-        valorFKAnterior = "";
+        filaSelectID[ordenTB] = idNuevaFila1;        
     }
 }
 
 var NomelementColumnAnterior = "";
 function getColumnNueva(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, ordenTB, IdTabla1, idNuevaFila1) {
-
+    
     if (filaSelectID[ordenTB].length = 0) {
         console.log("reasigno valor");
         filaSelectID[ordenTB] = idNuevaFila1;
     }
 
     IdTabla = IdTabla1;
-    RowsTable = RowsTableTEMP[ls_ordenTB];
-    ColumnsTable = ColumnsTableTEMP[ls_ordenTB];
+    RowsTable = RowsTableTEMP[ordenTB];
+    ColumnsTable = ColumnsTableTEMP[ordenTB];
+    valorFKAnterior=filaSelectID[ordenTB];
+    filaSelectID[ordenTB] = 'N' + ordenTB + '' + index_row;
     NomelementColumn = "#col" + ordenTB + "_" + index_row + "_" + index_column;
     var elementColumn = $(NomelementColumn);
     if (NomelementColumnAnterior != NomelementColumn) {
+        eliminarObjeto();
         crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_select, boolNuevo);
         NomelementColumnAnterior = NomelementColumn;
     }
     activarTabla();
-   
+    
 }
 function getUltimoIdRowTabla() {
     var ultimoIRRowTabla = "";

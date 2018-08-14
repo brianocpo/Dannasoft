@@ -80,10 +80,10 @@ public  class obj_acciones_tabla implements Comparable <obj_acciones_tabla>{
     @Override
     public int compareTo(obj_acciones_tabla o) {
        
-            if (Integer.parseInt(OredenTabla) > Integer.parseInt(o.OredenTabla)) {
+            if (Integer.parseInt(OredenTabla) < Integer.parseInt(o.OredenTabla)) {
                 return -1;
             }
-            if (Integer.parseInt(OredenTabla) < Integer.parseInt(o.OredenTabla)) {
+            if (Integer.parseInt(OredenTabla) > Integer.parseInt(o.OredenTabla)) {
                 return 1;
             }
             return 0;

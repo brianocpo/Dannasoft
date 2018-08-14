@@ -399,7 +399,7 @@ public class CrudGenerico {
 
     }
 
-    public Integer ejecutarSQL(String ls_sql[]) {
+    public static Integer ejecutarSQL(String ls_sql[]) {
         Integer li_estado = 0;
         try {
             Conexion.getSession().beginTransaction();
