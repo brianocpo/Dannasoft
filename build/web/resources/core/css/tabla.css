@@ -1,0 +1,12 @@
+.pagination{margin: 0px; font-size: 9px}
+.form-control{height:30px;font-size:11px}
+.table-bordered{border: 1px solid #ddd;margin-bottom:20px}
+.table-bordered > thead > tr > td, .table-bordered > thead > tr > th{background-color:#dddddd;color:#272626}
+.btn-group, .btn-group-vertical{display:block}
+div.dataTables_wrapper div.dataTables_info{padding-top:0px}
+div.dataTables_wrapper div.dataTables_paginate ul.pagination{margin-top:-20px}
+body{font-size:12px;line-height: 0.9}
+.theadTitle{font-size: 14px; cursor: pointer}
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th{padding:3px}
+.table-bordered{margin-bottom:20px}  
+.table-borderedActived{border: 2px solid #97b2c9;margin-bottom:20px;background-color:#dddddd;color:#272626}
