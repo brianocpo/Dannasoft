@@ -418,6 +418,59 @@ public class CrudGenerico {
 
         return li_estado;
     }
+    public static void iniciarTransaction(){
+        try {
+            Conexion.getSession().beginTransaction();
+        }catch (Exception e) {
+            System.out.println("Error iniciarTransaction(): "+e);
+        } 
+    }
+    public static void commitTransaction(){
+        try {
+           Conexion.getSession().getTransaction().commit();
+        }catch (Exception e) {
+            System.out.println("Error CommitTransaction(): "+e);
+        }finally {
+           Conexion.closeSesion();
+        } 
+    }
+    public static void rollbackTransaction(){
+        try {
+           Conexion.getSession().getTransaction().rollback();
+        }catch (Exception e) {
+            System.out.println("Error CommitTransaction(): "+e);
+        } finally {
+           Conexion.closeSesion();
+        }
+    }
+    public static Integer ejecutarSQLSinCommit(String ls_sql) {
+        Integer li_estado = 1;
+        try {           
+            SQLQuery query = Conexion.getSession().createSQLQuery(ls_sql);
+            query.executeUpdate();           
+        } catch (Exception e) {           
+            li_estado = 0;
+        } 
+        return li_estado;
+    }
+    
+    public static Integer getMaxID(String ls_nombreCampoPK,String EsquemaBaseDatos,String ls_nombreTablaPK) {
+        String ls_sql="SELECT MAX("+ls_nombreCampoPK+") FROM "+EsquemaBaseDatos+"."+ls_nombreTablaPK;
+        Integer maxID=0;
+        List lst = null;
+        try {           
+            Query query = Conexion.getSession().createSQLQuery(ls_sql);
+            lst = query.list();
+            Iterator it_tabla = lst.iterator();
+            while (it_tabla.hasNext()) {
+                maxID = (Integer) it_tabla.next();               
+            }
+           
+        } catch (Exception e) {           
+            maxID = 0;
+        } 
+        return maxID;
+    }
 
     public Integer buscarGridDropdown(String codigo1_opc) {
         Integer index = -1;

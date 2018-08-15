@@ -20,7 +20,7 @@ var ElementFilaSeleccionada;
 var ElementoSelectTemp;
 var IndexSelect_row;
 var JsonTablaH = "";
-var valorFKAnterior = "";
+var FilaIDTemp = "";
 /*------JSON------------*/
 var Tabla = {"TablaBDD": []};
 var JsonTablas = [];
@@ -254,34 +254,36 @@ function getColumnasActualizadas(ColumnasActualizada, NomColumna1)
 }
 
 
-function findTypeColumn(nombre_column)
-{
+function findTypeColumn(nombre_column,ordenTB)
+{   console.log(RowsTableTEMP);
+    var Rows=RowsTableTEMP[ordenTB];
+    var Columns=ColumnsTableTEMP[ordenTB];
     var nombre_columnCompare = "";
     var TypeData = "";
-    if (RowsTable.length > 0) {
+    if (Rows.length > 0) {
 
-        for (var i in RowsTable[0].lista_gridColumn)//Columnas del Objeto
+        for (var i in Rows[0].lista_gridColumn)//Columnas del Objeto
         {
-            if (RowsTable[0].lista_gridColumn.hasOwnProperty(i)) //Verificacion de que exista datos
+            if (Rows[0].lista_gridColumn.hasOwnProperty(i)) //Verificacion de que exista datos
             {
-                var nombre_columnCompare = RowsTable[0].lista_gridColumn[i].ls_nombre_column;
+                var nombre_columnCompare = Rows[0].lista_gridColumn[i].ls_nombre_column;
                 if (nombre_columnCompare === nombre_column)
                 {
-                    TypeData = RowsTable[0].lista_gridColumn[i].data_column.is_nullable;
+                    TypeData = Rows[0].lista_gridColumn[i].data_column.is_nullable;
                     break;
                 }
             }
         }
     } else
     {
-        for (var i in ColumnsTable)//Columnas del Objeto
+        for (var i in Columns)//Columnas del Objeto
         {
-            if (ColumnsTable.hasOwnProperty(i)) //Verificacion de que exista datos
+            if (Columns.hasOwnProperty(i)) //Verificacion de que exista datos
             {
-                var nombre_columnCompare = ColumnsTable[i].ls_nombre_column;
+                var nombre_columnCompare = Columns[i].ls_nombre_column;
                 if (nombre_columnCompare === nombre_column)
                 {
-                    TypeData = ColumnsTable[i].data_column.is_nullable;
+                    TypeData = Columns[i].data_column.is_nullable;
                     break;
                 }
             }
@@ -296,6 +298,21 @@ function findIndexColumn(nombre_column)
     for (var i = 0; i < ColumnsTable.length; i++)
     {
         nombre_column_temp = $.trim(ColumnsTable[i].ls_nombre_column);
+        if (nombre_column_temp === $.trim(nombre_column))
+        {
+            index_col = i;
+            break;
+        }
+    }
+    return index_col;
+}
+function findIndexColumnVariaTablas(nombre_column,ColumnsTB)
+{
+    var index_col = -1;
+    var nombre_column_temp = "";
+    for (var i = 0; i < ColumnsTB.length; i++)
+    {
+        nombre_column_temp = $.trim(ColumnsTB[i].ls_nombre_column);
         if (nombre_column_temp === $.trim(nombre_column))
         {
             index_col = i;
@@ -390,6 +407,8 @@ function inicializarTabla(IdTabla1, NombreCampPK, jsonRows, jsonColumns, nombreT
     JSONColumnsTabla = jsonColumns;
     RowsTable = jQuery.parseJSON(JSONRowsTabla);
     ColumnsTable = jQuery.parseJSON(JSONColumnsTabla);
+    RowsTableTEMP[ordenTB] = RowsTable;
+    ColumnsTableTEMP[ordenTB] = ColumnsTable;
     ls_nombreTabla = nombreTabla;
     ls_ordenTB = ordenTB;
     activarTabla();
@@ -413,6 +432,7 @@ function activarTabla()
     if (IdTabla != IdTablaAnt) {
         IdTablaAnt = IdTabla;
     }
+    
 }
 /*---------------------------------------------------------------------------*/
 
@@ -501,7 +521,7 @@ function crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_selec
 
     var TypeData = "";
     var campo = "";
-    TypeData = findTypeColumn(nombre_column);
+    TypeData = findTypeColumn(nombre_column,ls_ordenTB);
 
     if (TypeData !== "")
     {
@@ -655,7 +675,7 @@ function busquedaTabla()
 }
 /*----------------------------CARGAR DETALLE TABLA----------------------------*/
 function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
-{    
+{   
     JsonTablaH = jQuery.parseJSON(JsonTablaHija);
     JsonTablaH.ls_where = JsonTablaH.ls_where.toString().replace("0", valorFK);
     NomTabla_hija = JsonTablaH.ls_name_tabla.toString();
@@ -671,9 +691,8 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
     } catch (Error) {
     }
 
-
-    if (valorFKAnterior != valorFK)
-    {   console.log("carga detalle tabla");
+    if (FilaIDTemp != valorFK)
+    {   
         if (JsonTablaH.ls_IdDivTabla.length)
         {
 
@@ -711,6 +730,7 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
                         }
                     });
         }
+        console.log("entro cargar_TablaHija"); 
     } else {
 
         removeLoad();
@@ -735,7 +755,7 @@ function GuardarDataConfirm(titulo, mensaje,ordenTB1) {
         title_html: true,
         buttons: [
             {
-                text: "Cancel",
+                text: "No Guardar",
                 "class": "btn btn-minier",
                 click: function () {
                     $(this).dialog("close");
@@ -749,12 +769,13 @@ function GuardarDataConfirm(titulo, mensaje,ordenTB1) {
                 click: function () {
                     $(this).dialog("close");
                     guardarTabla();
+                    IdColumnSelect="";
                     mensajeAccion("Exito", "información guardada", "");
                 }
             }
         ]
     });
-  
+ 
 }
 /*---------------------------------MENSAJES FLOTANTES-------------------------*/
 function mensajeAccion(valor, Mensaje, IdElementoAnclaje)
@@ -804,7 +825,7 @@ function eliminarMensaje(elemento)
 /*-----------------------------GUARDAR - INSERTAR -ACTUALIZAR - ELIMINAR TABLAS---------------------------------*/
 
 function guardarTabla()
-{
+{   
     /*Verificar los cambios a nivel de la Tabla*/
     if (verificarCambiosTablas() == 1)
     {
@@ -832,14 +853,16 @@ function insertarFilaNueva()
     /*Antes de insertar verificar si la columna Padre es Nueva*/
     marcarFilaNueva(insertRow());
     eliminarDetalleSelectN();
-    valorFKAnterior = "";
+    FilaIDTemp=filaSelectID[ls_ordenTB];
 
     /*Acciona el evento click de la nueva fila*/
     try {       
         $("#" + filaSelectID[ls_ordenTB]).click();
+        IdColumnSelect="";
     } catch (Error) {
         console.log("Error Funcion insertarFilaNueva: "+Error);
     }
+    console.log(Tabla);
 }
 function insertRow()
 {   //Guardar en un arreglo la estructura principal de la TABLA identificado por su ORDEN
@@ -1019,8 +1042,7 @@ function insertRow()
 
             }
         }
-        addFilasInsertadas(ls_nombreTabla, FilaInsertadas);                
-        console.log(filaSelectID);
+        addFilasInsertadas(ls_nombreTabla, FilaInsertadas);                        
         nuevaFila += "</tr>";
         // Agreabamos una Fila nueva a la tabla.
         $("#" + IdTabla).append(nuevaFila);
@@ -1032,6 +1054,7 @@ function insertRow()
         nuevaFila = "";
         return 0;
     }
+  
     return 0;
 }
 function updateColumn()
@@ -1049,7 +1072,7 @@ function updateColumn()
     var Valor = "";
     var FilasActualizadas = "";
     FilasActualizadas = BusFilasActualizadas();
-    TipoValor = findTypeColumn(IdColumnSelect);
+    TipoValor = findTypeColumn(IdColumnSelect,ls_ordenTB);
     Valor = $("#" + IdColumnSelect).val();
     //Buscar si ya esta la fila ingresada mediante su codigo primario
     var ColumnasActualizada_temp = "";
@@ -1135,7 +1158,7 @@ function InsertColumn(NomColumna,TipoValor,Valor,FK,IDColumn)
 function getValorFilasNuevas(){
     eliminarObjeto();
     for (var i = 0; i < Tabla.TablaBDD.length; i++)
-    {   
+    {   var ordenTB=Tabla.TablaBDD[i].OredenTabla;
         if (Tabla.TablaBDD[i].FilasInsertadas.length>0)
         {
             for (var f = 0; f < Tabla.TablaBDD[i].FilasInsertadas.length; f++)
@@ -1144,8 +1167,21 @@ function getValorFilasNuevas(){
                 {
                         var NombreColumn=Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].NomColumna;
                         var IDColumn=Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].IDColumn;
-                        var Valor=$("#"+IDColumn.trim()).html();
-                        var TipoValor = findTypeColumn(NombreColumn);
+                        
+                        var Valor="";
+                        var ColumnTEMP=ColumnsTableTEMP[ordenTB];
+                        var index_col = findIndexColumnVariaTablas(NombreColumn,ColumnTEMP);
+                        
+                        
+                        if(ColumnTEMP[index_col].lb_FK === true)
+                        {
+                            Valor = ColumnTEMP[index_col].data_dropdown.codigo_dw[0];
+                            Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].FK=true;
+                        }else{
+                            Valor=$("#"+IDColumn.trim()).html();
+                            Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].FK=false;
+                        }                                               
+                        var TipoValor = findTypeColumn(NombreColumn,ordenTB);
                         Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].Valor=Valor;
                         Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].TipoValor=TipoValor;
                 }               
@@ -1195,16 +1231,18 @@ function getBoolFK(index_column)
     return lb_FK;
 }
 function setTablaJson()
-{
+{   
     for (var i = 0; i < Tabla.TablaBDD.length; i++)
     {
         Tabla.TablaBDD[i].FilasEliminadas = [];
         Tabla.TablaBDD[i].FilasActualizadas = [];
         Tabla.TablaBDD[i].FilasInsertadas = [];
     }
+    
 }
 function setTablaJson2(ordenTB1)
 {   ordenTB1=parseInt(ordenTB1); 
+    
     for (var i = 0; i < Tabla.TablaBDD.length; i++)
     {   
         var ordenTabla=parseInt(Tabla.TablaBDD[i].OredenTabla);       
@@ -1215,7 +1253,7 @@ function setTablaJson2(ordenTB1)
             Tabla.TablaBDD[i].FilasInsertadas = [];
         }
     } 
-    
+   console.log(Tabla);  
 }
 function setTablaSeleccionada(NomTabla1)
 {
@@ -1243,10 +1281,13 @@ function setToolTip(element, title_tool)
     $(element).tooltip({title: title_tool, placement: "bottom", animation: true});
 }
 function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1)
-{   //Guarda el PK de la fila seleccionada para cada tabla
-    //valorFKAnterior=filaSelectID[ordenTB];
+{   
+   
+    //Guarda el PK de la fila seleccionada para cada tabla
+    FilaIDTemp=filaSelectID[ordenTB];
     filaSelectID[ordenTB] = IdRowFocu;
-    console.log("entro row "+IdRowFocu);
+    console.log("entro getRow:"+ FilaIDTemp);
+    
     ClassRow = ClassRow1;
     ElementFilaSeleccionada = ElementoSeleccionad;
     CodigoCampoPKTB = IdRowFocu;
@@ -1255,23 +1296,22 @@ function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows
         EstiloFilaActiva();
     }
 }
-function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB)
+function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow)
 {   
-   
+//    console.log("entro getColumn :"+ls_IdRow);
+//    console.log(filaSelectID[ordenTB]);
     NomelementColumnAnterior = "";
     /*Control de varificación de cambios pantalla doble*/
-    if (TablaSeleccionada != nombreTabla && parseInt(ordenTB) < parseInt(ls_ordenTB))
-    {  
-        if (filaSelectID[ordenTB] != valorFKAnterior) {
-           console.log(filaSelectID[ordenTB]);
-           console.log(valorFKAnterior);
+//    if (TablaSeleccionada != nombreTabla && parseInt(ordenTB) < parseInt(ls_ordenTB))
+//    {  
+        if (filaSelectID[ordenTB] != ls_IdRow) {
+            console.log("Es necesario Guardar");
+            if (verificarCambiosTablas() == 1)
+            { 
+                GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
+            } 
         }
-        
-//        if (verificarCambiosTablas() == 1)
-//        { 
-//            GuardarDataConfirm("Guardar Cambios", "Por favor, guarde los cambios realizados antes de cambiar fila.",ordenTB);
-//        } 
-    }
+//    }
     /*Setear los valores iniciales al seleccionar la columna*/
     if (inicializarTabla(IdTabla1, NombreCampPK, jsonRows, jsonColumns, nombreTabla, ordenTB) === 1)
     {
@@ -1293,7 +1333,7 @@ function getRowNueva(idNuevaFila1, ordenTB, classNuevaFila1, NombreCampoPKTB1, l
     IdTabla = IdTabla1;
 
     //Se verifica si la fila selecionada es diferente borra el detalle de la tabla
-    if (filaSelectID[ordenTB] != valorFKAnterior) {
+    if (filaSelectID[ordenTB] != FilaIDTemp) {
         eliminarDetalleSelectN();
         filaSelectID[ordenTB] = idNuevaFila1;        
     }
@@ -1310,7 +1350,7 @@ function getColumnNueva(index_row, index_column, nombre_column, ls_codigo_fk_sel
     IdTabla = IdTabla1;
     RowsTable = RowsTableTEMP[ordenTB];
     ColumnsTable = ColumnsTableTEMP[ordenTB];
-    valorFKAnterior=filaSelectID[ordenTB];
+    FilaIDTemp=filaSelectID[ordenTB];
     filaSelectID[ordenTB] = 'N' + ordenTB + '' + index_row;
     NomelementColumn = "#col" + ordenTB + "_" + index_row + "_" + index_column;
     var elementColumn = $(NomelementColumn);

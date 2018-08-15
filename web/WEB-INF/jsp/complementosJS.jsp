@@ -1,10 +1,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <!-- Jquery-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="${pageContext.request.contextPath}/resources/assets/js/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/assets/js/jquery-1.12.4.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/jquery-ui.css">
+<script src="${pageContext.request.contextPath}/resources/assets/js/jquery-ui.js"></script>
 
 <!-- Boostrap-->
 <!-- bootstrap & fontawesome -->
@@ -40,13 +40,13 @@
 <script src="${pageContext.request.contextPath}/resources/assets/js/respond.min.js"></script>
 <![endif]-->
 <!-- Boostrap Select -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/bootstrap-select.min.css">
+<script src="${pageContext.request.contextPath}/resources/assets/js/bootstrap-select.min.js"></script>
 <!-- Data table -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-colvis-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/cr-1.4.1/fc-3.2.4/fh-3.1.3/kt-2.3.2/r-2.2.1/rg-1.0.2/rr-1.2.3/sc-1.4.4/sl-1.2.5/datatables.min.css"/>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-colvis-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/cr-1.4.1/fc-3.2.4/fh-3.1.3/kt-2.3.2/r-2.2.1/rg-1.0.2/rr-1.2.3/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/assets/css/datatables.min.css"/>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/assets/js/pdfmake.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/assets/js/vfs_fonts.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/assets/js/datatables.min.js"></script>
 <!-- Tabla CORE -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/core/js/tabla.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/core/css/tabla.css">

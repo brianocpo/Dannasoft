@@ -16,12 +16,12 @@ import java.util.List;
 public class Soporte {
 
     CrudGenerico conexion = new CrudGenerico();
-    private String BDD;
-    private String SHECMAN;
+    private static String BaseDatos;
+    private static String EsquemaBaseDatos;
 
     public Soporte() {
-        this.BDD = "Dannasoft";
-        this.SHECMAN = "mod_administracion";
+        this.BaseDatos = "Dannasoft";
+        this.EsquemaBaseDatos = "mod_administracion";
     }
 
     // Funcion para remplazar un caracter dentro de un Vector String
@@ -40,11 +40,73 @@ public class Soporte {
 
     public List esquemaBDD(String nombre_tabla) {
         List lst = null;
-        lst = conexion.getColumEsquemaBDD(BDD, SHECMAN, nombre_tabla);
+        lst = conexion.getColumEsquemaBDD(BaseDatos, EsquemaBaseDatos, nombre_tabla);
         return lst;
     }
+    public void ejecutarAcciones(obj_acciones_array_tablas AccionesTabla){        
+       
+        //Se ejecutan instrucciones de Actualización, Eliminación de las tablas genéricas
+        String[] las_SqlAccionesDeleteUpdate= getSQLAccionesUpdateDelete(AccionesTabla);
+        CrudGenerico.ejecutarSQL(las_SqlAccionesDeleteUpdate);
+        
+        //Se procede con la insersión de las nuevas Filas dentro de las tablas
+        insertarNuevosDatos(AccionesTabla);
+    }
+    public void insertarNuevosDatos(obj_acciones_array_tablas AccionesTabla){
+        String ls_nombreCampoPK="";
+        String ls_nombreTablaPK="";
+        Integer li_MaxID=0;
+        String ls_sqlInsert="";
+        String ls_camposInsert="";
+        String ls_valuesInsert="";
+        String ls_nombreColumna="";
+        String ls_valor="";
+        String ls_tipoValor="";
+        
+        String ls_nombreCampoFK="";
+        CrudGenerico.iniciarTransaction();
+        
+        for (int i = AccionesTabla.getTablaBDD().size()-1; i >=0; i--) {
+            ls_nombreTablaPK=AccionesTabla.getTablaBDD().get(i).getNomTabla();
+            ls_nombreCampoPK=AccionesTabla.getTablaBDD().get(i).getNomCampoPK();            
 
-    public String[] ArraySQLAccionesTablas(obj_acciones_array_tablas AccionesTabla) {
+            for (int a = 0; a < AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().size(); a++) {
+                ls_sqlInsert="INSERT INTO "+this.EsquemaBaseDatos+"."+ls_nombreTablaPK+" ";
+                ls_camposInsert="";
+                ls_camposInsert="";
+                for (int b = 0; b < AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getColumnasInsertadas().size(); b++){
+                   
+                    ls_nombreColumna=AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getColumnasInsertadas().get(b).getNomColumna();
+                    
+                    if(ls_nombreCampoPK!=ls_nombreColumna){
+                        ls_camposInsert=ls_camposInsert + ls_nombreColumna +",";
+                        if(ls_nombreCampoFK==ls_nombreColumna){
+                            ls_valor=String.valueOf(li_MaxID);
+                        }else{
+                            ls_valor=AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getColumnasInsertadas().get(b).getValor();
+                        }
+                        
+                        ls_tipoValor=AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getColumnasInsertadas().get(b).getTipoValor();                    
+                        ls_valor=transformarTipoValor(ls_tipoValor,ls_valor);
+                        ls_valuesInsert=ls_valuesInsert + ls_valor +",";   
+                    }                    
+                }
+                ls_camposInsert=acortarString(ls_camposInsert, 1);
+                ls_valuesInsert=acortarString(ls_valuesInsert, 1);                
+                ls_sqlInsert=ls_sqlInsert+" ("+ls_camposInsert+") VALUES ("+ls_valuesInsert+")";
+                if(CrudGenerico.ejecutarSQLSinCommit(ls_sqlInsert)==1){
+                    li_MaxID=CrudGenerico.getMaxID(ls_nombreCampoPK,this.EsquemaBaseDatos,ls_nombreTablaPK);
+                    ls_nombreCampoFK=ls_nombreCampoPK;
+                }else{
+                    CrudGenerico.rollbackTransaction();
+                }
+                
+            }
+            
+        }
+        CrudGenerico.commitTransaction();
+    }
+    public String[] getSQLAccionesUpdateDelete(obj_acciones_array_tablas AccionesTabla) {
         List lst = null;
         String[] resp = new String[numeroCambiosTabla(AccionesTabla)];
         Integer li_pos=0;
@@ -59,7 +121,7 @@ public class Soporte {
             for (int j = 0; j < AccionesTabla.getTablaBDD().get(i).getFilasEliminadas().size(); j++) {
                 String codigoPK = "";
                 codigoPK=AccionesTabla.getTablaBDD().get(i).getFilasEliminadas().get(j).getCodigoPK();
-                ls_sql = "DELETE FROM " + SHECMAN + "." + NomTabla + " WHERE  " + NomCampoPK + "=" + codigoPK;
+                ls_sql = "DELETE FROM " + EsquemaBaseDatos + "." + NomTabla + " WHERE  " + NomCampoPK + "=" + codigoPK;
                 resp[li_pos]=ls_sql;
                 li_pos++;
             }
@@ -68,7 +130,7 @@ public class Soporte {
                 String codigoPK = "";
                 String setColumns = "";
                 codigoPK=AccionesTabla.getTablaBDD().get(i).getFilasActualizadas().get(a).getCodigoPK();
-                ls_sql = "UPDATE " + SHECMAN + "." + NomTabla + " SET  ";
+                ls_sql = "UPDATE " + EsquemaBaseDatos + "." + NomTabla + " SET  ";
                 for (int c = 0; c < AccionesTabla.getTablaBDD().get(i).getFilasActualizadas().get(a).getColumnasActualizada().size(); c++) {
                      String NomColumna="";
                      String Valor="";
@@ -88,15 +150,11 @@ public class Soporte {
                 resp[li_pos]=ls_sql;
                 li_pos++;
             }
-            
-            /*ACCIONES INSERSIÓN*/
-            for (int a = 0; a < AccionesTabla.getTablaBDD().get(i).getFilasEliminadas().size(); a++) {
-                String codigoPK = "";
-            }
         }
         borrarGarbage();
         return resp;
     }
+    //Reduce la cadena desde el final 
     public static String acortarString(String cadena, int n) {
          int indice = 0;
         if(cadena.length()>0){

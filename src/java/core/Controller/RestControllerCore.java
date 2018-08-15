@@ -6,7 +6,6 @@
 package core.Controller;
 
 import com.google.gson.Gson;
-import core.Config.CrudGenerico;
 import core.Config.Soporte;
 import core.Objects.obj_acciones_array_tablas;
 import core.Objects.obj_tabla;
@@ -38,13 +37,11 @@ public class RestControllerCore {
     public @ResponseBody
     obj_acciones_array_tablas JsonAccionTable(@RequestBody String jsonTable) {
         Gson gson = new Gson();
-        obj_acciones_array_tablas AccionesTabla = gson.fromJson(jsonTable, obj_acciones_array_tablas.class);
+        obj_acciones_array_tablas AccionesTabla = gson.fromJson(jsonTable, obj_acciones_array_tablas.class);        
         Collections.sort(AccionesTabla.getTablaBDD());
          
-        Soporte Soporte = new Soporte();
-        String[] las_sqlAcciones = Soporte.ArraySQLAccionesTablas(AccionesTabla);
-        CrudGenerico.ejecutarSQL(las_sqlAcciones);
-       
+        Soporte soporte = new Soporte();
+        soporte.ejecutarAcciones(AccionesTabla);               
         return AccionesTabla;
     }
 
