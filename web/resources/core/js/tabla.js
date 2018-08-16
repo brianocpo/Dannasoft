@@ -34,7 +34,7 @@ var RowsTableTEMP = [];
 var ColumnsTableTEMP = [];
 var classFilaSelectID = [];
 var TablasRelacionadas = [];
-
+var RowID = [];
 function addTabla(NomTabla1, NomCampoPK1, OredenTabla1)
 {
     var TablaBDD_ADD = {"NomTabla": NomTabla1,
@@ -717,7 +717,12 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
                             //Coloca el Foco de la primera fila de la tabla Hija y retorna el Foco a la Primera tabla 
                             var ordenTemp=parseInt(ls_ordenTB) + 1;
                             $("#R"+ordenTemp+"_0").click(); 
-                            $("#R1_0").click(); 
+                            
+                            if(ordenTemp>0){
+                                var filamarcada=RowID[ordenTemp-1];
+                                $(filamarcada).click(); 
+                            }
+                            
                             removeLoad();
                             
                         }
@@ -839,6 +844,7 @@ function guardarTabla()
             url: "post/jsonTable"
         })
                 .done(function (data, textStatus, jqXHR) {
+                    eliminarObjeto();
                     mensajeAccion("Exito", "información guardada", "");
                     setTablaJson();
                 })
@@ -958,8 +964,11 @@ function insertRow()
         }
         var codigoPK = "N" + ls_ordenTB + numeracionFila;
         
-        setearFilaInsertada();        
-        InsertFila(codigoPK,PKTablaPadre,nombreCampoFK);
+        setearFilaInsertada(); 
+        if(PKTablaPadre.length>0){InsertFila(codigoPK,PKTablaPadre,nombreCampoFK);}else{
+            InsertFila(codigoPK,"","");
+        }
+        
         var FK=false;
         //SI se conoce el total de columnas - en caso de que ya existan registros anteriores
         if (Tcolumns > 0)
@@ -1282,7 +1291,7 @@ function setToolTip(element, title_tool)
 }
 function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1)
 {   
-   
+    RowID[ordenTB]=ElementoSeleccionad;
     //Guarda el PK de la fila seleccionada para cada tabla
     FilaIDTemp=filaSelectID[ordenTB];
     filaSelectID[ordenTB] = IdRowFocu;
