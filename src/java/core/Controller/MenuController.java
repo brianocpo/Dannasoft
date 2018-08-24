@@ -102,6 +102,57 @@ public class MenuController {
         return "pantalla_doble";
     }
 
+    @RequestMapping("/PaisCiudadEstado")
+    public String PaisCiudadEstado(Model model) {
+        model.addAttribute("ls_schema", ls_schema);
+        //Tabla Pais
+        String ls_query = "";
+        String ls_where = "";
+        String ls_orden = "nombre_pai ASC";
+        obj_tabla Tabla1 = new obj_tabla();
+        Tabla1.configTabla(ls_catalog, ls_schema, "v_pais", ls_query, ls_where, ls_orden);
+        Tabla1.setLb_cargaHija(true);
+        Tabla1.crearTabla();
+        Tabla1.setLs_Id_Tabla("v_pais");
+        Tabla1.setLs_ordenTB("1");
+        Tabla1.setLs_AltoTabla("50%");
+        Tabla1.setTituloTabla("PAÍS");
+
+        //Tabla Ciudad
+        String ls_query2 = "";
+        obj_tabla Tabla2 = new obj_tabla();
+        Tabla2.configTabla(ls_catalog, ls_schema, "v_ciudad", ls_query2, "codigo_pai=0", "nombre_ciu ASC");
+        Tabla2.setLb_cargaHija(true);
+        Tabla2.setLs_nombre_campo_padre("codigo_pai");
+        Tabla2.crearTabla();
+        Tabla2.setLs_Id_Tabla("v_ciudad");
+        Tabla2.setLs_ordenTB("2");
+        Tabla2.setLs_AltoTabla("50%");
+        Tabla2.setTituloTabla("CIUDAD");
+        Tabla2.setLs_IdDivTabla("tabla2");
+        
+        //Tabla Estado
+        obj_tabla Tabla3 = new obj_tabla();
+        Tabla3.configTabla(ls_catalog, ls_schema, "v_estado","", "codigo_ciu=0", "nombre_est ASC");
+        Tabla3.setLs_nombre_campo_padre("codigo_ciu");
+        Tabla3.crearTabla();
+        Tabla3.setLs_Id_Tabla("v_estado");
+        Tabla3.setLs_ordenTB("3");
+        Tabla3.setLs_AltoTabla("50%");
+        Tabla3.setTituloTabla("Estado");
+        Tabla3.setLs_IdDivTabla("tabla3");
+        
+        //Se asocia la tabla hija a la tabla padre
+        obj_grupo_tabla GrupTables = new obj_grupo_tabla(Tabla1, Tabla2);
+        obj_grupo_tabla GrupTables2 = new obj_grupo_tabla(Tabla2, Tabla3);
+        
+        model.addAttribute("tabla", GrupTables.getTablaHtml());        
+        model.addAttribute("tabla2", GrupTables2.getTablaHtml());  
+        model.addAttribute("tabla3", Tabla3.getTablaHtml());
+        
+        return "pantalla_triple";
+    }
+    
     @RequestMapping("/PerfilUsuario")
     public String tb_perfiles(Model model) {
 

@@ -108,7 +108,7 @@ function deletRow() //Evento Ejecutado desde los Botones principales
             
         } else
         {
-            mensajeAccion("Alerta", "Fila Eliminada", "");
+//            mensajeAccion("Alerta", "Fila Eliminada", "");
             $("." + codigoCampoTempora[1]).remove();            
             deleteRowCadenaInsert(codigoCampoTempora[2]);
             //Si se elimina una fila se posiciona el cursor en la ultima fila de la tabla
@@ -690,7 +690,7 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
         }
     } catch (Error) {
     }
-
+   
     if (FilaIDTemp != valorFK)
     {   
         if (JsonTablaH.ls_IdDivTabla.length)
@@ -699,7 +699,7 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
             JsonTablaH.ls_valor_codigo_padre = valorFK;
             JsonTablaH.ls_valor_nombre_padre = nombreFK;
             JsonTablaH.ls_classTablaPadre = lsClassPadre;
-
+           
             var jsonString = JSON.stringify(JsonTablaH);
             //Equivalente a lo anterior
             $.ajax({
@@ -718,7 +718,7 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
                             var ordenTemp=parseInt(ls_ordenTB) + 1;
                             $("#R"+ordenTemp+"_0").click(); 
                             
-                            if(ordenTemp>0){
+                            if(ordenTemp>1){
                                 var filamarcada=RowID[ordenTemp-1];
                                 $(filamarcada).click(); 
                             }
@@ -1295,7 +1295,7 @@ function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows
     //Guarda el PK de la fila seleccionada para cada tabla
     FilaIDTemp=filaSelectID[ordenTB];
     filaSelectID[ordenTB] = IdRowFocu;
-    console.log("entro getRow:"+ FilaIDTemp);
+    console.log("entro getRow:"+ IdRowFocu);
     
     ClassRow = ClassRow1;
     ElementFilaSeleccionada = ElementoSeleccionad;
@@ -1307,12 +1307,11 @@ function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows
 }
 function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow)
 {   
-//    console.log("entro getColumn :"+ls_IdRow);
-//    console.log(filaSelectID[ordenTB]);
+    console.log(ls_IdRow);
     NomelementColumnAnterior = "";
     /*Control de varificación de cambios pantalla doble*/
-//    if (TablaSeleccionada != nombreTabla && parseInt(ordenTB) < parseInt(ls_ordenTB))
-//    {  
+    if (TablaSeleccionada != nombreTabla && parseInt(ordenTB) < parseInt(ls_ordenTB))
+    {  
         if (filaSelectID[ordenTB] != ls_IdRow) {
             console.log("Es necesario Guardar");
             if (verificarCambiosTablas() == 1)
@@ -1320,7 +1319,7 @@ function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, 
                 GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
             } 
         }
-//    }
+    }
     /*Setear los valores iniciales al seleccionar la columna*/
     if (inicializarTabla(IdTabla1, NombreCampPK, jsonRows, jsonColumns, nombreTabla, ordenTB) === 1)
     {

@@ -181,7 +181,7 @@ public class obj_tabla implements Serializable {
                 //Condificion para cargar la tabla Hija en caso de tenerla
                 if (this.lb_cargaHija == true) {
                     fn_cargarTablaHija = ";onLoad();cargar_TablaHija('" + ls_valor_column + "','" + ls_IdRow + "',jsonTabla" + ls_ordenTB + ",'" + this.ls_classTabla + "')";
-                }
+                }else{fn_cargarTablaHija ="";}
             }
 
             htmlTablaBodyTR += "<tr id=\"R" + this.ls_ordenTB + "_" + i + "\" scope=\"row\"    onclick=\"getRow(this,'" + ls_IdRow + "','" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_classRow + "')" + fn_cargarTablaHija + "\"  class=\"rowTabla" + ls_ordenTB + " " + this.ls_classTabla + " " + this.ls_classTablaPadre + "\">";

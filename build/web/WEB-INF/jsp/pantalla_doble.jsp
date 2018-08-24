@@ -14,7 +14,6 @@
         <div id="mensajeAlerta" class="mensajeFixed"></div>
         <!--Botones Principales-->
         <div class="table-responsive" style="padding-bottom:20px">
-
             <button type="button"  class="btn btn-primary insert" onclick="insertarFilaNueva()"  onmouseover="setToolTip(this, 'Nuevo')" >
                 <span  class = "glyphicon glyphicon-plus" > </span>
             </button>
@@ -24,10 +23,8 @@
             <button type="button" class="btn btn-primary" onclick="guardarTabla()" onmouseover="setToolTip(this, 'Guardar')">
                 <span  class = "glyphicon glyphicon-floppy-disk" > </span>
             </button>
-
             Buscar:<input type="text" id="inp_busqueda" onkeyup="busquedaTabla()" onmouseover="setToolTip(this,'Seleccione la tabla y digite su búsqueda')"/> <span class="glyphicon glyphicon-search"></span>
         </div>
-
         
         <!--Sección de Tablas-->
         <div id="contenedor_tablas">
@@ -38,6 +35,5 @@
         <div id="dialog-message" class="hide">
             <p id="mensaje"> </p>
         </div>
-
     </body>
 </html>
