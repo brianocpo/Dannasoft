@@ -35,7 +35,7 @@ var RowsTableTEMP = [];
 var ColumnsTableTEMP = [];
 var classFilaSelectID = [];
 var TablasRelacionadas = [];
-var RowID = [];
+var RowID;
 //Variables para verificar si existe cambio de Fila y guardar almacena el ID de la FILA
 var columTablaSelectTEMP=[];
 var columTablaSelect=[];
@@ -619,17 +619,20 @@ function verificarDetalleTabla(NomTabla2, ClassRow1)
 {
     //En caso de que la fila tenga una tablaDetalle
     var bl_estado = false;
+    console.log("Detalle="+NomTabla2);
+    console.log(ClassRow1);
     if (NomTabla2.length > 0) {
         //Comprueba los detalles 
         $('.' + ClassRow1).each(function (rowTabla) {
             if (rowTabla > 0) {
-                mensajeAccion("Alerta", "No se puede eliminar posee datos relacionados", "");
+               
                 bl_estado = false;
             } else {
                 bl_estado = true;
             }
         });
     }
+    if(bl_estado==false){ mensajeAccion("Alerta", "No se puede eliminar posee datos relacionados", "");}
     return bl_estado;
 }
 /*---------------------BLOQUEAR PANTALLA DURANTE LA CARGA----------------------*/
@@ -726,7 +729,8 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
                             $("#R"+ordenTemp+"_0").click(); 
                             removeLoad();                            
                             if(ordenTBFinal==ordenTemp){
-                                fila=RowID[1];
+                                console.log(RowID);
+                                fila=$("#"+RowID);
                                 $(fila).click();                                
                             }
                             
@@ -736,7 +740,8 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
                         if (console && console.log) {
                             $('#' + JsonTablaH.ls_IdDivTabla.toString().trim() + " tbody").html("");                           
                             if(ordenTBFinal==ordenTemp){
-                                fila=RowID[1];
+                                console.log(RowID);
+                                fila=$("#"+RowID);
                                 $(fila).click();                                
                             }
                             console.log("La solicitud a fallado: " + textStatus + errorThrown);
@@ -1311,7 +1316,7 @@ function setToolTip(element, title_tool)
 }
 function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1)
 {   
-    RowID[ordenTB]=ElementoSeleccionad;
+    
     //Guarda el PK de la fila seleccionada para cada tabla
     FilaIDTemp[ordenTB]=filaSelectID[ordenTB];
     filaSelectID[ordenTB] = IdRowFocu;
@@ -1324,8 +1329,9 @@ function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows
         EstiloFilaActiva();
     }
 }
-function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow)
+function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect)
 {   
+    RowID=idRowSelect;//Elemento seleccionado 
     NomelementColumnAnterior = "";
     columTablaSelectTEMP[ordenTB]=columTablaSelect[ordenTB];
     columTablaSelect[ordenTB]=ls_IdRow;
