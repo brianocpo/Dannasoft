@@ -158,7 +158,7 @@ public class obj_tabla implements Serializable {
             ls_classRow = ls_classRow + i;
             this.ls_classTabla = ls_classRow;
             htmlTablaBodyTD = "";
-            ls_IdRow = "";
+            ls_IdRow = "CodPK";
             fn_cargarTablaHija = "";
             for (int j = 0; j < this.lista_gridRow.get(i).getLista_gridColumn().size(); j++) {
                 ls_width = getWidthColumn(lista_gridRow.get(i).getLista_gridColumn().get(j));
@@ -183,7 +183,8 @@ public class obj_tabla implements Serializable {
                     fn_cargarTablaHija = ";onLoad();cargar_TablaHija('" + ls_valor_column + "','" + ls_IdRow + "',jsonTabla" + ls_ordenTB + ",'" + this.ls_classTabla + "')";
                 }else{fn_cargarTablaHija ="";}
             }
-
+            
+            htmlTablaBodyTD=htmlTablaBodyTD.replaceAll("CodPK",ls_IdRow );
             htmlTablaBodyTR += "<tr id=\"R" + this.ls_ordenTB + "_" + i + "\" scope=\"row\"    onclick=\"getRow(this,'" + ls_IdRow + "','" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_classRow + "')" + fn_cargarTablaHija + "\"  class=\"rowTabla" + ls_ordenTB + " " + this.ls_classTabla + " " + this.ls_classTablaPadre + "\">";
             htmlTablaBodyTR += htmlTablaBodyTD;
             htmlTablaBodyTR += "</tr>";
