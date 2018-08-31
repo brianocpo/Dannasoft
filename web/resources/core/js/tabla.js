@@ -206,13 +206,8 @@ function verificarCambiosTablas(ordenTB)
 
             var NumFilasInsertadas = Tabla.TablaBDD[i].FilasInsertadas.length;
             if (NumFilasInsertadas > 0)
-            {
-                if(getValorFilasNuevas()==1){
-                    return 1; 
-                }else{
-                     return 0;
-                }
-
+            {               
+                    return 1;               
             }
         }
     }
@@ -487,7 +482,7 @@ function crearComboDefecto(nombre_column, codigoPadreFK1) {
         if (JsonTablaH.ls_nombre_campo_padre == nombre_column) {
             var bloquearColumn = "disabled";
             codigoPadreFK = codigoPadreFK1;
-            console.log("Codigo padre=" + codigoPadreFK);
+            console.log("Codigo padreeee=" + codigoPadreFK1);
             var index_col = findIndexColumn(nombre_column);
             //ColumnsTable contiene la estructura en General común de todo el GRID
             var codigoSelect = ColumnsTable[index_col].data_dropdown.codigo_dw;
@@ -523,7 +518,7 @@ function crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_selec
             valorDefctoColumn = JsonTablaH.ls_valor_codigo_padre;
         }
     } catch (err) {
-        document.getElementById("demo").innerHTML = err.message;
+        console.log(err.message);
     }
 
     var TypeData = "";
@@ -788,7 +783,7 @@ function GuardarDataConfirm(titulo, mensaje,ordenTB1) {
                 "class": "btn btn-primary btn-minier",
                 click: function () {
                     $(this).dialog("close");
-                    guardarTabla();
+                    guardarTabla(0);
                     IdColumnSelect="";
                     mensajeAccion("Exito", "información guardada", "");
                 }
@@ -844,13 +839,15 @@ function eliminarMensaje(elemento)
 }
 /*-----------------------------GUARDAR - INSERTAR -ACTUALIZAR - ELIMINAR TABLAS---------------------------------*/
 
-function guardarTabla()
-{   
-    
-    var jsonString;   
-    if(getValorFilasNuevas()==1){    //En caso de nuevas columnas hay que cargar los valores        
-        jsonString= JSON.stringify(Tabla); 
-    }else{
+function guardarTabla(guardadoDirecto)
+{   var jsonString; 
+    if(guardadoDirecto===1){
+        eliminarObjeto();
+        if(getValorFilasNuevas()===1){    //En caso de nuevas columnas hay que cargar los valores        
+          jsonString= JSON.stringify(Tabla); 
+        }
+    }      
+    else{
         jsonString= JSON.stringify(Tabla) ;
     }
 
@@ -891,7 +888,6 @@ function insertarFilaNueva()
 }
 function insertRow()
 {    
-    console.log(JsonTablaHTemp);
     //Guardar en un arreglo la estructura principal de la TABLA identificado por su ORDEN
     RowsTableTEMP[ls_ordenTB] = RowsTable;
     ColumnsTableTEMP[ls_ordenTB] = ColumnsTable;
@@ -903,7 +899,9 @@ function insertRow()
     var nombreCampoFK = "";
     var codigoPadreFk = "";
     try
-    {   JsonTablaH=JsonTablaHTemp[ls_ordenTB - 1];
+    {   
+        console.log(JsonTablaH);
+        JsonTablaH=JsonTablaHTemp[ls_ordenTB - 1];
         if (JsonTablaH.length == 0)
         {
             nombreCampoFK = "";
@@ -974,7 +972,7 @@ function insertRow()
             }
         }
 
-         console.log(nombreCampoFK);
+        
         ////////////////////////////////////////////////////
 
         filaSelectID[ls_ordenTB] = idNuevaFila;
@@ -988,17 +986,14 @@ function insertRow()
         }
         var codigoPK = "N" + ls_ordenTB + numeracionFila;
         
-        setearFilaInsertada(); 
+        setearFilaInsertada();         
         if(PKTablaPadre.length>0){InsertFila(codigoPK,PKTablaPadre,nombreCampoFK);}else{
             InsertFila(codigoPK,"","");
-        }
-        
+        }        
         var FK=false;
-        
-        
         //SI se conoce el total de columnas - en caso de que ya existan registros anteriores
         if (Tcolumns > 0)
-        {
+        {  
             for (var j = 0; j < Tcolumns; j++)
             {   
                 // añadimos las columnas
@@ -1041,7 +1036,7 @@ function insertRow()
         } else //SI no se conoce el total de columnas se consulta al ColumnsTable -  solo en caso de ser una tabla sin registros
         {   
             for (var j = 0; j < ColumnsTable.length; j++)
-            {
+            {   
                 // añadimos las columnas
                 var valor = "";
                 var nombreColumn = "'" + getNameColumn(j) + "'";
@@ -1052,7 +1047,7 @@ function insertRow()
                     if (PKTablaPadre.indexOf("N") >= 0) {
                         valor = PKTablaPadre;
                     } else {
-                        valor = crearComboDefecto(nombreCampoFK, codigoPadreFk);
+                        valor = crearComboDefecto(nombreCampoFK, PKTablaPadre);
                     }
                     FK=true;
                 }else{
@@ -1088,8 +1083,7 @@ function insertRow()
         mensajeAccion("Informativo", "Seleccione la Tabla para poder insertar una nueva Fila", "");
         nuevaFila = "";
         return 0;
-    }
-  
+    }  
     return 0;
 }
 function updateColumn()
@@ -1191,7 +1185,7 @@ function InsertColumn(NomColumna,TipoValor,Valor,FK,IDColumn)
 }
 
 function getValorFilasNuevas(){
-    eliminarObjeto();
+    
     for (var i = 0; i < Tabla.TablaBDD.length; i++)
     {   var ordenTB=Tabla.TablaBDD[i].OredenTabla;
         if (Tabla.TablaBDD[i].FilasInsertadas.length>0)
@@ -1221,7 +1215,7 @@ function getValorFilasNuevas(){
                         Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].TipoValor=TipoValor;
                 }               
             }
-        }       
+        }     
     }
     
     return 1;
@@ -1316,8 +1310,10 @@ function setToolTip(element, title_tool)
 }
 function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1)
 {   
-    
-    //Guarda el PK de la fila seleccionada para cada tabla
+       clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1); 
+}
+function clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1)
+{
     FilaIDTemp[ordenTB]=filaSelectID[ordenTB];
     filaSelectID[ordenTB] = IdRowFocu;
 
@@ -1327,7 +1323,7 @@ function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows
     if (inicializarTabla(IdTabla1, NombreCampPK, jsonRows, jsonColumns, nombreTabla, ordenTB) === 1)
     {
         EstiloFilaActiva();
-    }
+    } 
 }
 function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect)
 {   
@@ -1337,12 +1333,23 @@ function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, 
     columTablaSelect[ordenTB]=ls_IdRow;
     
     if ((parseInt(columTablaSelectTEMP[ordenTB]) != parseInt(columTablaSelect[ordenTB])) && parseInt(columTablaSelectTEMP[ordenTB])>0) {
-        if (verificarCambiosTablas(ordenTB) == 1)
-        { 
-            GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
+        if (verificarCambiosTablas(ordenTB) === 1)
+        {   eliminarObjeto();
+            if(getValorFilasNuevas()===1){
+                console.log(" getColumn Datos nuevos cargados");
+                GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
+                clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect);
+            } 
+        }else{
+            clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect);
         } 
-    }
-    /*Setear los valores iniciales al seleccionar la columna*/
+    }else{
+            clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect);
+    } 
+    
+}
+function clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect){
+  /*Setear los valores iniciales al seleccionar la columna*/
     if (inicializarTabla(IdTabla1, NombreCampPK, jsonRows, jsonColumns, nombreTabla, ordenTB) === 1)
     {
         if (IdColumnSelect !== nombre_column || IndexSelect_row !== index_row)
@@ -1350,7 +1357,7 @@ function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, 
             var elementColumn = $("#col" + ordenTB + "_" + index_row + "_" + index_column);
             crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_select, boolNuevo);
         }
-    }
+    }  
 }
 function getRowNueva(idNuevaFila1, ordenTB, classNuevaFila1, NombreCampoPKTB1, ls_nombreTabla1, IdTabla1)
 {

@@ -20,7 +20,7 @@
             <button type="button" class="btn btn-primary" onclick="deletRow()" onmouseover="setToolTip(this, 'Eliminar')" >
                 <span  class = "glyphicon glyphicon-remove" > </span>
             </button>
-            <button type="button" class="btn btn-primary" onclick="guardarTabla()" onmouseover="setToolTip(this, 'Guardar')">
+            <button type="button" class="btn btn-primary" onclick="guardarTabla(1)" onmouseover="setToolTip(this, 'Guardar')">
                 <span  class = "glyphicon glyphicon-floppy-disk" > </span>
             </button>
             Buscar:<input type="text" id="inp_busqueda" onkeyup="busquedaTabla()" onmouseover="setToolTip(this,'Seleccione la tabla y digite su búsqueda')"/> <span class="glyphicon glyphicon-search"></span>

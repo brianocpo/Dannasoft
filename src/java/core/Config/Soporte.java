@@ -114,6 +114,7 @@ public class Soporte {
                     ls_camposInsert=acortarString(ls_camposInsert, 1);
                     ls_valuesInsert=acortarString(ls_valuesInsert, 1);                
                     ls_sqlInsert=ls_sqlInsert+" ("+ls_camposInsert+") VALUES ("+ls_valuesInsert+")";
+                    System.out.println(ls_sqlInsert);
                     if(CrudGenerico.ejecutarSQLSinCommit(ls_sqlInsert)==1){
                         if(ls_nombreCampoFK.length()<=0){
                            li_codigoFK=CrudGenerico.getMaxID(ls_nombreCampoPK,this.EsquemaBaseDatos,ls_nombreTablaPK);
