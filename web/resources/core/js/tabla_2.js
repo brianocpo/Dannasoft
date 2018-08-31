@@ -258,7 +258,7 @@ function getColumnasActualizadas(ColumnasActualizada, NomColumna1)
 
 
 function findTypeColumn(nombre_column,ordenTB)
-{   console.log(RowsTableTEMP);
+{   
     var Rows=RowsTableTEMP[ordenTB];
     var Columns=ColumnsTableTEMP[ordenTB];
     var nombre_columnCompare = "";
@@ -873,9 +873,10 @@ function insertarFilaNueva()
     console.log(Tabla);
 }
 function insertRow()
-{   //Guardar en un arreglo la estructura principal de la TABLA identificado por su ORDEN
-    RowsTableTEMP[ls_ordenTB] = RowsTable;
-    ColumnsTableTEMP[ls_ordenTB] = ColumnsTable;
+{   
+//Guardar en un arreglo la estructura principal de la TABLA identificado por su ORDEN
+//    RowsTableTEMP[ls_ordenTB] = RowsTable;
+//    ColumnsTableTEMP[ls_ordenTB] = ColumnsTable;
     //Setear el objeto que este activo para edicion
     eliminarObjeto();
     //Setear el CodigoCampoPKTB carcado en el evento onclick de cada columna

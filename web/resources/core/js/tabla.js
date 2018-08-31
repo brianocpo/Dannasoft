@@ -103,21 +103,17 @@ function deletRow() //Evento Ejecutado desde los Botones principales
     if (CodigoCampoPKTB.length > 0)//Verifica si exite una clave Primaria
     {
         var codigoCampoTempora = CodigoCampoPKTB.split("=");//en el caso de una fila nueva CodigoCampoPKTB se rescribe
-
         if (codigoCampoTempora[0] != "N")//N significa que si es una columna Nueva
         {
             if(eliminarFilaTabla(ls_nombreTabla, NombreCampoPKTB, ls_ordenTB, CodigoCampoPKTB)===1){
                 selectUltimaFilaTabla();
-            }
-            
+            }            
         } else
         {
-//            mensajeAccion("Alerta", "Fila Eliminada", "");
             $("." + codigoCampoTempora[1]).remove();            
             deleteRowCadenaInsert(codigoCampoTempora[2]);
             //Si se elimina una fila se posiciona el cursor en la ultima fila de la tabla
-            selectUltimaFilaTabla();
-            console.log(Tabla);
+            selectUltimaFilaTabla();            
         }
     }
 }
@@ -161,7 +157,6 @@ function eliminarFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1)
     }else{ return 0;}
         mensajeAccion("Alerta", "Fila Eliminada", "");
     return 1;
-
 }
 function BusFilasActualizadas()
 {
@@ -482,7 +477,6 @@ function crearComboDefecto(nombre_column, codigoPadreFK1) {
         if (JsonTablaH.ls_nombre_campo_padre == nombre_column) {
             var bloquearColumn = "disabled";
             codigoPadreFK = codigoPadreFK1;
-            console.log("Codigo padreeee=" + codigoPadreFK1);
             var index_col = findIndexColumn(nombre_column);
             //ColumnsTable contiene la estructura en General común de todo el GRID
             var codigoSelect = ColumnsTable[index_col].data_dropdown.codigo_dw;
@@ -614,8 +608,6 @@ function verificarDetalleTabla(NomTabla2, ClassRow1)
 {
     //En caso de que la fila tenga una tablaDetalle
     var bl_estado = false;
-    console.log("Detalle="+NomTabla2);
-    console.log(ClassRow1);
     if (NomTabla2.length > 0) {
         //Comprueba los detalles 
         $('.' + ClassRow1).each(function (rowTabla) {
@@ -724,7 +716,6 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
                             $("#R"+ordenTemp+"_0").click(); 
                             removeLoad();                            
                             if(ordenTBFinal==ordenTemp){
-                                console.log(RowID);
                                 fila=$("#"+RowID);
                                 $(fila).click();                                
                             }
@@ -840,17 +831,17 @@ function eliminarMensaje(elemento)
 /*-----------------------------GUARDAR - INSERTAR -ACTUALIZAR - ELIMINAR TABLAS---------------------------------*/
 
 function guardarTabla(guardadoDirecto)
-{   var jsonString; 
-    if(guardadoDirecto===1){
+{   
+    var jsonString; 
+    if(guardadoDirecto==1){
         eliminarObjeto();
-        if(getValorFilasNuevas()===1){    //En caso de nuevas columnas hay que cargar los valores        
+        if(getValorFilasNuevas()==1){    //En caso de nuevas columnas hay que cargar los valores        
           jsonString= JSON.stringify(Tabla); 
         }
     }      
     else{
         jsonString= JSON.stringify(Tabla) ;
     }
-
         $.ajax({
             data: jsonString,
             type: "POST",
@@ -1185,7 +1176,7 @@ function InsertColumn(NomColumna,TipoValor,Valor,FK,IDColumn)
 }
 
 function getValorFilasNuevas(){
-    
+
     for (var i = 0; i < Tabla.TablaBDD.length; i++)
     {   var ordenTB=Tabla.TablaBDD[i].OredenTabla;
         if (Tabla.TablaBDD[i].FilasInsertadas.length>0)
@@ -1194,17 +1185,25 @@ function getValorFilasNuevas(){
             {  
                 for (var g = 0; g < Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas.length; g++)
                 {
+                        //Datos de la tabla padre  codigoFK
+                        var codigoPKPadre=Tabla.TablaBDD[i].FilasInsertadas[f].codigoFK;
+                        var nombrePKPadre=Tabla.TablaBDD[i].FilasInsertadas[f].nombreCampoFK;
+                    
                         var NombreColumn=Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].NomColumna;
-                        var IDColumn=Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].IDColumn;
-                        
+                        var IDColumn=Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].IDColumn;                        
                         var Valor="";
+                        //Verificacion con la estructura de la tabla la columna FK
                         var ColumnTEMP=ColumnsTableTEMP[ordenTB];
                         var index_col = findIndexColumnVariaTablas(NombreColumn,ColumnTEMP);
-                        
-                        
                         if(ColumnTEMP[index_col].lb_FK === true)
-                        {
-                            Valor = ColumnTEMP[index_col].data_dropdown.codigo_dw[0];
+                        {   
+                            var html_column=$("#"+IDColumn).html();
+                            if(html_column.indexOf("<select")==0)
+                            {
+                                Valor=$("#"+IDColumn+" select").val();
+                            }else{
+                                Valor=html_column;
+                            }                   
                             Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].FK=true;
                         }else{
                             Valor=$("#"+IDColumn.trim()).html();

@@ -64,7 +64,7 @@ public class Soporte {
         String ls_tipoValor="";
         Boolean lb_exiten_filas=false;
         String ls_nombreCampoFK="";
-        String ls_codigoPK="";
+        String ls_codigoPKPadre="";
         //Comprueba si exiten nuevas filas en las tablas
         for (int i = AccionesTabla.getTablaBDD().size()-1; i >=0; i--) {
             if(AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().size()>0){
@@ -83,7 +83,7 @@ public class Soporte {
                     ls_sqlInsert="INSERT INTO "+this.EsquemaBaseDatos+"."+ls_nombreTablaPK+" ";
                     ls_camposInsert="";
                     ls_valuesInsert="";
-
+                    ls_codigoPKPadre=AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getCodigoPK();
                     if(AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getNombreCampoFK().length()>0){
                         ls_nombreCampoFK=AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getNombreCampoFK();
                     }                    
@@ -114,9 +114,9 @@ public class Soporte {
                     ls_camposInsert=acortarString(ls_camposInsert, 1);
                     ls_valuesInsert=acortarString(ls_valuesInsert, 1);                
                     ls_sqlInsert=ls_sqlInsert+" ("+ls_camposInsert+") VALUES ("+ls_valuesInsert+")";
-                    System.out.println(ls_sqlInsert);
+                    System.out.println(ls_sqlInsert+" fk="+ls_codigoPKPadre);
                     if(CrudGenerico.ejecutarSQLSinCommit(ls_sqlInsert)==1){
-                        if(ls_nombreCampoFK.length()<=0){
+                        if(ls_codigoPKPadre.indexOf("N")==0){
                            li_codigoFK=CrudGenerico.getMaxID(ls_nombreCampoPK,this.EsquemaBaseDatos,ls_nombreTablaPK);
                            ls_nombreCampoFK=ls_nombreCampoPK;      
                         }                    
