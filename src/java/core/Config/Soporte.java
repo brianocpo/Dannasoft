@@ -64,7 +64,7 @@ public class Soporte {
         String ls_tipoValor="";
         Boolean lb_exiten_filas=false;
         String ls_nombreCampoFK="";
-        String ls_codigoPKPadre="";
+
         //Comprueba si exiten nuevas filas en las tablas
         for (int i = AccionesTabla.getTablaBDD().size()-1; i >=0; i--) {
             if(AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().size()>0){
@@ -78,26 +78,26 @@ public class Soporte {
             for (int i = AccionesTabla.getTablaBDD().size()-1; i >=0; i--) {
                 ls_nombreTablaPK=AccionesTabla.getTablaBDD().get(i).getNomTabla();
                 ls_nombreCampoPK=AccionesTabla.getTablaBDD().get(i).getNomCampoPK();            
-
+                //RECORRO LAS FILAS INSERTADAS
                 for (int a = 0; a < AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().size(); a++) {
                     ls_sqlInsert="INSERT INTO "+this.EsquemaBaseDatos+"."+ls_nombreTablaPK+" ";
                     ls_camposInsert="";
                     ls_valuesInsert="";
                     ls_codigoPKPadre=AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getCodigoPK();
+                    
                     if(AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getNombreCampoFK().length()>0){
                         ls_nombreCampoFK=AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getNombreCampoFK();
-                    }                    
+                    }
+                    //EN CASO DE QUE TENGA CODIGO FORANEO SE RECUPERA Y SE AGREGA AL INSERT                    
                     if(AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getCodigoFK().length()>0){
                         boolean resultado = AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getCodigoFK().contains("N");
                         if(resultado==false){
                            li_codigoFK=Integer.parseInt(AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getCodigoFK()); 
                         }                        
                     }
-
+                    //RECORRO LAS COLUMNAS PARA ARMAR EL INSERT CON LA DATA POR CADA FILA
                     for (int b = 0; b < AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getColumnasInsertadas().size(); b++){
-
                         ls_nombreColumna=AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getColumnasInsertadas().get(b).getNomColumna();
-
                         if(ls_nombreCampoPK!=ls_nombreColumna){
                             ls_camposInsert=ls_camposInsert + ls_nombreColumna +",";
                             if(ls_nombreCampoFK==ls_nombreColumna){
@@ -114,18 +114,13 @@ public class Soporte {
                     ls_camposInsert=acortarString(ls_camposInsert, 1);
                     ls_valuesInsert=acortarString(ls_valuesInsert, 1);                
                     ls_sqlInsert=ls_sqlInsert+" ("+ls_camposInsert+") VALUES ("+ls_valuesInsert+")";
-                    System.out.println(ls_sqlInsert+" fk="+ls_codigoPKPadre);
                     if(CrudGenerico.ejecutarSQLSinCommit(ls_sqlInsert)==1){
-                        if(ls_codigoPKPadre.indexOf("N")==0){
-                           li_codigoFK=CrudGenerico.getMaxID(ls_nombreCampoPK,this.EsquemaBaseDatos,ls_nombreTablaPK);
-                           ls_nombreCampoFK=ls_nombreCampoPK;      
-                        }                    
+                        li_codigoFK=CrudGenerico.getMaxID(ls_nombreCampoPK,this.EsquemaBaseDatos,ls_nombreTablaPK);
                     }else{
                         CrudGenerico.rollbackTransaction();
                     }
-
                 }
-
+                             
             }
             CrudGenerico.commitTransaction();
         }
