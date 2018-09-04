@@ -6,6 +6,8 @@
 package core.Config;
 
 
+
+import com.google.gson.JsonObject;
 import core.Objects.obj_acciones_array_tablas;
 import java.util.List;
 
@@ -56,6 +58,7 @@ public class Soporte {
         String ls_nombreCampoPK="";
         String ls_nombreTablaPK="";
         Integer li_codigoFK=0;
+        String ls_codigoFK="";
         String ls_sqlInsert="";
         String ls_camposInsert="";
         String ls_valuesInsert="";
@@ -64,6 +67,9 @@ public class Soporte {
         String ls_tipoValor="";
         Boolean lb_exiten_filas=false;
         String ls_nombreCampoFK="";
+        String ls_codigoPKTEMP="";
+        String ls_codigoFKTEMP="";
+        JsonObject codigosTB = new JsonObject();
 
         //Comprueba si exiten nuevas filas en las tablas
         for (int i = AccionesTabla.getTablaBDD().size()-1; i >=0; i--) {
@@ -83,8 +89,8 @@ public class Soporte {
                     ls_sqlInsert="INSERT INTO "+this.EsquemaBaseDatos+"."+ls_nombreTablaPK+" ";
                     ls_camposInsert="";
                     ls_valuesInsert="";
-                    ls_codigoPKPadre=AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getCodigoPK();
-                    
+                    ls_codigoPKTEMP=AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getCodigoPK();
+                    ls_codigoFKTEMP=AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getCodigoFK();
                     if(AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getNombreCampoFK().length()>0){
                         ls_nombreCampoFK=AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getNombreCampoFK();
                     }
@@ -93,6 +99,15 @@ public class Soporte {
                         boolean resultado = AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getCodigoFK().contains("N");
                         if(resultado==false){
                            li_codigoFK=Integer.parseInt(AccionesTabla.getTablaBDD().get(i).getFilasInsertadas().get(a).getCodigoFK()); 
+                        }else{
+                            try {
+                                ls_codigoFK=codigosTB.get(ls_codigoFKTEMP).toString();
+                                if(ls_codigoFK.length()>0){
+                                    li_codigoFK=Integer.parseInt(ls_codigoFK);
+                                }
+                            } catch (Exception e) {
+                                System.out.println("No se encontro la clave FORANEA a la que está enlazada la tabla "+e);
+                            }                           
                         }                        
                     }
                     //RECORRO LAS COLUMNAS PARA ARMAR EL INSERT CON LA DATA POR CADA FILA
@@ -112,15 +127,19 @@ public class Soporte {
                         }                    
                     }
                     ls_camposInsert=acortarString(ls_camposInsert, 1);
-                    ls_valuesInsert=acortarString(ls_valuesInsert, 1);                
+                    ls_valuesInsert=acortarString(ls_valuesInsert, 1); 
+                    //Se arma la consulta
                     ls_sqlInsert=ls_sqlInsert+" ("+ls_camposInsert+") VALUES ("+ls_valuesInsert+")";
+                    System.out.println(ls_sqlInsert);
+                    //Se ejecuta si es satisfactoria se consulta su ID
                     if(CrudGenerico.ejecutarSQLSinCommit(ls_sqlInsert)==1){
                         li_codigoFK=CrudGenerico.getMaxID(ls_nombreCampoPK,this.EsquemaBaseDatos,ls_nombreTablaPK);
+                        codigosTB.addProperty(ls_codigoPKTEMP, li_codigoFK); 
                     }else{
                         CrudGenerico.rollbackTransaction();
                     }
                 }
-                             
+
             }
             CrudGenerico.commitTransaction();
         }

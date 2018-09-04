@@ -303,13 +303,13 @@ function findIndexColumn(nombre_column)
     }
     return index_col;
 }
-function findIndexColumnVariaTablas(nombre_column,ColumnsTB)
+function findIndexColumnVariaTablas(nombre_column,ColumnTEMP)
 {
     var index_col = -1;
     var nombre_column_temp = "";
-    for (var i = 0; i < ColumnsTB.length; i++)
+    for (var i = 0; i < ColumnTEMP.length; i++)
     {
-        nombre_column_temp = $.trim(ColumnsTB[i].ls_nombre_column);
+        nombre_column_temp = $.trim(ColumnTEMP[i].ls_nombre_column);
         if (nombre_column_temp === $.trim(nombre_column))
         {
             index_col = i;
@@ -318,18 +318,18 @@ function findIndexColumnVariaTablas(nombre_column,ColumnsTB)
     }
     return index_col;
 }
-function findCodigoSelect(index_column, valor)
+function findCodigoSelect(index_column, valor,ColumnTEMP)
 {
     var codigo = "";
     var codigoSelect = "";
     var valorSelect = "";
-    if (ColumnsTable[index_column].data_dropdown.codigo_dw.length)
+    if (ColumnTEMP[index_column].data_dropdown.codigo_dw.length)
     {
-        codigoSelect = ColumnsTable[index_column].data_dropdown.codigo_dw;
+        codigoSelect = ColumnTEMP[index_column].data_dropdown.codigo_dw;
     }
-    if (ColumnsTable[index_column].data_dropdown.valor_dw.length)
+    if (ColumnTEMP[index_column].data_dropdown.valor_dw.length)
     {
-        valorSelect = ColumnsTable[index_column].data_dropdown.valor_dw;
+        valorSelect = ColumnTEMP[index_column].data_dropdown.valor_dw;
     }
     for (var i = 0; i < valorSelect.length; i++)
     {
@@ -1175,8 +1175,23 @@ function InsertColumn(NomColumna,TipoValor,Valor,FK,IDColumn)
     FilaInsertadas.ColumnasInsertadas=vecColumnaInsertada;
 }
 
-function getValorFilasNuevas(){
 
+
+function isNumeric(texto){
+   var letras="abcdefghyjklmnñopqrstuvwxyzABCDEFGHIJKLMNOPQRTSUVWXYZ,.-_";
+   for(i=0; i<texto.length; i++){
+      if (letras.indexOf(texto.charAt(i),0)!=-1){
+         return false;
+      }
+   }
+   return true;
+}
+
+function getValorFilasNuevas(){
+    var codigo_char="";
+    var codigo_num="";
+    var numero=0;
+    var html_column;
     for (var i = 0; i < Tabla.TablaBDD.length; i++)
     {   var ordenTB=Tabla.TablaBDD[i].OredenTabla;
         if (Tabla.TablaBDD[i].FilasInsertadas.length>0)
@@ -1195,14 +1210,25 @@ function getValorFilasNuevas(){
                         //Verificacion con la estructura de la tabla la columna FK
                         var ColumnTEMP=ColumnsTableTEMP[ordenTB];
                         var index_col = findIndexColumnVariaTablas(NombreColumn,ColumnTEMP);
+                        html_column="";
                         if(ColumnTEMP[index_col].lb_FK === true)
                         {   
-                            var html_column=$("#"+IDColumn).html();
+                            html_column=$("#"+IDColumn).html();
+                            html_column=html_column.trim();
                             if(html_column.indexOf("<select")==0)
                             {
                                 Valor=$("#"+IDColumn+" select").val();
-                            }else{
-                                Valor=html_column;
+                            }else{                                
+                                //comprobar si se trata de de un texto o de clave foranea temporal
+                                codigo_char=html_column.substr(0,1);
+                                codigo_num=html_column.substr(1);
+                                if(isNumeric(codigo_num)){ numero=parseInt(codigo_num);} 
+                                
+                                if(codigo_char=='N' && numero>0){//Verificacion sies una clave foranea Temporal
+                                   Valor=html_column; 
+                                }else{//En caso de no ser busco su código con el nombre que se refleja en el DROPDOWN
+                                   Valor = findCodigoSelect(index_col, html_column,ColumnTEMP);
+                                }                                                                  
                             }                   
                             Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].FK=true;
                         }else{

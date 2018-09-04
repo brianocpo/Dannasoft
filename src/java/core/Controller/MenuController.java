@@ -61,7 +61,7 @@ public class MenuController {
         Tabla1.setLs_ordenTB("1");
         Tabla1.setTituloTabla("Usuarios");
         model.addAttribute("tabla", Tabla1.getTablaHtml());
-        return "pantalla_simple";        
+        return "sistema";        
     }
 
     @RequestMapping("/PaisCiudad")
@@ -99,7 +99,7 @@ public class MenuController {
         model.addAttribute("tabla2", Tabla2.getTablaHtml());
         model.addAttribute("tabla2", Tabla2.getTablaHtml());
         
-        return "pantalla_doble";
+        return "sistema";
     }
 
     @RequestMapping("/PaisCiudadEstado")
@@ -150,7 +150,7 @@ public class MenuController {
         model.addAttribute("tabla2", GrupTables2.getTablaHtml());  
         model.addAttribute("tabla3", Tabla3.getTablaHtml());
         
-        return "pantalla_triple";
+        return "sistema";
     }
     
     @RequestMapping("/PerfilUsuario")
@@ -168,7 +168,7 @@ public class MenuController {
         Tabla1.setTituloTabla("Perfiles de Usuarios");
         model.addAttribute("tabla", Tabla1.getTablaHtml());
         model.addAttribute("ls_schema", ls_schema);
-        return "pantalla_simple";
+        return "sistema";
     }
 
     @RequestMapping("/Opcion")
@@ -186,7 +186,7 @@ public class MenuController {
         Tabla1.setTituloTabla("Opciones del Sistema");
         model.addAttribute("tabla", Tabla1.getTablaHtml());
         model.addAttribute("ls_schema", ls_schema);
-        return "pantalla_simple";
+        return "sistema";
     }
     @RequestMapping(value = "/GetObjTable", method = RequestMethod.GET)
     public @ResponseBody String getData(@RequestBody String jsonString) {
