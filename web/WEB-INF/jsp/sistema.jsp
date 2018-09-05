@@ -9,8 +9,8 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
+        <meta name="description" content="Generico Dannasoft v1.0">
+        <meta name="author" content="Brian Montenegro">
 
         <title>Dannasoft - Login</title>
 
@@ -19,32 +19,33 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/font-awesome/4.5.0/css/font-awesome.min.css" />
 
         <!-- page specific plugin styles -->
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/jquery-ui.min.css" />
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/bootstrap-datepicker3.min.css" />
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/ui.jqgrid.min.css" />
         <!-- text fonts -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/fonts.googleapis.com.css" />
 
         <!-- ace styles -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
-
         <!--[if lte IE 9]>
-                <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
+                <link rel="stylesheet" href="assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
         <![endif]-->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/ace-skins.min.css" />
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/ace-rtl.min.css" />
-
         <!--[if lte IE 9]>
-          <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/ace-ie.min.css" />
-        <![endif]-->
+            <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
+          <![endif]-->
 
-        <!-- inline styles related to this page -->
+          <!-- inline styles related to this page -->
 
-        <!-- ace settings handler -->
-        <script src="${pageContext.request.contextPath}/resources/assets/js/ace-extra.min.js"></script>
+          <!-- ace settings handler -->
+          <script src="${pageContext.request.contextPath}/resources/assets/js/ace-extra.min.js"></script>
 
-        <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+          <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
-        <!--[if lte IE 8]>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/html5shiv.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/respond.min.js"></script>
+          <!--[if lte IE 8]>
+          <script src="assets/js/html5shiv.min.js"></script>
+          <script src="assets/js/respond.min.js"></script>
         <![endif]-->
         <title>Dannasoft - Login</title>
     </head>
@@ -103,7 +104,7 @@
                             <div class="col-xs-12">
                                
                                  <%@ include file="pantalla_triple.jsp" %>
-                                
+                                 <div id="grid-pager"></div>
                             </div><!-- /.col -->
                         </div><!-- /.row -->
                     </div><!-- /.page-content -->
@@ -128,12 +129,6 @@
             </a>
         </div><!-- /.main-container -->
 
-        <!-- basic scripts -->
-
-        <!--[if !IE]> -->
-        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery-2.1.4.min.js"></script>
-
-        <!-- <![endif]-->
 
         <!--[if IE]>
         <script src="${pageContext.request.contextPath}/resources/assets/js/jquery-1.11.3.min.js"></script>
@@ -145,21 +140,17 @@
         <script src="${pageContext.request.contextPath}/resources/assets/js/bootstrap.min.js"></script>
 
         <!-- page specific plugin scripts -->
-
-        <!--[if lte IE 8]>
-          <script src="${pageContext.request.contextPath}/resources/assets/js/excanvas.min.js"></script>
-        <![endif]-->
-        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery-ui.custom.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery.ui.touch-punch.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery.easypiechart.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery.sparkline.index.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery.flot.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery.flot.pie.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery.flot.resize.min.js"></script>
-
+        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery.dataTables.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery.dataTables.bootstrap.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/assets/js/dataTables.buttons.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/assets/js/buttons.flash.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/assets/js/buttons.html5.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/assets/js/buttons.print.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/assets/js/buttons.colVis.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/assets/js/dataTables.select.min.js"></script>
         <!-- ace scripts -->
         <script src="${pageContext.request.contextPath}/resources/assets/js/ace-elements.min.js"></script>
         <script src="${pageContext.request.contextPath}/resources/assets/js/ace.min.js"></script>
-
+        
     </body>
 </html>

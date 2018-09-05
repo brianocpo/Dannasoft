@@ -221,7 +221,14 @@ public class obj_tabla implements Serializable {
                 + ".rowActive" + ls_ordenTB + " {background-color:  #286090; color: #ffffff}"
                 + ".rowTablaThead" + ls_ordenTB + " {cursor:  pointer }"
                 + "</style>";
-        htmlTabla += scriptTabla + styleTabla;
+        //Script DataTable
+        String DataTabla ="<script type=\"text/javascript\">\n" +
+"			$(document).ready( function () {\n" +
+"			    $('#"+ this.ls_Id_Tabla+"').DataTable();\n" +
+"			} );\n" +
+"		</script>";
+        htmlTabla += scriptTabla + styleTabla + DataTabla;
+        
         return htmlTabla;
     }
 
