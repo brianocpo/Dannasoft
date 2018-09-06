@@ -7,8 +7,10 @@ package core.Config;
 
 
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import core.Objects.obj_acciones_array_tablas;
+import core.Objects.obj_tabla;
 import java.util.List;
 
 /**
@@ -223,38 +225,16 @@ public class Soporte {
         }
         return li_numeroCambios;        
     }
-
-    public String[] ArrayUpdatetRow(String[] data, String Tabla) {
-//         List lst=null;
-        String[] resp = new String[data.length];
-//         String [] rowData;
-//
-//         String nombre_campoPK="";
-//         String campo_update="";
-//         String id="";
-//         String id_anterior="";
-//         String ls_sql="";
-//         for(int i=0;i<data.length;i++)
-//         {
-//             rowData=data[i].split(":");
-//             nombre_campoPK=rowData[0];
-//             id=rowData[1];
-//             campo_update=rowData[2];
-//
-//            
-//                    ls_sql="UPDATE "+SHECMAN+"."+Tabla+" SET "+campo_update+"WHERE  "+nombre_campoPK+"="+id; 
-//                    resp[i]=ls_sql; 
-//                    campo_update="";   
-//            
-//           
-//             id_anterior=id;    
-//         }
-        return resp;
-    }
     
     public static void borrarGarbage() {
             Runtime garbage = Runtime.getRuntime();        
             garbage.gc();
+    }
+    
+    public String convertObjTablaJson(obj_tabla tabla)
+    {   
+        String Jsontabla=new Gson().toJson(tabla);
+        return Jsontabla;
     }
 
 }

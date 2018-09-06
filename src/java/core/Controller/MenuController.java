@@ -28,9 +28,9 @@ public class MenuController {
     String ls_catalog = "Dannasoft";
     String ls_schema = "mod_administracion";
     String ls_nombre_software = "Dannasoft";  
-   
+    Soporte so;
     public MenuController(){
-        Soporte so= new Soporte();
+        so= new Soporte();
         so.borrarGarbage();
         System.out.println("borro garbagecolector()");
     }
@@ -49,24 +49,28 @@ public class MenuController {
 
     @RequestMapping("/Usuarios")
     public String VerDatosTabla(Model model) {
-        model.addAttribute("ls_schema", ls_schema);
-        String ls_nombreTabla1 = "s_usuario";
+       
         String ls_query = "";
         String ls_where = "";
         String ls_orden = "nombre_usu ASC";
-        obj_tabla Tabla1 = new obj_tabla();
-        Tabla1.configTabla(ls_catalog, ls_schema, ls_nombreTabla1, ls_query, ls_where, ls_orden);
-        Tabla1.crearTabla();
+        obj_tabla Tabla1 = new obj_tabla();//Se instancia 
+        Tabla1.configTabla(ls_catalog, ls_schema, "s_usuario", ls_query, ls_where, ls_orden);//Se configura la tabla
+        //Se configura la tabla indispensable seguir el orden
+        Tabla1.setLb_paginar(true);
+        Tabla1.setLi_num_reg_x_pagina(1);
         Tabla1.setLs_Id_Tabla("s_usuario");
         Tabla1.setLs_ordenTB("1");
-        Tabla1.setTituloTabla("Usuarios");
-        model.addAttribute("tabla", Tabla1.getTablaHtml());
+        Tabla1.setTituloTabla("Usuarios");                
+        Tabla1.crearTabla(); //Se crea la tabla
+        Tabla1.setObjsonTabla(so.convertObjTablaJson(Tabla1));//si estructura JSON se almacena en una variable ObjsonTabla
+        
+        model.addAttribute("tabla1", Tabla1.getTablaHtml());
         return "sistema";        
     }
 
     @RequestMapping("/PaisCiudad")
     public String PaisCiudad(Model model) {
-        model.addAttribute("ls_schema", ls_schema);
+      
         //Tabla Pais
         String ls_query = "";
         String ls_where = "";
@@ -94,7 +98,7 @@ public class MenuController {
         
         //Se asocia la tabla hija a la tabla padre
         obj_grupo_tabla GrupTables = new obj_grupo_tabla(Tabla1, Tabla2);
-        model.addAttribute("tabla", GrupTables.getTablaHtml());
+        model.addAttribute("tabla1", GrupTables.getTablaHtml());
         //Se genera solo el esquema de la tabla hija
         model.addAttribute("tabla2", Tabla2.getTablaHtml());
         model.addAttribute("tabla2", Tabla2.getTablaHtml());
@@ -146,7 +150,7 @@ public class MenuController {
         obj_grupo_tabla GrupTables = new obj_grupo_tabla(Tabla1, Tabla2);
         obj_grupo_tabla GrupTables2 = new obj_grupo_tabla(Tabla2, Tabla3);
         
-        model.addAttribute("tabla", GrupTables.getTablaHtml());        
+        model.addAttribute("tabla1", GrupTables.getTablaHtml());        
         model.addAttribute("tabla2", GrupTables2.getTablaHtml());  
         model.addAttribute("tabla3", Tabla3.getTablaHtml());
         
@@ -166,7 +170,7 @@ public class MenuController {
         Tabla1.setLs_Id_Tabla("s_perfil_usuario");
         Tabla1.setLs_ordenTB("1");
         Tabla1.setTituloTabla("Perfiles de Usuarios");
-        model.addAttribute("tabla", Tabla1.getTablaHtml());
+        model.addAttribute("tabla1", Tabla1.getTablaHtml());
         model.addAttribute("ls_schema", ls_schema);
         return "sistema";
     }
@@ -184,7 +188,7 @@ public class MenuController {
         Tabla1.setLs_Id_Tabla("s_opcion");
         Tabla1.setLs_ordenTB("1");
         Tabla1.setTituloTabla("Opciones del Sistema");
-        model.addAttribute("tabla", Tabla1.getTablaHtml());
+        model.addAttribute("tabla1", Tabla1.getTablaHtml());
         model.addAttribute("ls_schema", ls_schema);
         return "sistema";
     }

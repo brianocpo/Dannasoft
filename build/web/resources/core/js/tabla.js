@@ -735,7 +735,7 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
                         }
                     });
         }
-//        console.log("entro cargar_TablaHija"); 
+
     } else {
 
         removeLoad();
@@ -1473,4 +1473,37 @@ function loadTB(NomTabla) {
     if (FristIdRowTabla.length > 0) {
             $("#" + FristIdRowTabla).click();      
     }else{console.log(NomTabla+" no tiene filas");}
+}
+function actualizarTabla(){
+    if(ls_ordenTB.length>0){
+        
+      var ObjsonTabla = jQuery.parseJSON(ObjsonTabla1); 
+      ObjsonTabla.li_num_reg_x_pagina=2;
+      ObjsonTabla.ls_IdDivTabla="tabla1";
+      console.log(ObjsonTabla);
+      var jsonString = JSON.stringify(ObjsonTabla);
+      $.ajax({
+                data: jsonString,
+                type: "POST",
+                dataType: "json",
+                contentType: 'application/json',
+                url: "post/json"
+            })
+                    .done(function (data, textStatus, jqXHR) {
+                        if (console && console.log) {
+                            
+                            $('#' + ObjsonTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);
+                            console.log("Tabla "+ls_ordenTB+" Actualizada");
+                            $("#R"+ls_ordenTB+"_0").click(); 
+                            removeLoad();                                                      
+                        }
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        if (console && console.log) {
+                            $('#' + ObjsonTabla.ls_IdDivTabla.toString().trim() + " tbody").html("");                                                      
+                            console.log("La solicitud a fallado: " + textStatus + errorThrown);
+                            removeLoad();
+                        }
+                    });
+    }    
 }

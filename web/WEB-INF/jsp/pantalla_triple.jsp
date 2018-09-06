@@ -13,12 +13,17 @@
     <button type="button" class="btn btn-primary" onclick="guardarTabla(1)" onmouseover="setToolTip(this, 'Guardar')">
         <span  class = "glyphicon glyphicon-floppy-disk" > </span>
     </button>
+    
+    <button type="button" class="btn btn-primary"  onclick="actualizarTabla()" onmouseover="setToolTip(this, 'Actualizar')">
+        <span> Actual.</span>
+    </button>
+    
     Buscar:<input type="text" id="inp_busqueda" onkeyup="busquedaTabla()" onmouseover="setToolTip(this,'Seleccione la tabla y digite su búsqueda')"/> <span class="glyphicon glyphicon-search"></span>
 </div>
 
 <!--Sección de Tablas-->
 <div id="contenedor_tablas">
-    <div class="table-responsive" id="tabla1">${tabla} </div> 
+    <div class="table-responsive" id="tabla1">${tabla1} </div> 
     <div class="table-responsive" id="tabla2">${tabla2}</div>
     <div class="table-responsive" id="tabla3">${tabla3}</div>
 </div>

@@ -69,7 +69,7 @@ public class CrudGenerico {
         }
     }
 
-    public List getDataSQL(String table_catalog, String table_schema, String ls_tabla, String ls_query, String ls_where, String ls_orden) {
+    public List getDataSQL(String table_catalog, String table_schema, String ls_tabla, String ls_query, String ls_where, String ls_orden ,String ls_paginacion) {
         List lst =null;
         String ls_campos_tabla = "";
         String[] la_campos_tabla = null;
@@ -84,12 +84,19 @@ public class CrudGenerico {
         if (ls_query.length() > 0) {
             ls_sql = ls_query;
         }
+        //Condicion
         if (ls_where.length() > 0) {
             ls_sql = ls_sql + " WHERE " + ls_where;
         }
+        //Ordenamiento
         if (ls_orden.length() > 0) {
             ls_sql = ls_sql + " ORDER BY " + ls_orden;
         }
+        //Paginacion
+        if (ls_paginacion.length() > 0) {
+            ls_sql = ls_sql + " " + ls_paginacion;
+        }
+       
         try {
             Query query = Conexion.getSession().createSQLQuery(ls_sql);
             lst=query.list();
@@ -255,13 +262,13 @@ public class CrudGenerico {
         return lista_gridColumn;
     }
 
-    public void crearListArrayRowsTable(String ls_catalog, String ls_schema, String ls_name_tabla, String ls_query, String ls_where, String ls_orden) {
+    public void crearListArrayRowsTable(String ls_catalog, String ls_schema, String ls_name_tabla, String ls_query, String ls_where, String ls_orden, String ls_paginacion) {
         setLs_schema(ls_schema);
         setLs_catalog(ls_catalog);
         //Obtiene las Columnas del Esquema de la BDD de la tabla
         this.lista_gridColumn = getColumEsquemaBDD(ls_catalog, ls_schema, ls_name_tabla);
         //Data de toda la Tabla
-        this.dataTablaRows = getDataSQL(ls_catalog, ls_schema, ls_name_tabla, ls_query, ls_where, ls_orden);
+        this.dataTablaRows = getDataSQL(ls_catalog, ls_schema, ls_name_tabla, ls_query, ls_where, ls_orden, ls_paginacion);
         this.lista_gridRow.clear();
 
         //Arma las filas con sus respectivas columnas y su Información para cada Campo de la tabla
@@ -470,6 +477,20 @@ public class CrudGenerico {
             maxID = 0;
         } 
         return maxID;
+    }
+    
+    public static Integer getTotalRegistros(String EsquemaBaseDatos,String ls_nombreTablaPK) {
+        String ls_sql="SELECT count(*) as total FROM "+EsquemaBaseDatos+"."+ls_nombreTablaPK;
+        System.out.println(ls_sql);
+        Integer li_total=0;  
+        try{           
+            Query query= Conexion.getSession().createSQLQuery(ls_sql);
+            li_total=Integer.parseInt(String.valueOf(query.uniqueResult()));
+           
+        } catch (Exception e) {           
+            li_total = 0;
+        } 
+        return li_total;
     }
 
     public Integer buscarGridDropdown(String codigo1_opc) {

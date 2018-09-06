@@ -17,32 +17,39 @@ import java.io.Serializable;
  */
 public class obj_tabla implements Serializable {
 
-    List<obj_row> lista_gridRow;
-    List<obj_column> lista_gridColumn;
-    String ls_catalog;
-    String ls_schema;
-    String ls_name_tabla;
-    String ls_nombre_colPK;
-    String ls_query;
-    String ls_where;
-    String ls_orden;
-    String htmlTabla;
-    String ls_Id_Tabla;
-    String ls_ordenTB;
-    String ls_AltoTabla;
-    String TituloTabla = "";
-    Boolean lb_cargaHija;
+    private List<obj_row> lista_gridRow;
+    private List<obj_column> lista_gridColumn;
+    private String ls_catalog;
+    private String ls_schema;
+    private String ls_name_tabla;
+    private String ls_nombre_colPK;
+    private String ls_query;
+    private String ls_where;
+    private String ls_orden;
+    private String htmlTabla;
+    private String ls_Id_Tabla;
+    private String ls_ordenTB;
+    private String ls_AltoTabla;
+    private String TituloTabla = "";
+    private Boolean lb_cargaHija;
     //En caso de que esta tabla llame a otra
-    String ls_nombre_campo_padre; //nombre del campo codigo de la tabla  : Ejem: codigo_pai
-    String ls_valor_codigo_padre;
-    String ls_valor_nombre_padre;
-    String ls_condicion;
-    String ls_IdDivTabla;
-    String ls_classTabla;
-    String ls_classTablaPadre;
+    private String ls_nombre_campo_padre; //nombre del campo codigo de la tabla  : Ejem: codigo_pai
+    private String ls_valor_codigo_padre;
+    private String ls_valor_nombre_padre;
+    private String ls_condicion;
+    private String ls_IdDivTabla;
+    private String ls_classTabla;
+    private String ls_classTablaPadre;
     //Datos para la paguinacion
-    Boolean ls_paginacion;
-    Integer li_reg_pagina;
+    private obj_paginador paginador;
+    private Integer li_num_reg_x_pagina;
+    private Boolean lb_paginar;
+    private Integer li_limit;
+    private String  ls_paginacion;
+    private Integer li_total_rows;    
+    //Estructura OBJETO JSON
+    private String ObjsonTabla;
+    
     public obj_tabla() {
         this.htmlTabla = "";
         this.ls_Id_Tabla = "";
@@ -58,8 +65,13 @@ public class obj_tabla implements Serializable {
         this.ls_valor_nombre_padre = "";
         this.ls_classTabla = "";
         this.ls_classTablaPadre = "";
-        this.ls_paginacion=false;
-        this.li_reg_pagina=10;
+        this.paginador=new obj_paginador();
+        this.li_num_reg_x_pagina=10;
+        this.lb_paginar=false;
+        this.li_limit=1;
+        this.ls_paginacion="";
+        this.li_total_rows=0;
+        this.ObjsonTabla="";
     }
 
     public void configTabla(String ls_catalog, String ls_schema, String ls_name_tabla, String ls_query, String ls_where, String ls_orden) {
@@ -74,8 +86,16 @@ public class obj_tabla implements Serializable {
     }
 
     public void crearTabla() {
+       
         CrudGenerico EstructuraBDD = new CrudGenerico();
-        EstructuraBDD.crearListArrayRowsTable(this.ls_catalog, this.ls_schema, this.ls_name_tabla, this.ls_query, this.ls_where, this.ls_orden);
+        if(lb_paginar==false){//Paginación 
+           this.ls_paginacion="";
+        }else{
+            this.li_total_rows=EstructuraBDD.getTotalRegistros(ls_schema, ls_name_tabla);
+            this.ls_paginacion=" limit "+this.li_limit+" offset "+ this.li_num_reg_x_pagina;
+            this.paginador.configurar(this.li_total_rows, this.li_num_reg_x_pagina, this.ls_Id_Tabla+"_paginador");
+        }   
+        EstructuraBDD.crearListArrayRowsTable(this.ls_catalog, this.ls_schema, this.ls_name_tabla, this.ls_query, this.ls_where, this.ls_orden, this.ls_paginacion);
         //Objetos para almacenar las Filas del Grid
         this.lista_gridRow = EstructuraBDD.getLista_gridRow();
         this.lista_gridColumn = EstructuraBDD.getLista_gridColumn();
@@ -209,6 +229,7 @@ public class obj_tabla implements Serializable {
                 + "var jsonColumns" + ls_ordenTB + "='" + jsonColumns + "';  "
                 + "var jsonRows" + ls_ordenTB + "='" + jsonRows + "';  "
                 + "var ordenTabla" + ls_ordenTB + "='" + ls_ordenTB + "';  "
+                + "var ObjsonTabla" + ls_ordenTB + "='" + this.ObjsonTabla + "';  "
                 + "TablasRelacionadas[" + ls_ordenTB + "]='" + this.ls_Id_Tabla + "';"
                 + " </script>";
         //Estilo Tabla
@@ -436,5 +457,46 @@ public class obj_tabla implements Serializable {
     public void setLs_classTablaPadre(String ls_classTablaPadre) {
         this.ls_classTablaPadre = ls_classTablaPadre;
     }
+
+    public obj_paginador getPaginador() {
+        return paginador;
+    }
+
+    public void setPaginador(obj_paginador paginador) {
+        this.paginador = paginador;
+    }
+
+    public Integer getLi_num_reg_x_pagina() {
+        return li_num_reg_x_pagina;
+    }
+
+    public void setLi_num_reg_x_pagina(Integer li_num_reg_x_pagina) {
+        this.li_num_reg_x_pagina = li_num_reg_x_pagina;
+    }
+
+    public Boolean getLb_paginar() {
+        return lb_paginar;
+    }
+
+    public void setLb_paginar(Boolean lb_paginar) {
+        this.lb_paginar = lb_paginar;
+    }
+
+    public Integer getLi_limit() {
+        return li_limit;
+    }
+
+    public void setLi_limit(Integer li_limit) {
+        this.li_limit = li_limit;
+    }
+
+    public String getObjsonTabla() {
+        return ObjsonTabla;
+    }
+
+    public void setObjsonTabla(String ObjsonTabla) {
+        this.ObjsonTabla = ObjsonTabla;
+    }
+    
 
 }

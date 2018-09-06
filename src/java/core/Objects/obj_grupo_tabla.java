@@ -34,8 +34,7 @@ public class obj_grupo_tabla {
                 + "var jsonTabla"+tablaPadre.getLs_ordenTB()+"='"+jsonTabla+"';  "
                 + " </script>";
         HTMLTabla+=scriptTabla;
-        return HTMLTabla;
-        
+        return HTMLTabla;        
     }
 
   
