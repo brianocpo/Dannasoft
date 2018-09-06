@@ -40,7 +40,9 @@ public class obj_tabla implements Serializable {
     String ls_IdDivTabla;
     String ls_classTabla;
     String ls_classTablaPadre;
-
+    //Datos para la paguinacion
+    Boolean ls_paginacion;
+    Integer li_reg_pagina;
     public obj_tabla() {
         this.htmlTabla = "";
         this.ls_Id_Tabla = "";
@@ -56,6 +58,8 @@ public class obj_tabla implements Serializable {
         this.ls_valor_nombre_padre = "";
         this.ls_classTabla = "";
         this.ls_classTablaPadre = "";
+        this.ls_paginacion=false;
+        this.li_reg_pagina=10;
     }
 
     public void configTabla(String ls_catalog, String ls_schema, String ls_name_tabla, String ls_query, String ls_where, String ls_orden) {
@@ -222,12 +226,14 @@ public class obj_tabla implements Serializable {
                 + ".rowTablaThead" + ls_ordenTB + " {cursor:  pointer }"
                 + "</style>";
         //Script DataTable
-        String DataTabla ="<script type=\"text/javascript\">\n" +
-"			$(document).ready( function () {\n" +
-"			    $('#"+ this.ls_Id_Tabla+"').DataTable();\n" +
-"			} );\n" +
-"		</script>";
-        htmlTabla += scriptTabla + styleTabla + DataTabla;
+//        String DataTabla ="<script type=\"text/javascript\">\n" +
+//"			$(document).ready( function () {\n" +
+//"			    $('#"+ this.ls_Id_Tabla+"').DataTable({"+
+//"                           select: true" +                
+//"                           });\n" +
+//"			} );\n" +
+//"		</script>";
+        htmlTabla += scriptTabla + styleTabla ;
         
         return htmlTabla;
     }
