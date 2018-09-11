@@ -139,47 +139,47 @@ public class obj_tabla implements Serializable {
     }
 
     public String getTablaHtml() {
+        
+        getlista_gridColumn_nombre_colPK();
         String ls_classRow = "";
-        String ls_classRoHija = "";
-
+      
         String ls_width = "0";
-        String htmlTablaHead = "<thead>";
-        String htmlTablaHeadTitulo = "<tr><th class=\"theadTitle\" colspan='" + this.lista_gridColumn.size() + "'>" + getTituloTabla() + "</th></tr> <tr>";
+        String htmlTablaHeadTitulo = "<tr><th class='theadTitle' colspan='" + this.lista_gridColumn.size() + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + getTituloTabla() + "</th></tr>";
         String htmlTablaHeadTH = "";
-        String htmlTablaBody = "<tbody>";
         String htmlTablaBodyTR = "";
         String htmlTablaBodyTD = "";
         String ls_IdRow = "";
-        String ls_campoFK = "";
         String ls_nombreColumn = "";
         String ls_valor_column = "";
 
+        this.htmlTabla = "<table  style='height:" + ls_AltoTabla + "' class='table table-responsive table-bordered Grid-" + this.ls_ordenTB + "' id='" + this.ls_Id_Tabla + "'>";
         //CABECERA DE LA TABLA
+        this.htmlTabla+= "<thead>";
+        this.htmlTabla+=    htmlTablaHeadTitulo;                
         //Se valida que lista_gridRow tenga filas en caso de no ser así solo se consulta las cabeceras de columnas
         if (0 == this.lista_gridRow.size()) {
-            //setear this.ls_nombre_colPK
-            getlista_gridColumn_nombre_colPK();
-            htmlTablaHeadTitulo = "<tr><th class=\"theadTitle\" colspan='" + this.lista_gridColumn.size() + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + getTituloTabla() + "</th></tr>";
+            //setear this.ls_nombre_colPK           
             for (int k = 0; k < this.lista_gridColumn.size(); k++) {
                 ls_width = getWidthColumn(lista_gridColumn.get(k));
-                htmlTablaHeadTH = htmlTablaHeadTH + "<th scope=\"col\"  width=\"" + ls_width + "\" class=\"rowTablaThead" + ls_ordenTB + "\" onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + lista_gridColumn.get(k).getLs_nombre_column() + "</th>";
+                htmlTablaHeadTH = htmlTablaHeadTH + "<th scope='col'  width='" + ls_width + "' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + lista_gridColumn.get(k).getLs_nombre_column() + "</th>";
             }
-        } else {
-            for (int i = this.lista_gridRow.size() - 1; i < this.lista_gridRow.size(); i++) {   //setear this.ls_nombre_colPK
-                getlista_gridRow_nombre_colPK();
-                htmlTablaHeadTitulo = "<tr><th class=\"theadTitle\" colspan='" + this.lista_gridColumn.size() + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + getTituloTabla() + "</th></tr>";
+        }
+        else {
+            for (int i = this.lista_gridRow.size() - 1; i < this.lista_gridRow.size(); i++) {   //setear this.ls_nombre_colPK               
                 for (int k = 0; k < this.lista_gridRow.get(i).getLista_gridColumn().size(); k++) {
                     ls_width = getWidthColumn(lista_gridRow.get(i).getLista_gridColumn().get(k));
-                    htmlTablaHeadTH = htmlTablaHeadTH + "<th scope=\"col\"  width=\"" + ls_width + "\" class=\"rowTablaThead" + ls_ordenTB + "\" onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + lista_gridRow.get(i).getLista_gridColumn().get(k).getLs_nombre_column() + "</th>";
+                    htmlTablaHeadTH = htmlTablaHeadTH + "<th scope='col'  width='" + ls_width + "' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + lista_gridRow.get(i).getLista_gridColumn().get(k).getLs_nombre_column() + "</th>";
                 }
             }
         }
+        this.htmlTabla+= htmlTablaHeadTH;
+        this.htmlTabla+= "</thead>";
+        
         //CUERPO DE LA TABLA
-        ls_campoFK = "";
+        this.htmlTabla+= "<tbody>";
         String fn_cargarTablaHija = "";
-        for (int i = 0; i < this.lista_gridRow.size(); i++) {
-            ls_classRow = this.ls_ordenTB + "_row_";
-            ls_classRow = ls_classRow + i;
+        for (int i = 0; i < this.lista_gridRow.size(); i++) {          
+            ls_classRow = this.ls_ordenTB + "_row_"+ i;
             this.ls_classTabla = ls_classRow;
             htmlTablaBodyTD = "";
             ls_IdRow = "CodPK";
@@ -201,7 +201,7 @@ public class obj_tabla implements Serializable {
                     ls_valor_column = lista_gridRow.get(i).getLista_gridColumn().get(j).getLs_valor().trim();
                 }
 
-                htmlTablaBodyTD += "<td scope=\"col\"   width=\"" + ls_width + "\" id=\"col" + this.ls_ordenTB + "_" + i + "_" + j + "\" onclick=\"getColumn(" + i + "," + j + ",'" + ls_nombreColumn + "','" + ls_codigo_fk_select + "',false,'" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_IdRow + "','R"+this.ls_ordenTB+"_"+i+"')\">" + ls_valor_column + "</td>";
+                htmlTablaBodyTD += "<td scope='col'   width='" + ls_width + "' id='col" + this.ls_ordenTB + "_" + i + "_" + j + "' onclick=\"getColumn(" + i + "," + j + ",'" + ls_nombreColumn + "','" + ls_codigo_fk_select + "',false,'" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_IdRow + "','R"+this.ls_ordenTB+"_"+i+"')\">" + ls_valor_column + "</td>";
                 //Condificion para cargar la tabla Hija en caso de tenerla
                 if (this.lb_cargaHija == true) {
                     fn_cargarTablaHija = ";onLoad();cargar_TablaHija('" + ls_valor_column + "','" + ls_IdRow + "',jsonTabla" + ls_ordenTB + ",'" + this.ls_classTabla + "')";
@@ -209,23 +209,25 @@ public class obj_tabla implements Serializable {
             }
             
             htmlTablaBodyTD=htmlTablaBodyTD.replaceAll("CodPK",ls_IdRow );
-            htmlTablaBodyTR += "<tr id=\"R" + this.ls_ordenTB + "_" + i + "\" scope=\"row\"    onclick=\"getRow(this,'" + ls_IdRow + "','" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_classRow + "')" + fn_cargarTablaHija + "\"  class=\"rowTabla" + ls_ordenTB + " " + this.ls_classTabla + " " + this.ls_classTablaPadre + "\">";
+            htmlTablaBodyTR += "<tr id='R" + this.ls_ordenTB + "_" + i + "' scope='row'    onclick=\"getRow(this,'" + ls_IdRow + "','" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_classRow + "')" + fn_cargarTablaHija + "\"  class=\"rowTabla" + ls_ordenTB + " " + this.ls_classTabla + " " + this.ls_classTablaPadre + "\">";
             htmlTablaBodyTR += htmlTablaBodyTD;
             htmlTablaBodyTR += "</tr>";
         }
-        htmlTablaHead += htmlTablaHeadTitulo + "<tr>" + htmlTablaHeadTH + "</tr>";
-        htmlTablaHead += "</thead>";
-
-        htmlTablaBody += htmlTablaBodyTR;
-        htmlTablaBody += "</tr></tbody>";
-
-        htmlTabla = "<table  style=\"height:" + ls_AltoTabla + " \" class=\"table table-responsive table-bordered Grid-" + this.ls_ordenTB + "\" id=\"" + this.ls_Id_Tabla + "\">" + htmlTablaHead + htmlTablaBody +this.paginador.crearPaginador()+  "</table>";
+       
+        this.htmlTabla+= htmlTablaBodyTR;
+        this.htmlTabla+= "</tbody>";
+        this.htmlTabla +="</table>";  
+        //Verifico si se agregará el paginador
+        if(getLb_paginar()){
+            this.htmlTabla +=this.paginador.crearPaginador();
+        }
+        
         
         //Data que será pasada para el CRUD en cada TABLA
         String jsonRows = new Gson().toJson(getLista_gridRow());
         String jsonColumns = new Gson().toJson(getLista_gridColumn());
         //Script para la configuracion de Datatable Jquery 
-        String scriptTabla = " <script type=\"text/javascript\" >"
+        String scriptTabla = " <script type='text/javascript' >"
                 + "var jsonColumns" + ls_ordenTB + "='" + jsonColumns + "';  "
                 + "var jsonRows" + ls_ordenTB + "='" + jsonRows + "';  "
                 + "var ordenTabla" + ls_ordenTB + "='" + ls_ordenTB + "';  "
@@ -233,7 +235,7 @@ public class obj_tabla implements Serializable {
                 + "TablasRelacionadas[" + ls_ordenTB + "]='" + this.ls_Id_Tabla + "';"
                 + " </script>";
         //Estilo Tabla
-        String styleTabla = "<style type=\"text/css\">"
+        String styleTabla = "<style type='text/css'>"
                 + ".rowTabla" + ls_ordenTB + " {\n"
                 + "            border: none;\n"
                 + "            outline: none;\n"
@@ -246,14 +248,7 @@ public class obj_tabla implements Serializable {
                 + ".rowActive" + ls_ordenTB + " {background-color:  #286090; color: #ffffff}"
                 + ".rowTablaThead" + ls_ordenTB + " {cursor:  pointer }"
                 + "</style>";
-          //Script DataTable
-//        String DataTabla ="<script type=\"text/javascript\">\n" +
-//"			$(document).ready( function () {\n" +
-//"			    $('#"+ this.ls_Id_Tabla+"').DataTable({"+
-//"                           select: true" +                
-//"                           });\n" +
-//"			} );\n" +
-//"		</script>";
+
         htmlTabla += scriptTabla + styleTabla ;
         
         return htmlTabla;

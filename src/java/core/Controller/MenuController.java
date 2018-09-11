@@ -28,10 +28,9 @@ public class MenuController {
     String ls_catalog = "Dannasoft";
     String ls_schema = "mod_administracion";
     String ls_nombre_software = "Dannasoft";  
-    Soporte so;
-    public MenuController(){
-        so= new Soporte();
-        so.borrarGarbage();
+
+    public MenuController(){       
+        Soporte.borrarGarbage();
         System.out.println("borro garbagecolector()");
     }
     
@@ -60,9 +59,10 @@ public class MenuController {
         Tabla1.setLi_num_reg_x_pagina(1);
         Tabla1.setLs_Id_Tabla("s_usuario");
         Tabla1.setLs_ordenTB("1");
-        Tabla1.setTituloTabla("Usuarios");                
-        Tabla1.crearTabla(); //Se crea la tabla
-        Tabla1.setObjsonTabla(so.convertObjTablaJson(Tabla1));//si estructura JSON se almacena en una variable ObjsonTabla
+        Tabla1.setTituloTabla("Usuarios"); 
+        //Se crea la tabla
+        Tabla1.crearTabla(); 
+        Tabla1.setObjsonTabla(Soporte.convertObjTablaJson(Tabla1));//si estructura JSON se almacena en una variable ObjsonTabla
         
         model.addAttribute("tabla1", Tabla1.getTablaHtml());
         return "sistema";        
@@ -77,25 +77,28 @@ public class MenuController {
         String ls_orden = "nombre_pai ASC";
         obj_tabla Tabla1 = new obj_tabla();
         Tabla1.configTabla(ls_catalog, ls_schema, "v_pais", ls_query, ls_where, ls_orden);
-        Tabla1.setLb_cargaHija(true);
-        Tabla1.crearTabla();
+        Tabla1.setLb_paginar(false);
+        Tabla1.setLb_cargaHija(true);        
         Tabla1.setLs_Id_Tabla("v_pais");
         Tabla1.setLs_ordenTB("1");
         Tabla1.setLs_AltoTabla("50%");
         Tabla1.setTituloTabla("PAÍS");
-
+        Tabla1.crearTabla();
+        Tabla1.setObjsonTabla(Soporte.convertObjTablaJson(Tabla1));//si estructura JSON se almacena en una variable ObjsonTabla
+        
         //Tabla Ciudad
         String ls_query2 = "";
         obj_tabla Tabla2 = new obj_tabla();
         Tabla2.configTabla(ls_catalog, ls_schema, "v_ciudad", ls_query2, "codigo_pai=0", "nombre_ciu ASC");
-        Tabla2.setLs_nombre_campo_padre("codigo_pai");
-        Tabla2.crearTabla();
+        Tabla1.setLb_paginar(false);
+        Tabla2.setLs_nombre_campo_padre("codigo_pai");       
         Tabla2.setLs_Id_Tabla("v_ciudad");
         Tabla2.setLs_ordenTB("2");
         Tabla2.setLs_AltoTabla("50%");
         Tabla2.setTituloTabla("CIUDAD");
         Tabla2.setLs_IdDivTabla("tabla2");
-        
+        Tabla2.crearTabla();
+       
         //Se asocia la tabla hija a la tabla padre
         obj_grupo_tabla GrupTables = new obj_grupo_tabla(Tabla1, Tabla2);
         model.addAttribute("tabla1", GrupTables.getTablaHtml());

@@ -1474,14 +1474,15 @@ function loadTB(NomTabla) {
             $("#" + FristIdRowTabla).click();      
     }else{console.log(NomTabla+" no tiene filas");}
 }
-function actualizarTabla(){
+function actualizarTabla(offset){
     if(ls_ordenTB.length>0){
-        
+       
       var ObjsonTabla = jQuery.parseJSON(ObjsonTabla1); 
-      ObjsonTabla.offset=0;
-      ObjsonTabla.li_num_reg_x_pagina=10;
-      ObjsonTabla.ls_IdDivTabla="tabla1";
       console.log(ObjsonTabla);
+      ObjsonTabla.offset=offset;
+      //ObjsonTabla.li_num_reg_x_pagina=10;
+      ObjsonTabla.ls_IdDivTabla="tabla1";
+
       var jsonString = JSON.stringify(ObjsonTabla);
       $.ajax({
                 data: jsonString,
@@ -1494,8 +1495,8 @@ function actualizarTabla(){
                         if (console && console.log) {
                             
                             $('#' + ObjsonTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);
-                            console.log("Tabla "+ls_ordenTB+" Actualizada");
-                            $("#R"+ls_ordenTB+"_0").click(); 
+                            console.log("Tabla "+ObjsonTabla.ls_ordenTB.toString().trim()+" Actualizada");
+                            $("#R"+ObjsonTabla.ls_ordenTB.toString().trim()+"_0").click(); 
                             removeLoad();                                                      
                         }
                     })

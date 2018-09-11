@@ -231,7 +231,7 @@ public class Soporte {
             garbage.gc();
     }
     
-    public String convertObjTablaJson(obj_tabla tabla)
+    public static String convertObjTablaJson(obj_tabla tabla)
     {   
         String Jsontabla=new Gson().toJson(tabla);
         return Jsontabla;

@@ -29,9 +29,7 @@ public class obj_row {
         this.ls_nombre_PK = ls_nombre_PK;
         this.ls_codigo_PK = ls_codigo_PK;
     }
-    
-    
-    
+
     public String getLs_nombre_PK() {
         return ls_nombre_PK;
     }

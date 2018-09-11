@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class RestControllerCore {
+  
     /*Procesa las tablas Hijas Pantallas Dobles*/
     @RequestMapping(value = "/post/json", method = RequestMethod.POST)
     public @ResponseBody
@@ -29,6 +30,7 @@ public class RestControllerCore {
         Gson gson = new Gson();
         obj_tabla obj2 = gson.fromJson(jsonString, obj_tabla.class);
         obj2.crearTabla();
+        obj2.setObjsonTabla(Soporte.convertObjTablaJson(obj2));
         obj2.getHtmlTabla();
         return obj2;
     }

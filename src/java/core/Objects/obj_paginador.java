@@ -76,7 +76,7 @@ public class obj_paginador {
         }
     }
     public String crearPaginador(){
-        ls_htmlPaginador="<ul class=\"pagination\">";
+        ls_htmlPaginador="<ul class='pagination'>";
         for(int i=0;i<lista_paginas.size();i++){            
             ls_htmlPaginador+=lista_paginas.get(i).getLs_htmlPagina();
         }
