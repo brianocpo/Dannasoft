@@ -15,12 +15,22 @@ public class obj_pagina {
     private Integer li_rag_inicio;
     private Integer li_rag_fin;
     private Boolean lb_estado;
-
+    private String ls_htmlPagina;
     public obj_pagina(String ls_nombre_pagina, Integer li_rag_inicio, Integer li_rag_fin, Boolean lb_estado) {
         this.ls_nombre_pagina = ls_nombre_pagina;
         this.li_rag_inicio = li_rag_inicio;
         this.li_rag_fin = li_rag_fin;
         this.lb_estado = lb_estado;
+        this.ls_htmlPagina="";
+        crearPagina();
+    }
+    public String crearPagina(){
+        String ls_estado="";
+        if(this.lb_estado){ls_estado="active";}
+        ls_htmlPagina=" <li class=\""+ls_estado+"\">";
+        ls_htmlPagina+="<a href=\"#\"> "+ls_nombre_pagina+" </a>";
+        ls_htmlPagina+="</li>";
+        return this.ls_htmlPagina;
     }
 
     public Boolean getLb_estado() {
@@ -53,6 +63,14 @@ public class obj_pagina {
 
     public void setLi_rag_fin(Integer li_rag_fin) {
         this.li_rag_fin = li_rag_fin;
+    }
+
+    public String getLs_htmlPagina() {
+        return ls_htmlPagina;
+    }
+
+    public void setLs_htmlPagina(String ls_htmlPagina) {
+        this.ls_htmlPagina = ls_htmlPagina;
     }
     
     

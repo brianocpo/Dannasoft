@@ -13,6 +13,7 @@ import java.util.ArrayList;
  * @author brian
  */
 public class obj_paginador {
+    private String ls_htmlPaginador;
     private Integer li_num_pag_visibles;
     private String ls_id_paginador;
     private Integer li_pag_inicio;
@@ -30,6 +31,7 @@ public class obj_paginador {
         this.ls_id_paginador=ls_id_paginador;
         lista_paginas=new ArrayList<obj_pagina>();
         this.armarPaginas();
+        this.ls_htmlPaginador="";
     }
     public final void armarPaginas(){
         double ld_total;
@@ -37,6 +39,7 @@ public class obj_paginador {
         int li_reg_inicio=1;
         int li_reg_fin=this.li_num_reg_x_pagina;
         boolean lb_pagina_activa;
+        
         if(this.li_total_reg_tabla>0 && (this.li_total_reg_tabla>this.li_num_reg_x_pagina)){
             ld_total=this.li_total_reg_tabla/this.li_num_reg_x_pagina;
             ls_numero= String.valueOf(ld_total);
@@ -56,14 +59,14 @@ public class obj_paginador {
                 if(li_reg_fin>this.li_total_reg_tabla){
                     li_reg_fin=this.li_total_reg_tabla;
                 }
-                lista_paginas.add(pagina);
+                lista_paginas.add(pagina);               
             }
             //Se asigna la pos de la página final de la lista de paginas
             this.li_pag_fin=intNumber-1;            
         }else{
             this.li_pag_fin=0;
             obj_pagina pagina=new obj_pagina("1", 1, this.li_total_reg_tabla, true);
-            lista_paginas.add(pagina);
+            lista_paginas.add(pagina);           
         }
         
         //Inicializamos las variables
@@ -71,6 +74,15 @@ public class obj_paginador {
              this.li_pag_inicio=0;
              this.li_pag_actual=0;        
         }
+    }
+    public String crearPaginador(){
+        ls_htmlPaginador="<ul class=\"pagination\">";
+        for(int i=0;i<lista_paginas.size();i++){            
+            ls_htmlPaginador+=lista_paginas.get(i).getLs_htmlPagina();
+        }
+        ls_htmlPaginador+="</ul>";
+        
+        return ls_htmlPaginador;
     }
     public void paginaSiguiente(){
         if(this.li_pag_actual<this.li_pag_fin){
@@ -137,6 +149,14 @@ public class obj_paginador {
 
     public void setLista_paginas(ArrayList<obj_pagina> lista_paginas) {
         this.lista_paginas = lista_paginas;
+    }
+
+    public String getLs_htmlPaginador() {
+        return ls_htmlPaginador;
+    }
+
+    public void setLs_htmlPaginador(String ls_htmlPaginador) {
+        this.ls_htmlPaginador = ls_htmlPaginador;
     }
     
   

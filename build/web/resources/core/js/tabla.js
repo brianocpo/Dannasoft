@@ -1478,7 +1478,8 @@ function actualizarTabla(){
     if(ls_ordenTB.length>0){
         
       var ObjsonTabla = jQuery.parseJSON(ObjsonTabla1); 
-      ObjsonTabla.li_num_reg_x_pagina=2;
+      ObjsonTabla.offset=0;
+      ObjsonTabla.li_num_reg_x_pagina=10;
       ObjsonTabla.ls_IdDivTabla="tabla1";
       console.log(ObjsonTabla);
       var jsonString = JSON.stringify(ObjsonTabla);

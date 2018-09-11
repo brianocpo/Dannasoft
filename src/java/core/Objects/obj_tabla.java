@@ -44,7 +44,7 @@ public class obj_tabla implements Serializable {
     private obj_paginador paginador;
     private Integer li_num_reg_x_pagina;
     private Boolean lb_paginar;
-    private Integer li_limit;
+    private Integer offset;
     private String  ls_paginacion;
     private Integer li_total_rows;    
     //Estructura OBJETO JSON
@@ -68,7 +68,7 @@ public class obj_tabla implements Serializable {
         this.paginador=new obj_paginador();
         this.li_num_reg_x_pagina=10;
         this.lb_paginar=false;
-        this.li_limit=1;
+        this.offset=0;
         this.ls_paginacion="";
         this.li_total_rows=0;
         this.ObjsonTabla="";
@@ -92,7 +92,7 @@ public class obj_tabla implements Serializable {
            this.ls_paginacion="";
         }else{
             this.li_total_rows=EstructuraBDD.getTotalRegistros(ls_schema, ls_name_tabla);
-            this.ls_paginacion=" limit "+this.li_limit+" offset "+ this.li_num_reg_x_pagina;
+            this.ls_paginacion=" limit "+ this.li_num_reg_x_pagina+" offset "+this.offset;
             this.paginador.configurar(this.li_total_rows, this.li_num_reg_x_pagina, this.ls_Id_Tabla+"_paginador");
         }   
         EstructuraBDD.crearListArrayRowsTable(this.ls_catalog, this.ls_schema, this.ls_name_tabla, this.ls_query, this.ls_where, this.ls_orden, this.ls_paginacion);
@@ -219,8 +219,8 @@ public class obj_tabla implements Serializable {
         htmlTablaBody += htmlTablaBodyTR;
         htmlTablaBody += "</tr></tbody>";
 
-        htmlTabla = "<table  style=\"height:" + ls_AltoTabla + " \" class=\"table table-responsive table-bordered Grid-" + this.ls_ordenTB + "\" id=\"" + this.ls_Id_Tabla + "\">" + htmlTablaHead + htmlTablaBody + "</table>";
-
+        htmlTabla = "<table  style=\"height:" + ls_AltoTabla + " \" class=\"table table-responsive table-bordered Grid-" + this.ls_ordenTB + "\" id=\"" + this.ls_Id_Tabla + "\">" + htmlTablaHead + htmlTablaBody +this.paginador.crearPaginador()+  "</table>";
+        
         //Data que será pasada para el CRUD en cada TABLA
         String jsonRows = new Gson().toJson(getLista_gridRow());
         String jsonColumns = new Gson().toJson(getLista_gridColumn());
@@ -246,7 +246,7 @@ public class obj_tabla implements Serializable {
                 + ".rowActive" + ls_ordenTB + " {background-color:  #286090; color: #ffffff}"
                 + ".rowTablaThead" + ls_ordenTB + " {cursor:  pointer }"
                 + "</style>";
-        //Script DataTable
+          //Script DataTable
 //        String DataTabla ="<script type=\"text/javascript\">\n" +
 //"			$(document).ready( function () {\n" +
 //"			    $('#"+ this.ls_Id_Tabla+"').DataTable({"+
@@ -258,6 +258,7 @@ public class obj_tabla implements Serializable {
         
         return htmlTabla;
     }
+
 
     public String getWidthColumn(obj_column Columna) {
         String ls_width_columm = "";
@@ -482,20 +483,20 @@ public class obj_tabla implements Serializable {
         this.lb_paginar = lb_paginar;
     }
 
-    public Integer getLi_limit() {
-        return li_limit;
-    }
-
-    public void setLi_limit(Integer li_limit) {
-        this.li_limit = li_limit;
-    }
-
     public String getObjsonTabla() {
         return ObjsonTabla;
     }
 
     public void setObjsonTabla(String ObjsonTabla) {
         this.ObjsonTabla = ObjsonTabla;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
     }
     
 

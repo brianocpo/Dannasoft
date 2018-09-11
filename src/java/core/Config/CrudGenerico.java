@@ -96,7 +96,7 @@ public class CrudGenerico {
         if (ls_paginacion.length() > 0) {
             ls_sql = ls_sql + " " + ls_paginacion;
         }
-       
+        System.out.println(ls_sql);
         try {
             Query query = Conexion.getSession().createSQLQuery(ls_sql);
             lst=query.list();
