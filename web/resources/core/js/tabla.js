@@ -39,6 +39,9 @@ var RowID;
 //Variables para verificar si existe cambio de Fila y guardar almacena el ID de la FILA
 var columTablaSelectTEMP=[];
 var columTablaSelect=[];
+//Actualizar tabla
+var offset=0;
+var pagina_actual=0;
 function addTabla(NomTabla1, NomCampoPK1, OredenTabla1)
 {
     var TablaBDD_ADD = {"NomTabla": NomTabla1,
@@ -851,6 +854,7 @@ function guardarTabla(guardadoDirecto)
         })
                 .done(function (data, textStatus, jqXHR) {
                     eliminarObjeto();
+                    actualizarTabla();
                     mensajeAccion("Exito", "información guardada", "");
                     setTablaJson();
                 })
@@ -1474,13 +1478,16 @@ function loadTB(NomTabla) {
             $("#" + FristIdRowTabla).click();      
     }else{console.log(NomTabla+" no tiene filas");}
 }
-function actualizarTabla(offset){
-    if(ls_ordenTB.length>0){
-       
+function actualizarTabla(){
+   
       var ObjsonTabla = jQuery.parseJSON(ObjsonTabla1); 
       console.log(ObjsonTabla);
       ObjsonTabla.offset=offset;
-      //ObjsonTabla.li_num_reg_x_pagina=10;
+      if(pagina_actual>0){
+        ObjsonTabla.li_pagina_actual=pagina_actual;
+      }else{
+        ObjsonTabla.li_pagina_actual=1;  
+      }
       ObjsonTabla.ls_IdDivTabla="tabla1";
 
       var jsonString = JSON.stringify(ObjsonTabla);
@@ -1494,8 +1501,7 @@ function actualizarTabla(offset){
                     .done(function (data, textStatus, jqXHR) {
                         if (console && console.log) {
                             
-                            $('#' + ObjsonTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);
-                            console.log("Tabla "+ObjsonTabla.ls_ordenTB.toString().trim()+" Actualizada");
+                            $('#' + ObjsonTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                           
                             $("#R"+ObjsonTabla.ls_ordenTB.toString().trim()+"_0").click(); 
                             removeLoad();                                                      
                         }
@@ -1507,5 +1513,44 @@ function actualizarTabla(offset){
                             removeLoad();
                         }
                     });
-    }    
+       
+}
+function actualizarTablaPaginador(offset1,pagina_actual1,tablaJson)
+{   
+    offset=offset1;
+    pagina_actual=pagina_actual1;
+      
+
+    var ObjsonTabla = jQuery.parseJSON(tablaJson); 
+     
+      ObjsonTabla.offset=offset1;
+      ObjsonTabla.li_pagina_actual=pagina_actual1;
+      //ObjsonTabla.li_num_reg_x_pagina=10;
+      ObjsonTabla.ls_IdDivTabla="tabla1";
+
+      var jsonString = JSON.stringify(ObjsonTabla);
+      $.ajax({
+                data: jsonString,
+                type: "POST",
+                dataType: "json",
+                contentType: 'application/json',
+                url: "post/json"
+            })
+                    .done(function (data, textStatus, jqXHR) {
+                        if (console && console.log) {
+                            IdColumnSelect="";
+                            setTablaJson();
+                            $('#' + ObjsonTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                          
+                            $("#R"+ObjsonTabla.ls_ordenTB.toString().trim()+"_0").click(); 
+                            removeLoad();                                                      
+                        }
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        if (console && console.log) {
+                            $('#' + ObjsonTabla.ls_IdDivTabla.toString().trim() + " tbody").html("");                                                      
+                            console.log("La solicitud a fallado: " + textStatus + errorThrown);
+                            removeLoad();
+                        }
+                    });
+      
 }

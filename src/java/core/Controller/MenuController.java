@@ -56,7 +56,7 @@ public class MenuController {
         Tabla1.configTabla(ls_catalog, ls_schema, "s_usuario", ls_query, ls_where, ls_orden);//Se configura la tabla
         //Se configura la tabla indispensable seguir el orden
         Tabla1.setLb_paginar(true);
-        Tabla1.setLi_num_reg_x_pagina(1);
+        Tabla1.setLi_num_reg_x_pagina(5);
         Tabla1.setLs_Id_Tabla("s_usuario");
         Tabla1.setLs_ordenTB("1");
         Tabla1.setTituloTabla("Usuarios"); 
@@ -77,33 +77,34 @@ public class MenuController {
         String ls_orden = "nombre_pai ASC";
         obj_tabla Tabla1 = new obj_tabla();
         Tabla1.configTabla(ls_catalog, ls_schema, "v_pais", ls_query, ls_where, ls_orden);
-        Tabla1.setLb_paginar(false);
+        Tabla1.setLb_paginar(true);
+        Tabla1.setLi_num_reg_x_pagina(5);
         Tabla1.setLb_cargaHija(true);        
         Tabla1.setLs_Id_Tabla("v_pais");
         Tabla1.setLs_ordenTB("1");
         Tabla1.setLs_AltoTabla("50%");
         Tabla1.setTituloTabla("PAÍS");
         Tabla1.crearTabla();
-        Tabla1.setObjsonTabla(Soporte.convertObjTablaJson(Tabla1));//si estructura JSON se almacena en una variable ObjsonTabla
+        Tabla1.setObjsonTabla(Soporte.convertObjTablaJson(Tabla1));//estructura JSON se almacena en una variable ObjsonTabla
         
         //Tabla Ciudad
         String ls_query2 = "";
         obj_tabla Tabla2 = new obj_tabla();
         Tabla2.configTabla(ls_catalog, ls_schema, "v_ciudad", ls_query2, "codigo_pai=0", "nombre_ciu ASC");
-        Tabla1.setLb_paginar(false);
+        Tabla2.setLb_paginar(true);
+        Tabla2.setLi_num_reg_x_pagina(2);
         Tabla2.setLs_nombre_campo_padre("codigo_pai");       
         Tabla2.setLs_Id_Tabla("v_ciudad");
-        Tabla2.setLs_ordenTB("2");
+        Tabla2.setLs_ordenTB("1");
         Tabla2.setLs_AltoTabla("50%");
         Tabla2.setTituloTabla("CIUDAD");
         Tabla2.setLs_IdDivTabla("tabla2");
-        Tabla2.crearTabla();
-       
+        Tabla2.crearTabla();        
+        
         //Se asocia la tabla hija a la tabla padre
         obj_grupo_tabla GrupTables = new obj_grupo_tabla(Tabla1, Tabla2);
         model.addAttribute("tabla1", GrupTables.getTablaHtml());
         //Se genera solo el esquema de la tabla hija
-        model.addAttribute("tabla2", Tabla2.getTablaHtml());
         model.addAttribute("tabla2", Tabla2.getTablaHtml());
         
         return "sistema";

@@ -479,8 +479,11 @@ public class CrudGenerico {
         return maxID;
     }
     
-    public static Integer getTotalRegistros(String EsquemaBaseDatos,String ls_nombreTablaPK) {
-        String ls_sql="SELECT count(*) as total FROM "+EsquemaBaseDatos+"."+ls_nombreTablaPK;
+    public static Integer getTotalRegistros(String EsquemaBaseDatos,String ls_nombreTablaPK,String ls_where) {
+        if(ls_where!=""){
+            ls_where=" WHERE "+ls_where;
+        }
+        String ls_sql="SELECT count(*) as total FROM "+EsquemaBaseDatos+"."+ls_nombreTablaPK+" "+ls_where;
         System.out.println(ls_sql);
         Integer li_total=0;  
         try{           

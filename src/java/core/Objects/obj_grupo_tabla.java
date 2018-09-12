@@ -30,7 +30,7 @@ public class obj_grupo_tabla {
         String HTMLTabla=tablaPadre.getTablaHtml();
         String jsonTabla = getJsonObjTabla(tablaHija);
          //Script para la configuracion de Datatable Jquery 
-        String scriptTabla=" <script type=\"text/javascript\" >"
+        String scriptTabla=" <script type='text/javascript' >"
                 + "var jsonTabla"+tablaPadre.getLs_ordenTB()+"='"+jsonTabla+"';  "
                 + " </script>";
         HTMLTabla+=scriptTabla;

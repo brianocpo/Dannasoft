@@ -45,10 +45,13 @@ public class obj_tabla implements Serializable {
     private Integer li_num_reg_x_pagina;
     private Boolean lb_paginar;
     private Integer offset;
+    private Integer li_pagina_actual;
     private String  ls_paginacion;
     private Integer li_total_rows;    
     //Estructura OBJETO JSON
     private String ObjsonTabla;
+    //Fila
+    private int li_idFilaSeleccionada;
     
     public obj_tabla() {
         this.htmlTabla = "";
@@ -72,6 +75,8 @@ public class obj_tabla implements Serializable {
         this.ls_paginacion="";
         this.li_total_rows=0;
         this.ObjsonTabla="";
+        this.li_pagina_actual=1;
+        this.li_idFilaSeleccionada=0;
     }
 
     public void configTabla(String ls_catalog, String ls_schema, String ls_name_tabla, String ls_query, String ls_where, String ls_orden) {
@@ -90,10 +95,10 @@ public class obj_tabla implements Serializable {
         CrudGenerico EstructuraBDD = new CrudGenerico();
         if(lb_paginar==false){//Paginación 
            this.ls_paginacion="";
-        }else{
-            this.li_total_rows=EstructuraBDD.getTotalRegistros(ls_schema, ls_name_tabla);
-            this.ls_paginacion=" limit "+ this.li_num_reg_x_pagina+" offset "+this.offset;
-            this.paginador.configurar(this.li_total_rows, this.li_num_reg_x_pagina, this.ls_Id_Tabla+"_paginador");
+        }else{           
+            this.li_total_rows=EstructuraBDD.getTotalRegistros(ls_schema, ls_name_tabla,this.ls_where);
+            this.ls_paginacion="  limit "+ this.li_num_reg_x_pagina+" offset "+this.offset;
+            this.paginador.configurar(this.li_total_rows, this.li_num_reg_x_pagina, this.ls_Id_Tabla+"_paginador",li_pagina_actual,ls_ordenTB);
         }   
         EstructuraBDD.crearListArrayRowsTable(this.ls_catalog, this.ls_schema, this.ls_name_tabla, this.ls_query, this.ls_where, this.ls_orden, this.ls_paginacion);
         //Objetos para almacenar las Filas del Grid
@@ -139,7 +144,7 @@ public class obj_tabla implements Serializable {
     }
 
     public String getTablaHtml() {
-        
+        this.htmlTabla="";
         getlista_gridColumn_nombre_colPK();
         String ls_classRow = "";
       
@@ -151,8 +156,14 @@ public class obj_tabla implements Serializable {
         String ls_IdRow = "";
         String ls_nombreColumn = "";
         String ls_valor_column = "";
+        //Paginador
+        if(getLb_paginar()){
+            this.htmlTabla=this.paginador.crearPaginador();
+        }
+        
+        
 
-        this.htmlTabla = "<table  style='height:" + ls_AltoTabla + "' class='table table-responsive table-bordered Grid-" + this.ls_ordenTB + "' id='" + this.ls_Id_Tabla + "'>";
+        this.htmlTabla+= "<table  style='height:" + ls_AltoTabla + "' class='table table-responsive table-bordered Grid-" + this.ls_ordenTB + "' id='" + this.ls_Id_Tabla + "'>";
         //CABECERA DE LA TABLA
         this.htmlTabla+= "<thead>";
         this.htmlTabla+=    htmlTablaHeadTitulo;                
@@ -217,10 +228,7 @@ public class obj_tabla implements Serializable {
         this.htmlTabla+= htmlTablaBodyTR;
         this.htmlTabla+= "</tbody>";
         this.htmlTabla +="</table>";  
-        //Verifico si se agregará el paginador
-        if(getLb_paginar()){
-            this.htmlTabla +=this.paginador.crearPaginador();
-        }
+       
         
         
         //Data que será pasada para el CRUD en cada TABLA
@@ -492,6 +500,14 @@ public class obj_tabla implements Serializable {
 
     public void setOffset(Integer offset) {
         this.offset = offset;
+    }
+
+    public Integer getLi_pagina_actual() {
+        return li_pagina_actual;
+    }
+
+    public void setLi_pagina_actual(Integer li_pagina_actual) {
+        this.li_pagina_actual = li_pagina_actual;
     }
     
 

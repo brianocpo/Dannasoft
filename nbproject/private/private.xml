@@ -2,6 +2,17 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Objects/obj_tabla.java</file>
+            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Controller/RestControllerCore.java</file>
+            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/web/resources/core/js/tabla.js</file>
+            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/web/WEB-INF/jsp/pantalla_triple.jsp</file>
+            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Objects/obj_pagina.java</file>
+            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Controller/MenuController.java</file>
+            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Objects/obj_row.java</file>
+            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Config/CrudGenerico.java</file>
+            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Config/Soporte.java</file>
+            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Objects/obj_paginador.java</file>
+        </group>
     </open-files>
 </project-private>

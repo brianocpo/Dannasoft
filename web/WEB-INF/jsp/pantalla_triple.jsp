@@ -14,7 +14,7 @@
         <span  class = "glyphicon glyphicon-floppy-disk" > </span>
     </button>
     
-    <button type="button" class="btn btn-primary"  onclick="actualizarTabla(0)" onmouseover="setToolTip(this, 'Actualizar')">
+    <button type="button" class="btn btn-primary"  onclick="actualizarTabla()" onmouseover="setToolTip(this, 'Actualizar')">
         <span class="glyphicon glyphicon-refresh "></span>
     </button>
     
