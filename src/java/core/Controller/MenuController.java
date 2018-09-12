@@ -56,7 +56,7 @@ public class MenuController {
         Tabla1.configTabla(ls_catalog, ls_schema, "s_usuario", ls_query, ls_where, ls_orden);//Se configura la tabla
         //Se configura la tabla indispensable seguir el orden
         Tabla1.setLb_paginar(true);
-        Tabla1.setLi_num_reg_x_pagina(5);
+        Tabla1.setLi_num_reg_x_pagina(10);
         Tabla1.setLs_Id_Tabla("s_usuario");
         Tabla1.setLs_ordenTB("1");
         Tabla1.setTituloTabla("Usuarios"); 
