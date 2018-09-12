@@ -60,6 +60,7 @@ public class MenuController {
         Tabla1.setLs_Id_Tabla("s_usuario");
         Tabla1.setLs_ordenTB("1");
         Tabla1.setTituloTabla("Usuarios"); 
+        Tabla1.setLs_IdDivTabla("tabla1");
         //Se crea la tabla
         Tabla1.crearTabla(); 
         Tabla1.setObjsonTabla(Soporte.convertObjTablaJson(Tabla1));//si estructura JSON se almacena en una variable ObjsonTabla
@@ -84,6 +85,7 @@ public class MenuController {
         Tabla1.setLs_ordenTB("1");
         Tabla1.setLs_AltoTabla("50%");
         Tabla1.setTituloTabla("PAÍS");
+        Tabla1.setLs_IdDivTabla("tabla1");
         Tabla1.crearTabla();
         Tabla1.setObjsonTabla(Soporte.convertObjTablaJson(Tabla1));//estructura JSON se almacena en una variable ObjsonTabla
         
@@ -95,7 +97,7 @@ public class MenuController {
         Tabla2.setLi_num_reg_x_pagina(2);
         Tabla2.setLs_nombre_campo_padre("codigo_pai");       
         Tabla2.setLs_Id_Tabla("v_ciudad");
-        Tabla2.setLs_ordenTB("1");
+        Tabla2.setLs_ordenTB("2");
         Tabla2.setLs_AltoTabla("50%");
         Tabla2.setTituloTabla("CIUDAD");
         Tabla2.setLs_IdDivTabla("tabla2");

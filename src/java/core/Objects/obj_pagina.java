@@ -23,7 +23,7 @@ public class obj_pagina {
         this.li_rag_fin = li_rag_fin;
         this.lb_estado = lb_estado;
         this.ls_htmlPagina="";
-        this.ls_ordenTB=
+        this.ls_ordenTB=ls_ordenTB;
         crearPagina();
     }
     public String crearPagina(){

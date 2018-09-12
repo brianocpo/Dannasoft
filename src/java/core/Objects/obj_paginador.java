@@ -39,7 +39,7 @@ public class obj_paginador {
         this.li_pag_actual=li_pagina_actual;
         this.ls_htmlPaginador="";
         this.lista_paginas=new ArrayList<obj_pagina>();
-        this.ls_ordenTB=ls_ordenTB;
+        this.ls_ordenTB=ls_ordenTB;        
         this.armarPaginas();        
     }
     public final void armarPaginas(){
@@ -152,7 +152,7 @@ public class obj_paginador {
         
         String ls_htmlPagina=""; 
         ls_htmlPagina="<li class='"+ls_class2+"' style='cursor:pointer;' >";
-        ls_htmlPagina+="<a onclick='actualizarTablaPaginador("+li_rag_inicio+","+li_nombre_pagina+")'> <i class='"+ls_class+"'>"+ls_texto+"</i> </a>";
+        ls_htmlPagina+="<a onclick='actualizarTablaPaginador("+li_rag_inicio+","+li_nombre_pagina+",ObjsonTabla" + ls_ordenTB + ")'> <i class='"+ls_class+"'>"+ls_texto+"</i> </a>";
         ls_htmlPagina+="</li>";
         return ls_htmlPagina;
     }

@@ -480,7 +480,10 @@ public class CrudGenerico {
     }
     
     public static Integer getTotalRegistros(String EsquemaBaseDatos,String ls_nombreTablaPK,String ls_where) {
-        if(ls_where!=""){
+        
+        if(ls_where.trim().equals("")){
+            ls_where="";
+        }else{
             ls_where=" WHERE "+ls_where;
         }
         String ls_sql="SELECT count(*) as total FROM "+EsquemaBaseDatos+"."+ls_nombreTablaPK+" "+ls_where;

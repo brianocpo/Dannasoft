@@ -239,8 +239,8 @@ public class obj_tabla implements Serializable {
                 + "var jsonColumns" + ls_ordenTB + "='" + jsonColumns + "';  "
                 + "var jsonRows" + ls_ordenTB + "='" + jsonRows + "';  "
                 + "var ordenTabla" + ls_ordenTB + "='" + ls_ordenTB + "';  "
-                + "var ObjsonTabla" + ls_ordenTB + "='" + this.ObjsonTabla + "';  "
                 + "TablasRelacionadas[" + ls_ordenTB + "]='" + this.ls_Id_Tabla + "';"
+                + "var ObjsonTabla" + ls_ordenTB + "='" + this.ObjsonTabla + "';  "                
                 + " </script>";
         //Estilo Tabla
         String styleTabla = "<style type='text/css'>"

@@ -1463,6 +1463,7 @@ function getFirstIdRowTabla(IdTabla1) {
     return firstIDRowTabla;
 }
 function loadTablas() {
+    console.log("TablasRelacionadas"+TablasRelacionadas);
     for (var i = 1; i < TablasRelacionadas.length; i++)
     {
         if (TablasRelacionadas[i].length > 0) {
@@ -1473,7 +1474,9 @@ function loadTablas() {
 }
 function loadTB(NomTabla) {
     var FristIdRowTabla = "";
+    console.log("NomTabla"+NomTabla);
     FristIdRowTabla = getFirstIdRowTabla(NomTabla);
+    console.log("FristIdRowTabla"+FristIdRowTabla);
     if (FristIdRowTabla.length > 0) {
             $("#" + FristIdRowTabla).click();      
     }else{console.log(NomTabla+" no tiene filas");}
@@ -1520,13 +1523,13 @@ function actualizarTablaPaginador(offset1,pagina_actual1,tablaJson)
     offset=offset1;
     pagina_actual=pagina_actual1;
       
-
+    console.log(tablaJson);
     var ObjsonTabla = jQuery.parseJSON(tablaJson); 
      
       ObjsonTabla.offset=offset1;
       ObjsonTabla.li_pagina_actual=pagina_actual1;
       //ObjsonTabla.li_num_reg_x_pagina=10;
-      ObjsonTabla.ls_IdDivTabla="tabla1";
+      //ObjsonTabla.ls_IdDivTabla="tabla1";
 
       var jsonString = JSON.stringify(ObjsonTabla);
       $.ajax({
