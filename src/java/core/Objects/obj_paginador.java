@@ -90,8 +90,8 @@ public class obj_paginador {
         }        
     }
     public String crearPaginador(){
-        ls_htmlPaginador="<div class='row justify-content-center justify-content-md-start'>";
-            ls_htmlPaginador+="<div class='col-md-4'>";
+        ls_htmlPaginador="<div class='row justify-content-center justify-content-md-start paginadorTB' >";
+            ls_htmlPaginador+="<div class='col-md-4' style='padding-top:6px'>";
                ls_htmlPaginador+="Mostrando "+(li_row_inicio+1)+" al "+ (li_row_fin)+ " filas de "+(int)ld_total_reg_tabla;
             ls_htmlPaginador+="</div>";
             
@@ -113,6 +113,8 @@ public class obj_paginador {
         String ls_class="";
         String ls_class2="";
         String ls_texto="";
+        String ls_style="";
+        
         int li_rag_inicio=0;
         int li_nombre_pagina=0;
         int index=-1;
@@ -129,12 +131,14 @@ public class obj_paginador {
                         index=BuscarIndexPagina(String.valueOf(li_pag_fin));
                         break;
         case "siguiente":   ls_class="ace-icon fa fa-angle-double-right";
+                        ls_style="padding-top:10px;";
                         li_nombre_pagina=paginaSiguiente();
                         if(li_nombre_pagina==0){  ls_class2 ="disabled"; }else{
                             index=BuscarIndexPagina(String.valueOf(li_nombre_pagina));
                         }
                          break;
         case "anterior":  ls_class="ace-icon fa fa-angle-double-left";
+                        ls_style="padding-top:10px;";
                         li_nombre_pagina=paginaAnterior();
                         if(li_nombre_pagina==0){  ls_class2 ="disabled"; }else{
                             index=BuscarIndexPagina(String.valueOf(li_nombre_pagina));
@@ -149,10 +153,10 @@ public class obj_paginador {
            li_rag_inicio=0;
            li_nombre_pagina=1;
         }
-        
+        System.out.println(ls_style);
         String ls_htmlPagina=""; 
         ls_htmlPagina="<li class='"+ls_class2+"' style='cursor:pointer;' >";
-        ls_htmlPagina+="<a onclick='actualizarTablaPaginador("+li_rag_inicio+","+li_nombre_pagina+",ObjsonTabla" + ls_ordenTB + ")'> <i class='"+ls_class+"'>"+ls_texto+"</i> </a>";
+        ls_htmlPagina+="<a style='"+ls_style+"' onclick='actualizarTablaPaginador("+li_rag_inicio+","+li_nombre_pagina+",ObjsonTabla" + ls_ordenTB + ")'> <i class='"+ls_class+"'>"+ls_texto+"</i> </a>";
         ls_htmlPagina+="</li>";
         return ls_htmlPagina;
     }

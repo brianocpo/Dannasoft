@@ -727,7 +727,10 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
                         if (console && console.log) {
-                            $('#' + JsonTablaH.ls_IdDivTabla.toString().trim() + " tbody").html("");                           
+                            $('#' + JsonTablaH.ls_IdDivTabla.toString().trim() + " tbody").html(""); 
+                            $('#' + JsonTablaH.ls_IdDivTabla.toString().trim() + " .paginadorTB").html("");
+                    
+                    
                             if(ordenTBFinal==ordenTemp){
                                 console.log(RowID);
                                 fila=$("#"+RowID);
@@ -912,8 +915,6 @@ function insertRow()
     }
     var styleColumn = "";
     var numeracionFila = 0;
-    console.log(nombreCampoFK);
-    console.log(filaSelectID);
     
     if (IdTabla.length > 0)//ID con el nombr de la tabla
     {   //Se quita el estilo de la fila anteriormente seleccionada de la tabla
@@ -1364,8 +1365,7 @@ function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, 
     if ((parseInt(columTablaSelectTEMP[ordenTB]) != parseInt(columTablaSelect[ordenTB])) && parseInt(columTablaSelectTEMP[ordenTB])>0) {
         if (verificarCambiosTablas(ordenTB) === 1)
         {   eliminarObjeto();
-            if(getValorFilasNuevas()===1){
-                console.log(" getColumn Datos nuevos cargados");
+            if(getValorFilasNuevas()===1){                
                 GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
                 clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect);
             } 
@@ -1409,7 +1409,6 @@ var NomelementColumnAnterior = "";
 function getColumnNueva(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, ordenTB, IdTabla1, idNuevaFila1) {
     
     if (filaSelectID[ordenTB].length = 0) {
-        console.log("reasigno valor");
         filaSelectID[ordenTB] = idNuevaFila1;
     }
 
@@ -1463,7 +1462,6 @@ function getFirstIdRowTabla(IdTabla1) {
     return firstIDRowTabla;
 }
 function loadTablas() {
-    console.log("TablasRelacionadas"+TablasRelacionadas);
     for (var i = 1; i < TablasRelacionadas.length; i++)
     {
         if (TablasRelacionadas[i].length > 0) {
@@ -1474,23 +1472,16 @@ function loadTablas() {
 }
 function loadTB(NomTabla) {
     var FristIdRowTabla = "";
-    console.log("NomTabla"+NomTabla);
     FristIdRowTabla = getFirstIdRowTabla(NomTabla);
-    console.log("FristIdRowTabla"+FristIdRowTabla);
     if (FristIdRowTabla.length > 0) {
             $("#" + FristIdRowTabla).click();      
     }else{console.log(NomTabla+" no tiene filas");}
 }
 function actualizarTabla(){
    
-      var ObjsonTabla = jQuery.parseJSON(ObjsonTabla1); 
-      console.log(ObjsonTabla);
-      ObjsonTabla.offset=offset;
-      if(pagina_actual>0){
-        ObjsonTabla.li_pagina_actual=pagina_actual;
-      }else{
-        ObjsonTabla.li_pagina_actual=1;  
-      }
+      var ObjsonTabla = jQuery.parseJSON(ObjsonTabla1);
+      ObjsonTabla.offset=0;
+      ObjsonTabla.li_pagina_actual=1;  
       ObjsonTabla.ls_IdDivTabla="tabla1";
 
       var jsonString = JSON.stringify(ObjsonTabla);
@@ -1503,7 +1494,7 @@ function actualizarTabla(){
             })
                     .done(function (data, textStatus, jqXHR) {
                         if (console && console.log) {
-                            
+                            filaSelectID[1]="";
                             $('#' + ObjsonTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                           
                             $("#R"+ObjsonTabla.ls_ordenTB.toString().trim()+"_0").click(); 
                             removeLoad();                                                      
@@ -1519,11 +1510,9 @@ function actualizarTabla(){
        
 }
 function actualizarTablaPaginador(offset1,pagina_actual1,tablaJson)
-{   
+{   eliminarObjeto();
     offset=offset1;
     pagina_actual=pagina_actual1;
-      
-    console.log(tablaJson);
     var ObjsonTabla = jQuery.parseJSON(tablaJson); 
      
       ObjsonTabla.offset=offset1;

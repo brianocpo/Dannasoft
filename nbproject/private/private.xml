@@ -3,16 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Objects/obj_tabla.java</file>
-            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Controller/RestControllerCore.java</file>
-            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/web/resources/core/js/tabla.js</file>
-            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/web/WEB-INF/jsp/pantalla_triple.jsp</file>
-            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Objects/obj_pagina.java</file>
-            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Controller/MenuController.java</file>
-            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Objects/obj_row.java</file>
-            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Config/CrudGenerico.java</file>
-            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Config/Soporte.java</file>
-            <file>file:/home/brian/Documentos/Proyecto%20JAVA/Dannasoft/src/java/core/Objects/obj_paginador.java</file>
+            <file>file:/E:/Proyectos/JAVA/Dannasoft/web/WEB-INF/jsp/complementosJS.jsp</file>
+            <file>file:/E:/Proyectos/JAVA/Dannasoft/src/java/core/Config/Soporte.java</file>
+            <file>file:/E:/Proyectos/JAVA/Dannasoft/web/resources/assets/css/datatables.min.css</file>
+            <file>file:/E:/Proyectos/JAVA/Dannasoft/web/resources/core/js/tabla.js</file>
+            <file>file:/E:/Proyectos/JAVA/Dannasoft/web/WEB-INF/jsp/pantalla_triple.jsp</file>
+            <file>file:/E:/Proyectos/JAVA/Dannasoft/web/WEB-INF/jsp/pantalla_doble.jsp</file>
+            <file>file:/E:/Proyectos/JAVA/Dannasoft/src/java/core/Controller/RestControllerCore.java</file>
+            <file>file:/E:/Proyectos/JAVA/Dannasoft/src/java/core/Objects/obj_tabla.java</file>
+            <file>file:/E:/Proyectos/JAVA/Dannasoft/src/java/core/Controller/MenuController.java</file>
+            <file>file:/E:/Proyectos/JAVA/Dannasoft/web/WEB-INF/jsp/sistema.jsp</file>
         </group>
     </open-files>
 </project-private>
