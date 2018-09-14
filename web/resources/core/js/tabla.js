@@ -509,6 +509,7 @@ function crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_selec
     var bloquearColumn = "";
     var valorDefctoColumn = "";
     try {
+        JsonTablaH = jQuery.parseJSON(ObjsonTabla[ls_ordenTB]);
         if (JsonTablaH.ls_nombre_campo_padre == nombre_column) {
             bloquearColumn = "disabled";
             valorDefctoColumn = JsonTablaH.ls_valor_codigo_padre;
