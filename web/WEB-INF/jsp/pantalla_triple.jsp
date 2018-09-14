@@ -23,9 +23,9 @@
 
 <!--Sección de Tablas-->
 <div id="contenedor_tablas">
-    <div class="table-responsive" id="tabla1" style="border-top:medium groove #438eb9;">${tabla1} </div> <br>    
-    <div class="table-responsive" id="tabla2" style="border-top:medium groove #438eb9;">${tabla2}</div>  <br>
-    <div class="table-responsive" id="tabla3" style="border-top:medium groove #438eb9;">${tabla3}</div>  <br>
+    <div class="table-responsive" id="tabla1" style="border:medium ridge #122b40;">${tabla1} </div> <br>    
+    <div class="table-responsive" id="tabla2" style="border:medium ridge #122b40;">${tabla2}</div>  <br>
+    <div class="table-responsive" id="tabla3" style="border:medium ridge #122b40;">${tabla3}</div>  <br>
 </div>
 <!--Mensajes Flotantes-->
 <div id="dialog-message" class="hide">

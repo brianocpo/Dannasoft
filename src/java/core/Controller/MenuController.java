@@ -116,17 +116,33 @@ public class MenuController {
     public String PaisCiudadEstado(Model model) {
         model.addAttribute("ls_schema", ls_schema);
         //Tabla Pais
+//        String ls_query = "";
+//        String ls_where = "";
+//        String ls_orden = "nombre_pai ASC";
+//        obj_tabla Tabla1 = new obj_tabla();
+//        Tabla1.configTabla(ls_catalog, ls_schema, "v_pais", ls_query, ls_where, ls_orden);
+//        Tabla1.setLb_cargaHija(true);
+//        Tabla1.crearTabla();
+//        Tabla1.setLs_Id_Tabla("v_pais");
+//        Tabla1.setLs_ordenTB("1");
+//        Tabla1.setLs_AltoTabla("50%");
+//        Tabla1.setTituloTabla("PAÍS");
+  
         String ls_query = "";
         String ls_where = "";
         String ls_orden = "nombre_pai ASC";
         obj_tabla Tabla1 = new obj_tabla();
         Tabla1.configTabla(ls_catalog, ls_schema, "v_pais", ls_query, ls_where, ls_orden);
-        Tabla1.setLb_cargaHija(true);
-        Tabla1.crearTabla();
+        Tabla1.setLb_paginar(true);
+        Tabla1.setLi_num_reg_x_pagina(5);
+        Tabla1.setLb_cargaHija(true);        
         Tabla1.setLs_Id_Tabla("v_pais");
         Tabla1.setLs_ordenTB("1");
         Tabla1.setLs_AltoTabla("50%");
         Tabla1.setTituloTabla("PAÍS");
+        Tabla1.setLs_IdDivTabla("tabla1");
+        Tabla1.crearTabla();
+        Tabla1.setObjsonTabla(Soporte.convertObjTablaJson(Tabla1));//estructura JSON se almacena en una variable ObjsonTabla
 
         //Tabla Ciudad
         String ls_query2 = "";
