@@ -215,7 +215,7 @@ public class obj_tabla implements Serializable {
                 htmlTablaBodyTD += "<td scope='col'   width='" + ls_width + "' id='col" + this.ls_ordenTB + "_" + i + "_" + j + "' onclick=\"getColumn(" + i + "," + j + ",'" + ls_nombreColumn + "','" + ls_codigo_fk_select + "',false,'" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_IdRow + "','R"+this.ls_ordenTB+"_"+i+"')\">" + ls_valor_column + "</td>";
                 //Condificion para cargar la tabla Hija en caso de tenerla
                 if (this.lb_cargaHija == true) {
-                    fn_cargarTablaHija = ";onLoad();cargar_TablaHija('" + ls_valor_column + "','" + ls_IdRow + "',jsonTabla" + ls_ordenTB + ",'" + this.ls_classTabla + "')";
+                    fn_cargarTablaHija = ";onLoad();cargar_TablaHija('" + ls_valor_column + "','" + ls_IdRow + "'," + ls_ordenTB + ",'" + this.ls_classTabla + "')";
                 }else{fn_cargarTablaHija ="";}
             }
             
@@ -240,7 +240,7 @@ public class obj_tabla implements Serializable {
                 + "var jsonRows" + ls_ordenTB + "='" + jsonRows + "';  "
                 + "var ordenTabla" + ls_ordenTB + "='" + ls_ordenTB + "';  "
                 + "TablasRelacionadas[" + ls_ordenTB + "]='" + this.ls_Id_Tabla + "';"
-                + "var ObjsonTabla" + ls_ordenTB + "='" + this.ObjsonTabla + "';  "                
+                + "ObjsonTabla[" + ls_ordenTB + "]='" + this.ObjsonTabla + "';  "                
                 + " </script>";
         //Estilo Tabla
         String styleTabla = "<style type='text/css'>"

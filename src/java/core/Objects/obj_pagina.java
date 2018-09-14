@@ -35,7 +35,7 @@ public class obj_pagina {
             ls_style="cursor:pointer;";
         }
         ls_htmlPagina="<li class='"+ls_estado+"' style='"+ls_style+"'>";
-        ls_htmlPagina+="<a onclick='actualizarTablaPaginador("+li_rag_inicio+","+ls_nombre_pagina+",ObjsonTabla" + ls_ordenTB + ")'> "+ls_nombre_pagina+" </a>";
+        ls_htmlPagina+="<a onclick='actualizarTablaPaginador("+li_rag_inicio+","+ls_nombre_pagina+"," + ls_ordenTB + ")'> "+ls_nombre_pagina+" </a>";
         ls_htmlPagina+="</li>";
         return this.ls_htmlPagina;
     }

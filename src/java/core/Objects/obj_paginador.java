@@ -131,14 +131,14 @@ public class obj_paginador {
                         index=BuscarIndexPagina(String.valueOf(li_pag_fin));
                         break;
         case "siguiente":   ls_class="ace-icon fa fa-angle-double-right";
-                        ls_style="padding-top:10px;";
+                        ls_style="padding-top:9px;";
                         li_nombre_pagina=paginaSiguiente();
                         if(li_nombre_pagina==0){  ls_class2 ="disabled"; }else{
                             index=BuscarIndexPagina(String.valueOf(li_nombre_pagina));
                         }
                          break;
         case "anterior":  ls_class="ace-icon fa fa-angle-double-left";
-                        ls_style="padding-top:10px;";
+                        ls_style="padding-top:9px;";
                         li_nombre_pagina=paginaAnterior();
                         if(li_nombre_pagina==0){  ls_class2 ="disabled"; }else{
                             index=BuscarIndexPagina(String.valueOf(li_nombre_pagina));
@@ -156,7 +156,7 @@ public class obj_paginador {
         System.out.println(ls_style);
         String ls_htmlPagina=""; 
         ls_htmlPagina="<li class='"+ls_class2+"' style='cursor:pointer;' >";
-        ls_htmlPagina+="<a style='"+ls_style+"' onclick='actualizarTablaPaginador("+li_rag_inicio+","+li_nombre_pagina+",ObjsonTabla" + ls_ordenTB + ")'> <i class='"+ls_class+"'>"+ls_texto+"</i> </a>";
+        ls_htmlPagina+="<a style='"+ls_style+"' onclick='actualizarTablaPaginador("+li_rag_inicio+","+li_nombre_pagina+"," + ls_ordenTB + ")'> <i class='"+ls_class+"'>"+ls_texto+"</i> </a>";
         ls_htmlPagina+="</li>";
         return ls_htmlPagina;
     }

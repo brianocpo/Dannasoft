@@ -7,11 +7,6 @@ var SchemaBDD = 'mod_administracion';
 var IdTabla = "";
 var IdTablaAnt = "";
 var ls_ordenTB = "";
-
-var FilasActualizadasTB = [];
-var DataActualizadasTB = [];
-var ColumnasNuevasTB = [];
-
 var CodigoCampoPKTB = "";
 var NombreCampoPKTB;
 
@@ -36,12 +31,16 @@ var ColumnsTableTEMP = [];
 var classFilaSelectID = [];
 var TablasRelacionadas = [];
 var RowID;
+//Tablas Hijas
+var ObjsonTablaHija=[];
 //Variables para verificar si existe cambio de Fila y guardar almacena el ID de la FILA
 var columTablaSelectTEMP=[];
 var columTablaSelect=[];
 //Actualizar tabla
 var offset=0;
 var pagina_actual=0;
+//Paginacion 
+var ObjsonTabla=[];
 function addTabla(NomTabla1, NomCampoPK1, OredenTabla1)
 {
     var TablaBDD_ADD = {"NomTabla": NomTabla1,
@@ -674,9 +673,10 @@ function busquedaTabla()
     }
 }
 /*----------------------------CARGAR DETALLE TABLA----------------------------*/
-function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
+function cargar_TablaHija(nombreFK, valorFK, ordenTB, lsClassPadre)
 {   var ordenTBFinal=TablasRelacionadas.length-1; 
-    JsonTablaH = jQuery.parseJSON(JsonTablaHija);
+   
+    JsonTablaH = jQuery.parseJSON(ObjsonTablaHija[ordenTB]);
     JsonTablaH.ls_where = JsonTablaH.ls_where.toString().replace("0", valorFK);
     NomTabla_hija = JsonTablaH.ls_name_tabla.toString();
     //En caso de que sea una FILA nueva la que se seleciona no carga ningún detalle
@@ -713,28 +713,26 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
                     .done(function (data, textStatus, jqXHR) {
                         if (console && console.log) {
                             $('#' + JsonTablaH.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);
-                            console.log("La solicitud se ha completado correctamente.");
-                            //Coloca el Foco de la primera fila de la tabla Hija y retorna el Foco a la Primera tabla 
-                            
                             $("#R"+ordenTemp+"_0").click(); 
+                            console.log("La solicitud se ha completado correctamente.");                            
+                            //Coloca el Foco de la primera fila de la tabla Hija y retorna el Foco a la Primera tabla 
                             removeLoad();                            
                             if(ordenTBFinal==ordenTemp){
-                                fila=$("#"+RowID);
-                                $(fila).click();                                
+//                                fila=$("#"+RowID);
+//                                $(fila).click();                                
                             }
                             
                         }
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
                         if (console && console.log) {
-                            $('#' + JsonTablaH.ls_IdDivTabla.toString().trim() + " tbody").html(""); 
-                            $('#' + JsonTablaH.ls_IdDivTabla.toString().trim() + " .paginadorTB").html("");
-                    
+                           
+                            borarTablaHijas(ordenTB,(ordenTBFinal-1));
                     
                             if(ordenTBFinal==ordenTemp){
-                                console.log(RowID);
-                                fila=$("#"+RowID);
-                                $(fila).click();                                
+//                                console.log(RowID);
+//                                fila=$("#"+RowID);
+//                                $(fila).click();                                
                             }
                             console.log("La solicitud a fallado: " + textStatus + errorThrown);
                             removeLoad();
@@ -747,6 +745,14 @@ function cargar_TablaHija(nombreFK, valorFK, JsonTablaHija, lsClassPadre)
         removeLoad();
     }
     JsonTablaHTemp[ls_ordenTB]=JsonTablaH;
+}
+function borarTablaHijas(ordenTB,ordenTBFinal){
+    var JsonTabla;
+    for(var i=ordenTB;i<=ordenTBFinal;i++){
+        JsonTabla=jQuery.parseJSON(ObjsonTablaHija[i]);
+        $('#' + JsonTabla.ls_IdDivTabla.toString().trim() + " tbody").html(""); 
+        $('#' + JsonTabla.ls_IdDivTabla.toString().trim() + " .paginadorTB").html("");
+    }    
 }
 /*---------------------------------CONFIRM GUARDADO DE DATOS-------------------*/
 $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
@@ -1479,12 +1485,10 @@ function loadTB(NomTabla) {
 }
 function actualizarTabla(){
    
-      var ObjsonTabla = jQuery.parseJSON(ObjsonTabla1);
-      ObjsonTabla.offset=0;
-      ObjsonTabla.li_pagina_actual=1;  
-      ObjsonTabla.ls_IdDivTabla="tabla1";
+      var ObjTabla = jQuery.parseJSON(ObjsonTabla[1]); 
+      ObjTabla.ls_IdDivTabla="tabla1";
 
-      var jsonString = JSON.stringify(ObjsonTabla);
+      var jsonString = JSON.stringify(ObjTabla);
       $.ajax({
                 data: jsonString,
                 type: "POST",
@@ -1495,32 +1499,29 @@ function actualizarTabla(){
                     .done(function (data, textStatus, jqXHR) {
                         if (console && console.log) {
                             filaSelectID[1]="";
-                            $('#' + ObjsonTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                           
-                            $("#R"+ObjsonTabla.ls_ordenTB.toString().trim()+"_0").click(); 
+                            $('#' + ObjTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                           
+                            $("#R"+ObjTabla.ls_ordenTB.toString().trim()+"_0").click(); 
                             removeLoad();                                                      
                         }
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
                         if (console && console.log) {
-                            $('#' + ObjsonTabla.ls_IdDivTabla.toString().trim() + " tbody").html("");                                                      
+                            $('#' + ObjTabla.ls_IdDivTabla.toString().trim() + " tbody").html("");                                                      
                             console.log("La solicitud a fallado: " + textStatus + errorThrown);
                             removeLoad();
                         }
                     });
        
 }
-function actualizarTablaPaginador(offset1,pagina_actual1,tablaJson)
+function actualizarTablaPaginador(offset1,pagina_actual1,ordenTB)
 {   eliminarObjeto();
     offset=offset1;
     pagina_actual=pagina_actual1;
-    var ObjsonTabla = jQuery.parseJSON(tablaJson); 
+    var ObjTabla = jQuery.parseJSON(ObjsonTabla[ordenTB]); 
      
-      ObjsonTabla.offset=offset1;
-      ObjsonTabla.li_pagina_actual=pagina_actual1;
-      //ObjsonTabla.li_num_reg_x_pagina=10;
-      //ObjsonTabla.ls_IdDivTabla="tabla1";
-
-      var jsonString = JSON.stringify(ObjsonTabla);
+      ObjTabla.offset=offset1;
+      ObjTabla.li_pagina_actual=pagina_actual1;
+      var jsonString = JSON.stringify(ObjTabla);
       $.ajax({
                 data: jsonString,
                 type: "POST",
@@ -1532,14 +1533,14 @@ function actualizarTablaPaginador(offset1,pagina_actual1,tablaJson)
                         if (console && console.log) {
                             IdColumnSelect="";
                             setTablaJson();
-                            $('#' + ObjsonTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                          
-                            $("#R"+ObjsonTabla.ls_ordenTB.toString().trim()+"_0").click(); 
+                            $('#' + ObjTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                          
+                            $("#R"+ObjTabla.ls_ordenTB.toString().trim()+"_0").click(); 
                             removeLoad();                                                      
                         }
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
                         if (console && console.log) {
-                            $('#' + ObjsonTabla.ls_IdDivTabla.toString().trim() + " tbody").html("");                                                      
+                            $('#' + ObjTabla.ls_IdDivTabla.toString().trim() + " tbody").html("");                                                      
                             console.log("La solicitud a fallado: " + textStatus + errorThrown);
                             removeLoad();
                         }

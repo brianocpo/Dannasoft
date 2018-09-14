@@ -12,8 +12,8 @@ import com.google.gson.Gson;
  * @author brian
  */
 public class obj_grupo_tabla {
-    obj_tabla tablaPadre= new obj_tabla();
-    obj_tabla tablaHija= new obj_tabla();
+    obj_tabla tablaPadre;
+    obj_tabla tablaHija;
     String ls_ordenTB;
     public obj_grupo_tabla(obj_tabla objTablaPadre, obj_tabla objTablaHija) {
         tablaPadre=objTablaPadre;
@@ -31,7 +31,7 @@ public class obj_grupo_tabla {
         String jsonTabla = getJsonObjTabla(tablaHija);
          //Script para la configuracion de Datatable Jquery 
         String scriptTabla=" <script type='text/javascript' >"
-                + "var jsonTabla"+tablaPadre.getLs_ordenTB()+"='"+jsonTabla+"';  "
+                + " ObjsonTablaHija["+tablaPadre.getLs_ordenTB()+"]='"+jsonTabla+"';  "
                 + " </script>";
         HTMLTabla+=scriptTabla;
         return HTMLTabla;        

@@ -144,29 +144,31 @@ public class MenuController {
         Tabla1.crearTabla();
         Tabla1.setObjsonTabla(Soporte.convertObjTablaJson(Tabla1));//estructura JSON se almacena en una variable ObjsonTabla
 
-        //Tabla Ciudad
         String ls_query2 = "";
         obj_tabla Tabla2 = new obj_tabla();
         Tabla2.configTabla(ls_catalog, ls_schema, "v_ciudad", ls_query2, "codigo_pai=0", "nombre_ciu ASC");
+        Tabla2.setLb_paginar(true);
+        Tabla2.setLi_num_reg_x_pagina(2);
         Tabla2.setLb_cargaHija(true);
-        Tabla2.setLs_nombre_campo_padre("codigo_pai");
-        Tabla2.crearTabla();
+        Tabla2.setLs_nombre_campo_padre("codigo_pai");       
         Tabla2.setLs_Id_Tabla("v_ciudad");
         Tabla2.setLs_ordenTB("2");
         Tabla2.setLs_AltoTabla("50%");
         Tabla2.setTituloTabla("CIUDAD");
         Tabla2.setLs_IdDivTabla("tabla2");
+        Tabla2.crearTabla();
         
-        //Tabla Estado
         obj_tabla Tabla3 = new obj_tabla();
-        Tabla3.configTabla(ls_catalog, ls_schema, "v_estado","", "codigo_ciu=0", "nombre_est ASC");
-        Tabla3.setLs_nombre_campo_padre("codigo_ciu");
-        Tabla3.crearTabla();
+        Tabla3.configTabla(ls_catalog, ls_schema, "v_estado", "", "codigo_ciu=0", "nombre_est ASC");
+        Tabla3.setLb_paginar(true);
+        Tabla3.setLi_num_reg_x_pagina(2);
+        Tabla3.setLs_nombre_campo_padre("codigo_ciu");       
         Tabla3.setLs_Id_Tabla("v_estado");
         Tabla3.setLs_ordenTB("3");
         Tabla3.setLs_AltoTabla("50%");
         Tabla3.setTituloTabla("Estado");
         Tabla3.setLs_IdDivTabla("tabla3");
+        Tabla3.crearTabla();
         
         //Se asocia la tabla hija a la tabla padre
         obj_grupo_tabla GrupTables = new obj_grupo_tabla(Tabla1, Tabla2);
