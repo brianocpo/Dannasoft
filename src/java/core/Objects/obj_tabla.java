@@ -47,7 +47,8 @@ public class obj_tabla implements Serializable {
     private Integer offset;
     private Integer li_pagina_actual;
     private String  ls_paginacion;
-    private Integer li_total_rows;    
+    private Integer li_total_rows;
+    private Integer li_num_pag_visibles;     
     //Estructura OBJETO JSON
     private String ObjsonTabla;
     //Fila
@@ -77,6 +78,7 @@ public class obj_tabla implements Serializable {
         this.ObjsonTabla="";
         this.li_pagina_actual=1;
         this.li_idFilaSeleccionada=0;
+        this.li_num_pag_visibles=5; 
     }
 
     public void configTabla(String ls_catalog, String ls_schema, String ls_name_tabla, String ls_query, String ls_where, String ls_orden) {
@@ -98,7 +100,7 @@ public class obj_tabla implements Serializable {
         }else{           
             this.li_total_rows=EstructuraBDD.getTotalRegistros(ls_schema, ls_name_tabla,this.ls_where);
             this.ls_paginacion="  limit "+ this.li_num_reg_x_pagina+" offset "+this.offset;
-            this.paginador.configurar(this.li_total_rows, this.li_num_reg_x_pagina, this.ls_Id_Tabla+"_paginador",li_pagina_actual,ls_ordenTB);
+            this.paginador.configurar(this.li_total_rows, this.li_num_reg_x_pagina, this.ls_Id_Tabla+"_paginador",li_pagina_actual,ls_ordenTB,li_num_pag_visibles);
         }   
         EstructuraBDD.crearListArrayRowsTable(this.ls_catalog, this.ls_schema, this.ls_name_tabla, this.ls_query, this.ls_where, this.ls_orden, this.ls_paginacion);
         //Objetos para almacenar las Filas del Grid

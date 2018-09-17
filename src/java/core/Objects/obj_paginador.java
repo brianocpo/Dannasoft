@@ -18,6 +18,7 @@ public class obj_paginador {
     private String ls_id_paginador;
     private int li_pag_inicio;
     private int li_pag_fin;
+    private int li_total_pag;
     private int li_pag_actual;
     private double ld_num_reg_x_pagina;
     private double ld_total_reg_tabla;
@@ -30,18 +31,22 @@ public class obj_paginador {
         this.li_num_pag_visibles=5; 
         this.li_pag_inicio=1;
         this.li_row_inicio=0;
-        this.li_row_fin=0; 
+        this.li_row_fin=0;
+        this.li_total_pag=0;
     }
-    public void configurar(int ld_total_reg_tabla,int ld_num_reg_x_pagina,String ls_id_paginador, int li_pagina_actual,String ls_ordenTB) {        
+    public void configurar(int ld_total_reg_tabla,int ld_num_reg_x_pagina,String ls_id_paginador, int li_pagina_actual,String ls_ordenTB, Integer li_num_pag_visibles) {        
         this.ld_total_reg_tabla=(double)ld_total_reg_tabla;
         this.ld_num_reg_x_pagina=(double)ld_num_reg_x_pagina;
         this.ls_id_paginador=ls_id_paginador;       
         this.li_pag_actual=li_pagina_actual;
         this.ls_htmlPaginador="";
         this.lista_paginas=new ArrayList<obj_pagina>();
-        this.ls_ordenTB=ls_ordenTB;        
-        this.armarPaginas();        
+        this.ls_ordenTB=ls_ordenTB; 
+        this.li_num_pag_visibles=li_num_pag_visibles;
+        this.armarPaginas();  
+        this.paginaVisibles();
     }
+    
     public final void armarPaginas(){
         double ld_total;
         String ls_numero; 
@@ -80,14 +85,60 @@ public class obj_paginador {
                 lista_paginas.add(pagina);               
             }
             //Se asigna la pos de la página final de la lista de paginas
-            this.li_pag_fin=intNumber;            
+            this.li_total_pag=intNumber;            
         }else{
-            this.li_pag_fin=0;
+            this.li_total_pag=1;
             obj_pagina pagina=new obj_pagina("1", 0, (int)ld_total_reg_tabla, true,this.ls_ordenTB);
             lista_paginas.add(pagina); 
             li_row_inicio=0;
             li_row_fin=(int)this.ld_total_reg_tabla;
         }        
+    }
+    public void paginaVisibles(){
+        
+        this.li_num_pag_visibles = (this.li_num_pag_visibles > this.li_total_pag) ? this.li_total_pag : this.li_num_pag_visibles;
+        
+        if(this.li_pag_actual==1){
+            this.li_pag_inicio=1;
+            this.li_pag_fin=this.li_num_pag_visibles;            
+        }
+        else if(this.li_pag_actual==this.li_total_pag){
+            this.li_pag_fin=this.li_total_pag;
+            this.li_pag_inicio=this.li_pag_fin - (this.li_num_pag_visibles - 1);
+            if(this.li_pag_inicio<1){
+                    this.li_pag_inicio=1;
+            }
+        }
+        else{
+            if(this.li_pag_actual==this.li_pag_fin && this.li_pag_fin< this.li_total_pag){
+                this.li_pag_inicio=this.li_pag_fin;
+                this.li_pag_fin=this.li_pag_inicio + (this.li_num_pag_visibles - 1);
+                if(this.li_pag_fin>this.li_total_pag){
+                    this.li_pag_fin=this.li_total_pag;
+                }
+            }else{
+              if(this.li_pag_actual<=this.li_pag_inicio && this.li_pag_actual>1){
+                this.li_pag_fin=this.li_pag_inicio;
+                this.li_pag_inicio=this.li_pag_inicio - (this.li_num_pag_visibles - 1);
+                if(this.li_pag_inicio<1){
+                    this.li_pag_inicio=1;
+                }
+               }  
+            }            
+        }
+        
+        //Ajustes
+        if(this.li_pag_inicio==1 && this.li_pag_fin<this.li_num_pag_visibles){
+            this.li_pag_fin=this.li_num_pag_visibles;
+        }
+        
+        if(this.li_pag_fin==li_total_pag){
+            this.li_pag_inicio=this.li_pag_fin - (this.li_num_pag_visibles -1);
+            if(this.li_pag_inicio<1){
+                this.li_pag_inicio=1;
+            }
+        }
+     
     }
     public String crearPaginador(){
         ls_htmlPaginador="<div class='row justify-content-center justify-content-md-start paginadorTB' >";
@@ -99,7 +150,7 @@ public class obj_paginador {
                 ls_htmlPaginador+="<ul class='pagination pull-right'>";
                 ls_htmlPaginador+=htmlPagina("inicio");
                 ls_htmlPaginador+=htmlPagina("anterior");
-                for(int i=0;i<lista_paginas.size();i++){            
+                for(int i=this.li_pag_inicio-1;i<this.li_pag_fin;i++){            
                     ls_htmlPaginador+=lista_paginas.get(i).getLs_htmlPagina();
                 }
                 ls_htmlPaginador+=htmlPagina("siguiente");
@@ -127,8 +178,8 @@ public class obj_paginador {
                          break;
         case "fin":     ls_class="";
                         ls_texto="Fin";
-                        li_nombre_pagina=li_pag_fin;
-                        index=BuscarIndexPagina(String.valueOf(li_pag_fin));
+                        li_nombre_pagina=li_total_pag;
+                        index=BuscarIndexPagina(String.valueOf(li_total_pag));
                         break;
         case "siguiente":   ls_class="ace-icon fa fa-angle-double-right";
                         ls_style="padding-top:9px;";
@@ -153,7 +204,7 @@ public class obj_paginador {
            li_rag_inicio=0;
            li_nombre_pagina=1;
         }
-        System.out.println(ls_style);
+        
         String ls_htmlPagina=""; 
         ls_htmlPagina="<li class='"+ls_class2+"' style='cursor:pointer;' >";
         ls_htmlPagina+="<a style='"+ls_style+"' onclick='actualizarTablaPaginador("+li_rag_inicio+","+li_nombre_pagina+"," + ls_ordenTB + ")'> <i class='"+ls_class+"'>"+ls_texto+"</i> </a>";
@@ -170,13 +221,13 @@ public class obj_paginador {
         return -1;
     }
     public int paginaSiguiente(){
-        if(this.li_pag_actual<this.li_pag_fin){
+        if(this.li_pag_actual<this.li_total_pag){
             return this.li_pag_actual+1;
         }
         return 0;
     }
     public int  paginaAnterior(){
-        if(this.li_pag_actual>this.li_pag_inicio){
+        if(this.li_pag_actual>1){
             return this.li_pag_actual-1;            
         }
         return 0;

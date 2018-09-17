@@ -114,20 +114,7 @@ public class MenuController {
 
     @RequestMapping("/PaisCiudadEstado")
     public String PaisCiudadEstado(Model model) {
-        model.addAttribute("ls_schema", ls_schema);
-        //Tabla Pais
-//        String ls_query = "";
-//        String ls_where = "";
-//        String ls_orden = "nombre_pai ASC";
-//        obj_tabla Tabla1 = new obj_tabla();
-//        Tabla1.configTabla(ls_catalog, ls_schema, "v_pais", ls_query, ls_where, ls_orden);
-//        Tabla1.setLb_cargaHija(true);
-//        Tabla1.crearTabla();
-//        Tabla1.setLs_Id_Tabla("v_pais");
-//        Tabla1.setLs_ordenTB("1");
-//        Tabla1.setLs_AltoTabla("50%");
-//        Tabla1.setTituloTabla("PAÍS");
-  
+ 
         String ls_query = "";
         String ls_where = "";
         String ls_orden = "nombre_pai ASC";
@@ -184,18 +171,24 @@ public class MenuController {
     @RequestMapping("/PerfilUsuario")
     public String tb_perfiles(Model model) {
 
-        String ls_nombreTabla1 = "s_perfil_usuario";
+        
         String ls_query = "";
         String ls_where = "";
         String ls_orden = "nombre_per ASC";
-        obj_tabla Tabla1 = new obj_tabla();
-        Tabla1.configTabla(ls_catalog, ls_schema, ls_nombreTabla1, ls_query, ls_where, ls_orden);
-        Tabla1.crearTabla();
+        obj_tabla Tabla1 = new obj_tabla();//Se instancia 
+        Tabla1.configTabla(ls_catalog, ls_schema, "s_perfil_usuario", ls_query, ls_where, ls_orden);//Se configura la tabla
+        //Se configura la tabla indispensable seguir el orden
+        Tabla1.setLb_paginar(true);
+        Tabla1.setLi_num_reg_x_pagina(10);
         Tabla1.setLs_Id_Tabla("s_perfil_usuario");
         Tabla1.setLs_ordenTB("1");
-        Tabla1.setTituloTabla("Perfiles de Usuarios");
+        Tabla1.setTituloTabla("Perfiles de Usuarios"); 
+        Tabla1.setLs_IdDivTabla("tabla1");
+        //Se crea la tabla
+        Tabla1.crearTabla(); 
+        Tabla1.setObjsonTabla(Soporte.convertObjTablaJson(Tabla1));//guarda la estructura JSON del objeto
+
         model.addAttribute("tabla1", Tabla1.getTablaHtml());
-        model.addAttribute("ls_schema", ls_schema);
         return "sistema";
     }
 

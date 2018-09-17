@@ -458,16 +458,16 @@ function marcarFilaNueva(idFilaNueva)
 
 function eliminarDetalleSelectN()
 {
-    
+    var ordenTBFinal=TablasRelacionadas.length-1; 
     var filasEliminadas = 0;
     try {
         var li_ordentabla = parseInt(ls_ordenTB) + 1;
-        $(".Grid-" + li_ordentabla + " tbody tr").each(function () {
-
-            $(this).remove();
-            filasEliminadas++;
-        });
-
+        for(var i=li_ordentabla;i<=ordenTBFinal;i++){
+            $(".Grid-" + i + " tbody tr").each(function () {
+                $(this).remove();
+                filasEliminadas++;
+            });
+        }
     } catch (Error) {
         console.log(Error);
     }
@@ -719,8 +719,8 @@ function cargar_TablaHija(nombreFK, valorFK, ordenTB, lsClassPadre)
                             //Coloca el Foco de la primera fila de la tabla Hija y retorna el Foco a la Primera tabla 
                             removeLoad();                            
                             if(ordenTBFinal==ordenTemp){
-//                                fila=$("#"+RowID);
-//                                $(fila).click();                                
+                                fila=$("#"+RowID);
+                                $(fila).click();                                
                             }
                             
                         }
@@ -731,9 +731,8 @@ function cargar_TablaHija(nombreFK, valorFK, ordenTB, lsClassPadre)
                             borarTablaHijas(ordenTB,(ordenTBFinal-1));
                     
                             if(ordenTBFinal==ordenTemp){
-//                                console.log(RowID);
-//                                fila=$("#"+RowID);
-//                                $(fila).click();                                
+                                fila=$("#"+RowID);
+                                $(fila).click();                                
                             }
                             console.log("La solicitud a fallado: " + textStatus + errorThrown);
                             removeLoad();
