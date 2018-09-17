@@ -52,7 +52,7 @@ public class obj_tabla implements Serializable {
     //Estructura OBJETO JSON
     private String ObjsonTabla;
     //Fila
-    private int li_idFilaSeleccionada;
+    private String ls_idFilaSeleccionada;
     //Solo lectura
     private boolean lb_readonly;
     
@@ -79,7 +79,7 @@ public class obj_tabla implements Serializable {
         this.li_total_rows=0;
         this.ObjsonTabla="";
         this.li_pagina_actual=1;
-        this.li_idFilaSeleccionada=0;
+        this.ls_idFilaSeleccionada="";
         this.li_num_pag_visibles=5; 
         this.lb_readonly=false;
     }
@@ -234,7 +234,7 @@ public class obj_tabla implements Serializable {
             }
             
             htmlTablaBodyTD=htmlTablaBodyTD.replaceAll("CodPK",ls_IdRow );
-            htmlTablaBodyTR += "<tr id='R" + this.ls_ordenTB + "_" + i + "' scope='row'    onclick=\"getRow(this,'" + ls_IdRow + "','" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_classRow + "')" + cargar_TablaHija + "\"  class=\"rowTabla" + ls_ordenTB + " " + this.ls_classTabla + " " + this.ls_classTablaPadre + "\">";
+            htmlTablaBodyTR += "<tr id='R" + this.ls_ordenTB + "_" + i + "' scope='row'    onclick=\"getRow(this,'" + ls_IdRow + "','" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_classRow + "','R"+this.ls_ordenTB+"_"+i+"')" + cargar_TablaHija + "\"  class=\"rowTabla" + ls_ordenTB + " " + this.ls_classTabla + " " + this.ls_classTablaPadre + "\">";
             htmlTablaBodyTR += htmlTablaBodyTD;
             htmlTablaBodyTR += "</tr>";
         }
@@ -530,6 +530,14 @@ public class obj_tabla implements Serializable {
 
     public void setLb_readonly(boolean lb_readonly) {
         this.lb_readonly = lb_readonly;
+    }
+
+    public String getLs_idFilaSeleccionada() {
+        return ls_idFilaSeleccionada;
+    }
+
+    public void setLs_idFilaSeleccionada(String ls_idFilaSeleccionada) {
+        this.ls_idFilaSeleccionada = ls_idFilaSeleccionada;
     }
     
 

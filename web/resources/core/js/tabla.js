@@ -31,6 +31,7 @@ var ColumnsTableTEMP = [];
 var classFilaSelectID = [];
 var TablasRelacionadas = [];
 var RowID;
+var RowIDSelect=[];
 //Tablas Hijas
 var ObjsonTablaHija=[];
 //Variables para verificar si existe cambio de Fila y guardar almacena el ID de la FILA
@@ -906,8 +907,9 @@ function insertRow()
     var codigoPadreFk = "";
     try
     {   
+        
+        JsonTablaH=ObjsonTabla[ls_ordenTB];
         console.log(JsonTablaH);
-        JsonTablaH=JsonTablaHTemp[ls_ordenTB - 1];
         if (JsonTablaH.length == 0)
         {
             nombreCampoFK = "";
@@ -1346,12 +1348,12 @@ function setToolTip(element, title_tool)
 {
     $(element).tooltip({title: title_tool, placement: "bottom", animation: true});
 }
-function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1)
+function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect)
 {   
-       clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1); 
+       clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect); 
 }
-function clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1)
-{
+function clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect)
+{   RowIDSelect[ordenTB]=idRowSelect;//Elemento seleccionado 
     FilaIDTemp[ordenTB]=filaSelectID[ordenTB];
     filaSelectID[ordenTB] = IdRowFocu;
 
@@ -1486,9 +1488,10 @@ function loadTB(NomTabla) {
     }else{console.log(NomTabla+" no tiene filas");}
 }
 function actualizarTabla(){
-   
+      
       var ObjTabla = jQuery.parseJSON(ObjsonTabla[1]); 
       ObjTabla.ls_IdDivTabla="tabla1";
+      ObjTabla.ls_idFilaSeleccionada=RowIDSelect[1];
 
       var jsonString = JSON.stringify(ObjTabla);
       $.ajax({
@@ -1501,8 +1504,10 @@ function actualizarTabla(){
                     .done(function (data, textStatus, jqXHR) {
                         if (console && console.log) {
                             filaSelectID[1]="";
-                            $('#' + ObjTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                           
-                            $("#R"+ObjTabla.ls_ordenTB.toString().trim()+"_0").click(); 
+                            $('#' + ObjTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);
+                            if(ObjTabla.ls_idFilaSeleccionada.toString().trim()!=""){
+                                $("#"+ObjTabla.ls_idFilaSeleccionada.toString().trim()).click(); 
+                            }                            
                             removeLoad();                                                      
                         }
                     })
@@ -1550,18 +1555,21 @@ function actualizarTablaPaginador(offset1,pagina_actual1,ordenTB)
       
 }
 
-function permisoOpciones(ordenTB){    
-    var ObjTabla = jQuery.parseJSON(ObjsonTabla[ordenTB]);    
-    if(ObjTabla.lb_readonly==true){
-        eliminarObjeto();
-        $("#btn_insert").attr("disabled", "true");
-        $("#btn_delete").attr("disabled", "true");
-        $("#btn_save").attr("disabled", "true");
-        $("#btn_update").attr("disabled", "true");
-    }else{        
-        $("#btn_insert").removeAttr("disabled");
-        $("#btn_delete").removeAttr("disabled");
-        $("#btn_save").removeAttr("disabled");
-        $("#btn_update").removeAttr("disabled");
-    }
+function permisoOpciones(ordenTB){
+   if(ObjsonTabla[ordenTB]!=""){
+        var ObjTabla = jQuery.parseJSON(ObjsonTabla[ordenTB]);    
+        if(ObjTabla.lb_readonly==true){
+            eliminarObjeto();
+            $("#btn_insert").attr("disabled", "true");
+            $("#btn_delete").attr("disabled", "true");
+            $("#btn_save").attr("disabled", "true");
+            $("#btn_update").attr("disabled", "true");
+        }else{        
+            $("#btn_insert").removeAttr("disabled");
+            $("#btn_delete").removeAttr("disabled");
+            $("#btn_save").removeAttr("disabled");
+            $("#btn_update").removeAttr("disabled");
+        }  
+   }
+    
 }
