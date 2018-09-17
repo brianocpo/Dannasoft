@@ -413,6 +413,7 @@ function inicializarTabla(IdTabla1, NombreCampPK, jsonRows, jsonColumns, nombreT
     activarTabla();
     setJsonTablas(jsonRows, jsonColumns, nombreTabla);
     addTabla(nombreTabla, NombreCampPK, ordenTB);
+    permisoOpciones(ordenTB);
     return 1;
 }
 
@@ -844,7 +845,8 @@ function eliminarMensaje(elemento)
 
 function guardarTabla(guardadoDirecto)
 {   
-    var jsonString; 
+    var jsonString;
+    
     if(guardadoDirecto==1){
         eliminarObjeto();
         if(getValorFilasNuevas()==1){    //En caso de nuevas columnas hay que cargar los valores        
@@ -880,7 +882,7 @@ function insertarFilaNueva()
     marcarFilaNueva(insertRow());
     eliminarDetalleSelectN();
     FilaIDTemp[ls_ordenTB]=filaSelectID[ls_ordenTB];
-
+    NomelementColumnAnterior="";
     /*Acciona el evento click de la nueva fila*/
     try {       
         $("#" + filaSelectID[ls_ordenTB]).click();
@@ -1413,7 +1415,7 @@ function getRowNueva(idNuevaFila1, ordenTB, classNuevaFila1, NombreCampoPKTB1, l
 
 var NomelementColumnAnterior = "";
 function getColumnNueva(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, ordenTB, IdTabla1, idNuevaFila1) {
-    
+    ls_ordenTB=ordenTB;
     if (filaSelectID[ordenTB].length = 0) {
         filaSelectID[ordenTB] = idNuevaFila1;
     }
@@ -1424,7 +1426,7 @@ function getColumnNueva(index_row, index_column, nombre_column, ls_codigo_fk_sel
     FilaIDTemp[ordenTB]=filaSelectID[ordenTB];
     filaSelectID[ordenTB] = 'N' + ordenTB + '' + index_row;
     NomelementColumn = "#col" + ordenTB + "_" + index_row + "_" + index_column;
-    var elementColumn = $(NomelementColumn);
+    var elementColumn = $(NomelementColumn);    
     if (NomelementColumnAnterior != NomelementColumn) {
         eliminarObjeto();
         crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_select, boolNuevo);
@@ -1546,4 +1548,20 @@ function actualizarTablaPaginador(offset1,pagina_actual1,ordenTB)
                         }
                     });
       
+}
+
+function permisoOpciones(ordenTB){    
+    var ObjTabla = jQuery.parseJSON(ObjsonTabla[ordenTB]);    
+    if(ObjTabla.lb_readonly==true){
+        eliminarObjeto();
+        $("#btn_insert").attr("disabled", "true");
+        $("#btn_delete").attr("disabled", "true");
+        $("#btn_save").attr("disabled", "true");
+        $("#btn_update").attr("disabled", "true");
+    }else{        
+        $("#btn_insert").removeAttr("disabled");
+        $("#btn_delete").removeAttr("disabled");
+        $("#btn_save").removeAttr("disabled");
+        $("#btn_update").removeAttr("disabled");
+    }
 }

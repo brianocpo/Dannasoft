@@ -4,17 +4,17 @@
 <div id="mensajeAlerta" class="mensajeFixed"></div>
 <!--Botones Principales-->
 <div class="table-responsive" style="padding-bottom:20px">
-    <button type="button"  class="btn btn-primary insert" onclick="insertarFilaNueva()"  onmouseover="setToolTip(this, 'Nuevo')" >
+    <button type="button"  class="btn btn-primary insert" onclick="insertarFilaNueva()"  onmouseover="setToolTip(this, 'Nuevo')" id="btn_insert" >
         <span  class = "glyphicon glyphicon-plus" > </span>
     </button>
-    <button type="button" class="btn btn-primary" onclick="deletRow()" onmouseover="setToolTip(this, 'Eliminar')" >
+    <button type="button" class="btn btn-primary" onclick="deletRow()" onmouseover="setToolTip(this, 'Eliminar')" id="btn_delete"  >
         <span  class = "glyphicon glyphicon-remove" > </span>
     </button>
-    <button type="button" class="btn btn-primary" onclick="guardarTabla(1)" onmouseover="setToolTip(this, 'Guardar')">
+    <button type="button" class="btn btn-primary" onclick="guardarTabla(1)" onmouseover="setToolTip(this, 'Guardar')" id="btn_save">
         <span  class = "glyphicon glyphicon-floppy-disk" > </span>
     </button>
     
-    <button type="button" class="btn btn-primary"  onclick="actualizarTabla()" onmouseover="setToolTip(this, 'Actualizar')">
+    <button type="button" class="btn btn-primary"  onclick="actualizarTabla()" onmouseover="setToolTip(this, 'Actualizar')" id="btn_update">
         <span class="glyphicon glyphicon-refresh "></span>
     </button>
     

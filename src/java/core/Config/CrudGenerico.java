@@ -23,7 +23,6 @@ import org.hibernate.SQLQuery;
 public class CrudGenerico {
     
     public String ls_campos_tabla;
-    private String ls_tablaOpcion;
     private String ls_schema;
     private String ls_catalog;
     List<obj_column> lista_gridColumn;
@@ -36,8 +35,7 @@ public class CrudGenerico {
         lista_gridColumn = new ArrayList<obj_column>();
         lista_gridDropdown = new ArrayList<obj_dropdown>();
         dataTablaRows = null;
-        lista_gridRow = new ArrayList<obj_row>();
-        ls_tablaOpcion = "s_opcion";
+        lista_gridRow = new ArrayList<obj_row>();        
         ls_schema = "";
         ls_catalog = "";       
     }
@@ -225,7 +223,7 @@ public class CrudGenerico {
                 li_longitud = 0;
             }
 
-            //Verifica si el nombre pertebnece a un PK o FK y almacena todas en un String
+            //Verifica si el nombre pertenece a un PK o FK y almacena todas en un String
             if ("FOREIGN KEY".equals(ls_nombre_pk_fk)) {
                 la_column_name_fk = la_column_name_fk + ls_column_name + ",";
 
@@ -532,7 +530,7 @@ public class CrudGenerico {
         String dropdown = "";
         String ls_sql_dropdown = "";
         String[] la_campos_tabla = null;
-        String ls_sql = "SELECT tabla1_opc,codigo1_opc,campo1_ocp from " + getLs_schema() + "." + ls_tablaOpcion + " where codigo1_opc='" + codigo1_opc + "'";
+        String ls_sql = "SELECT tabla_tab,codigopk_tab,campo_tab from " + getLs_schema() + ".s_tablas_bdd where codigopk_tab='" + codigo1_opc + "'";
         List lst = null;
         List lst_dropdown = null;
 
@@ -544,7 +542,7 @@ public class CrudGenerico {
             Object[] columnaDropdown;
             if (lst.size() > 0) {
                 if (lst.size() > 1) {
-                    System.out.println("Existe mas de una opcion configurada con el mismo nombre codigo1_opc= " + codigo1_opc + " en la tabla de opciones");
+                    System.out.println("Existe mas de una opcion configurada con el mismo nombre codigopk_tab= " + codigo1_opc + " en la tabla s_tablas_bdd");
                 }
                 //Recorre la información de la Opcion configurada
                 for (int i = 0; i < 1; i++) {

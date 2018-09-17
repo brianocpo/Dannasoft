@@ -55,7 +55,7 @@ public class MenuController {
         obj_tabla Tabla1 = new obj_tabla();//Se instancia 
         Tabla1.configTabla(ls_catalog, ls_schema, "s_usuario", ls_query, ls_where, ls_orden);//Se configura la tabla
         //Se configura la tabla indispensable seguir el orden
-        Tabla1.setLb_paginar(true);
+        Tabla1.setLb_paginar(true);        
         Tabla1.setLi_num_reg_x_pagina(10);
         Tabla1.setLs_Id_Tabla("s_usuario");
         Tabla1.setLs_ordenTB("1");
@@ -68,7 +68,74 @@ public class MenuController {
         model.addAttribute("tabla1", Tabla1.getTablaHtml());
         return "sistema";        
     }
+    @RequestMapping("/TablasBDD")
+    public String VerTablasBDD(Model model) {
+       
+        String ls_query = "";
+        String ls_where = "";
+        String ls_orden = "nombre_tab ASC";
+        obj_tabla Tabla1 = new obj_tabla();//Se instancia 
+        Tabla1.configTabla(ls_catalog, ls_schema, "s_tablas_bdd", ls_query, ls_where, ls_orden);//Se configura la tabla
+        //Se configura la tabla indispensable seguir el orden
+        Tabla1.setLb_paginar(true);
+        Tabla1.setLi_num_reg_x_pagina(10);
+        Tabla1.setLs_Id_Tabla("s_tablas_bdd");
+        Tabla1.setLs_ordenTB("1");
+        Tabla1.setTituloTabla("Tablas BDD"); 
+        Tabla1.setLs_IdDivTabla("tabla1");
+        //Se crea la tabla
+        Tabla1.crearTabla(); 
+        Tabla1.setObjsonTabla(Soporte.convertObjTablaJson(Tabla1));//si estructura JSON se almacena en una variable ObjsonTabla
+        
+        model.addAttribute("tabla1", Tabla1.getTablaHtml());
+        return "sistema";        
+    }
+    
+    @RequestMapping("/TablaCampos")
+    public String VerTablaCampos(Model model) {
+        
+        String ls_query = "";
+        String ls_where = "";
+        String ls_orden = "nombre_tab ASC";
+        obj_tabla Tabla1 = new obj_tabla();//Se instancia 
+        Tabla1.configTabla(ls_catalog, ls_schema, "s_tablas_bdd", ls_query, ls_where, ls_orden);//Se configura la tabla
+        //Se configura la tabla indispensable seguir el orden
+        Tabla1.setLb_paginar(true);
+        Tabla1.setLb_readonly(true);
+        Tabla1.setLi_num_reg_x_pagina(10);
+        Tabla1.setLb_cargaHija(true);
+        Tabla1.setLs_Id_Tabla("s_tablas_bdd");
+        Tabla1.setLs_ordenTB("1");
+        Tabla1.setTituloTabla("Tablas BDD"); 
+        Tabla1.setLs_IdDivTabla("tabla1");
+        //Se crea la tabla
+        Tabla1.crearTabla(); 
+        Tabla1.setObjsonTabla(Soporte.convertObjTablaJson(Tabla1));//si estructura JSON se almacena en una variable ObjsonTabla
+        
+       
+        //Tabla hija
+        String ls_query2 = "";
+        obj_tabla Tabla2 = new obj_tabla();
+        Tabla2.configTabla(ls_catalog, ls_schema, "s_tablas_campos", ls_query2, "codigo_tac=0", "nombre_tac ASC");
+        Tabla2.setLb_paginar(true);
+        Tabla2.setLi_num_reg_x_pagina(2);
+        Tabla2.setLs_nombre_campo_padre("codigo_tab");       
+        Tabla2.setLs_Id_Tabla("s_tablas_campos");
+        Tabla2.setLs_ordenTB("2");
+        Tabla2.setLs_AltoTabla("50%");
+        Tabla2.setTituloTabla("CIUDAD");
+        Tabla2.setLs_IdDivTabla("tabla2");
+        Tabla2.crearTabla();  
 
+        
+         //Se asocia la tabla hija a la tabla padre
+        obj_grupo_tabla GrupTables = new obj_grupo_tabla(Tabla1, Tabla2);
+        model.addAttribute("tabla1", GrupTables.getTablaHtml());
+        //Se genera solo el esquema de la tabla hija
+        model.addAttribute("tabla2", Tabla2.getTablaHtml());
+
+        return "sistema";        
+    }
     @RequestMapping("/PaisCiudad")
     public String PaisCiudad(Model model) {
       
