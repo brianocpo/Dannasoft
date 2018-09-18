@@ -15,7 +15,6 @@ var ElementFilaSeleccionada;
 var ElementoSelectTemp;
 var IndexSelect_row;
 var JsonTablaH = "";
-var JsonTablaHTemp = [];
 var FilaIDTemp = [];
 /*------JSON------------*/
 var Tabla = {"TablaBDD": []};
@@ -32,6 +31,7 @@ var classFilaSelectID = [];
 var TablasRelacionadas = [];
 var RowID;
 var RowIDSelect=[];
+var nombre_campo_padre=[];
 //Tablas Hijas
 var ObjsonTablaHija=[];
 //Variables para verificar si existe cambio de Fila y guardar almacena el ID de la FILA
@@ -746,7 +746,6 @@ function cargar_TablaHija(nombreFK, valorFK, ordenTB, lsClassPadre)
 
         removeLoad();
     }
-    JsonTablaHTemp[ls_ordenTB]=JsonTablaH;
 }
 function borarTablaHijas(ordenTB,ordenTBFinal){
     var JsonTabla;
@@ -906,19 +905,8 @@ function insertRow()
     var nombreCampoFK = "";
     var codigoPadreFk = "";
     try
-    {   
-        
-        JsonTablaH=ObjsonTabla[ls_ordenTB];
-        console.log(JsonTablaH);
-        if (JsonTablaH.length == 0)
-        {
-            nombreCampoFK = "";
-        } else
-        {   
-            nombreCampoFK = JsonTablaH.ls_nombre_campo_padre;
-            codigoPadreFk = JsonTablaH.ls_valor_codigo_padre;
-        }
-
+    {           
+        nombreCampoFK=nombre_campo_padre[ls_ordenTB];
     } catch (err)
     {
         console.log(err.message);
@@ -1491,6 +1479,7 @@ function actualizarTabla(){
       
       var ObjTabla = jQuery.parseJSON(ObjsonTabla[1]); 
       ObjTabla.ls_IdDivTabla="tabla1";
+      console.log(RowIDSelect);
       ObjTabla.ls_idFilaSeleccionada=RowIDSelect[1];
 
       var jsonString = JSON.stringify(ObjTabla);
