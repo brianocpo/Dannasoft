@@ -140,11 +140,13 @@ public class obj_tabla implements Serializable {
     }
 
     public String getlista_gridRow_nombre_colPK() {
-        for (int j = 0; j < this.lista_gridRow.get(0).getLista_gridColumn().size(); j++) {
-            if (lista_gridRow.get(0).getLista_gridColumn().get(j).getLb_PK()) {
-                this.ls_nombre_colPK = lista_gridRow.get(0).getLista_gridColumn().get(j).getLs_nombre_column();
-            }
-        }
+        if(lista_gridRow.size()>0){
+            for (int j = 0; j < this.lista_gridRow.get(0).getLista_gridColumn().size(); j++) {
+                if (lista_gridRow.get(0).getLista_gridColumn().get(j).getLb_PK()) {
+                    this.ls_nombre_colPK = lista_gridRow.get(0).getLista_gridColumn().get(j).getLs_nombre_column();
+                }
+            } 
+        }       
         return this.ls_nombre_colPK;
     }
 

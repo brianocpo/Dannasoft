@@ -477,20 +477,21 @@ function eliminarDetalleSelectN()
 function crearComboDefecto(nombre_column, codigoPadreFK1) {
     var comboBox = "";
     var codigoPadreFK = 0;
+    var codPK="";
     try {
-        if (JsonTablaH.ls_nombre_campo_padre == nombre_column) {
+        if (nombre_campo_padre[ls_ordenTB] == nombre_column) {
             var bloquearColumn = "disabled";
-            codigoPadreFK = codigoPadreFK1;
+           
             var index_col = findIndexColumn(nombre_column);
             //ColumnsTable contiene la estructura en General común de todo el GRID
             var codigoSelect = ColumnsTable[index_col].data_dropdown.codigo_dw;
             var valorSelect = ColumnsTable[index_col].data_dropdown.valor_dw;
             comboBox = "<select " + bloquearColumn + " onchange='updateColumn()' class='form-control'  id='" + nombre_column + "' name='" + nombre_column + "' >";
-            for (var i = 0; i < valorSelect.length; i++)
-            {
-                if (codigoPadreFK > 0)
-                {
-                    if (codigoSelect[i] == codigoPadreFK)
+            for (var i = 0; i < codigoSelect.length; i++)
+            {   codPK="";
+                if (codigoPadreFK1 > 0)
+                {    codPK=codigoSelect[i];
+                    if (codPK.trim() == codigoPadreFK1.trim())
                     {
                         comboBox += "<option value='" + codigoSelect[i] + "' selected>" + valorSelect[i] + "</option>";
                     }
@@ -679,7 +680,7 @@ function busquedaTabla()
 function cargar_TablaHija(nombreFK, valorFK, ordenTB, lsClassPadre)
 {   var ordenTBFinal=TablasRelacionadas.length-1; 
    
-    JsonTablaH = jQuery.parseJSON(ObjsonTablaHija[ordenTB]);
+    JsonTablaH = jQuery.parseJSON(ObjsonTablaHija[ordenTB]);   
     JsonTablaH.ls_where = JsonTablaH.ls_where.toString().replace("0", valorFK);
     NomTabla_hija = JsonTablaH.ls_name_tabla.toString();
     //En caso de que sea una FILA nueva la que se seleciona no carga ningún detalle
@@ -715,9 +716,10 @@ function cargar_TablaHija(nombreFK, valorFK, ordenTB, lsClassPadre)
             })
                     .done(function (data, textStatus, jqXHR) {
                         if (console && console.log) {
+                            
                             $('#' + JsonTablaH.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);
                             $("#R"+ordenTemp+"_0").click(); 
-                            console.log("La solicitud se ha completado correctamente.");                            
+                            console.log(NomTabla_hija+" La solicitud se ha completado correctamente.");                            
                             //Coloca el Foco de la primera fila de la tabla Hija y retorna el Foco a la Primera tabla 
                             removeLoad();                            
                             if(ordenTBFinal==ordenTemp){
@@ -1476,12 +1478,11 @@ function loadTB(NomTabla) {
     }else{console.log(NomTabla+" no tiene filas");}
 }
 function actualizarTabla(){
-      
       var ObjTabla = jQuery.parseJSON(ObjsonTabla[1]); 
       ObjTabla.ls_IdDivTabla="tabla1";
-      console.log(RowIDSelect);
-      ObjTabla.ls_idFilaSeleccionada=RowIDSelect[1];
-
+      if(RowIDSelect.length>0){
+        ObjTabla.ls_idFilaSeleccionada=RowIDSelect[1];
+      }     
       var jsonString = JSON.stringify(ObjTabla);
       $.ajax({
                 data: jsonString,
@@ -1515,9 +1516,9 @@ function actualizarTablaPaginador(offset1,pagina_actual1,ordenTB)
     pagina_actual=pagina_actual1;
     var ObjTabla = jQuery.parseJSON(ObjsonTabla[ordenTB]); 
      
-      ObjTabla.offset=offset1;
-      ObjTabla.li_pagina_actual=pagina_actual1;
-      var jsonString = JSON.stringify(ObjTabla);
+    ObjTabla.offset=offset1;
+    ObjTabla.li_pagina_actual=pagina_actual1;
+    var jsonString = JSON.stringify(ObjTabla);
       $.ajax({
                 data: jsonString,
                 type: "POST",
