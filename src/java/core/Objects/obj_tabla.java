@@ -161,7 +161,6 @@ public class obj_tabla implements Serializable {
         
         //TABLA
         String ls_width = "0";
-//        String htmlTablaHeadTitulo = "<tr><th class='theadTitle' colspan='" + this.lista_gridColumn.size() + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\"></th></tr>";
         String htmlTablaHeadTH = "";
         String htmlTablaBodyTR = "";
         String htmlTablaBodyTD = "";
@@ -172,8 +171,7 @@ public class obj_tabla implements Serializable {
         this.htmlTabla+= "<table  style='height:" + ls_AltoTabla + "' class='table table-responsive table-bordered Grid-" + this.ls_ordenTB + "' id='" + this.ls_Id_Tabla + "'>";
         
         //CABECERA TABLA
-        this.htmlTabla+= "<thead>";
-//        this.htmlTabla+=    htmlTablaHeadTitulo;                
+        this.htmlTabla+= "<thead>";                
         //Se valida que lista_gridRow tenga filas en caso de no ser así solo se consulta las cabeceras de columnas
         if (0 == this.lista_gridRow.size()) {
             //setear this.ls_nombre_colPK           
@@ -197,7 +195,7 @@ public class obj_tabla implements Serializable {
         this.htmlTabla+= "<tbody>";
         String cargar_TablaHija = "";
         String getColumn = "";
-        
+        String display="";
         for (int i = 0; i < this.lista_gridRow.size(); i++) {          
             ls_classRow = this.ls_ordenTB + "_row_"+ i;
             this.ls_classTabla = ls_classRow;
@@ -206,6 +204,7 @@ public class obj_tabla implements Serializable {
             cargar_TablaHija = "";
             getColumn="";
             for (int j = 0; j < this.lista_gridRow.get(i).getLista_gridColumn().size(); j++) {
+                display="";
                 ls_width = getWidthColumn(lista_gridRow.get(i).getLista_gridColumn().get(j));
                 ls_nombreColumn = lista_gridRow.get(i).getLista_gridColumn().get(j).getLs_nombre_column();
                 //Dropdowns
@@ -213,10 +212,12 @@ public class obj_tabla implements Serializable {
                 if (lista_gridRow.get(i).getLista_gridColumn().get(j).getLb_PK()) {
                     ls_IdRow = lista_gridRow.get(i).getLista_gridColumn().get(j).getLs_valor();
                     this.ls_nombre_colPK = lista_gridRow.get(i).getLista_gridColumn().get(j).getLs_nombre_column();
+                    display="style='display:none'";
                 }
                 if (lista_gridRow.get(i).getLista_gridColumn().get(j).getLb_FK()) {
                     ls_codigo_fk_select = lista_gridRow.get(i).getLista_gridColumn().get(j).getData_dropdown().getCodigo_fk_select().trim();
                     ls_valor_column = lista_gridRow.get(i).getLista_gridColumn().get(j).getData_dropdown().getValor_fk_select().trim();
+                    display="style='display:none'";
                 } else {
                     ls_codigo_fk_select = "0";
                     ls_valor_column = lista_gridRow.get(i).getLista_gridColumn().get(j).getLs_valor().trim();
@@ -228,7 +229,7 @@ public class obj_tabla implements Serializable {
                     getColumn="getColumn(" + i + "," + j + ",'" + ls_nombreColumn + "','" + ls_codigo_fk_select + "',false,'" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_IdRow + "','R"+this.ls_ordenTB+"_"+i+"')";
                 }
                 
-                htmlTablaBodyTD += "<td scope='col'   width='" + ls_width + "' id='col" + this.ls_ordenTB + "_" + i + "_" + j + "' onclick=\""+getColumn+"\">" + ls_valor_column + "</td>";
+                htmlTablaBodyTD += "<td scope='col' "+display+"   width='" + ls_width + "' id='col" + this.ls_ordenTB + "_" + i + "_" + j + "' onclick=\""+getColumn+"\">" + ls_valor_column + "</td>";
                 //Carga tabla Hija
                 if (this.lb_cargaHija == true) {
                     cargar_TablaHija = ";onLoad();cargar_TablaHija('" + ls_valor_column + "','" + ls_IdRow + "'," + ls_ordenTB + ",'" + this.ls_classTabla + "')";

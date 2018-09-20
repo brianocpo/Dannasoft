@@ -1022,14 +1022,14 @@ function insertRow()
 
                 if (ColumnsTable[index_col].lb_FK === true && PKTablaPadre.indexOf("N") < 0)
                 {
-                    nuevaFila += '<td ' + styleColumn + ' onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',1,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                    nuevaFila += '<td style="display:none"' + styleColumn + ' onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',1,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
 
                 } else if (ColumnsTable[index_col].lb_FK === true && getNameColumn(j) == nombreCampoFK && PKTablaPadre.indexOf("N") >= 0)
                 {
-                    nuevaFila += '<td ' + styleColumn + ' class="bloquear"  id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                    nuevaFila += '<td style="display:none"' + styleColumn + ' class="bloquear"  id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
                 } else
                 {
-                    nuevaFila += '<td ' + styleColumn + ' onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',0,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                    nuevaFila += '<td style="display:none"' + styleColumn + ' onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',0,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
                 }
                 
                 var IDColumn="col" + ls_ordenTB + "_" + trs + "_" + j;
@@ -1060,13 +1060,13 @@ function insertRow()
                 index_col = findIndexColumn(nombreColumn.replace(/'/g, ""));
                 if (ColumnsTable[index_col].lb_FK === true && PKTablaPadre.indexOf("N") < 0)
                 {
-                    nuevaFila += '<td ' + styleColumn + ' onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',1,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                    nuevaFila += '<td style="display:none"' + styleColumn + ' onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',1,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
                 } else if (ColumnsTable[index_col].lb_FK === true && getNameColumn(j) == nombreCampoFK && PKTablaPadre.indexOf("N") >= 0)
                 {
-                    nuevaFila += '<td ' + styleColumn + ' class="bloquear" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                    nuevaFila += '<td style="display:none"' + styleColumn + ' class="bloquear" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
                 } else
                 {
-                    nuevaFila += '<td ' + styleColumn + ' onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',0,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                    nuevaFila += '<td style="display:none"' + styleColumn + ' onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',0,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
                 }
                 
                 var IDColumn="col" + ls_ordenTB + "_" + trs + "_" + j;
