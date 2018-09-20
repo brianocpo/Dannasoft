@@ -143,7 +143,7 @@ public class obj_paginador {
     public String crearPaginador(){
         ls_htmlPaginador="<div class='row justify-content-center justify-content-md-start paginadorTB' >";
             ls_htmlPaginador+="<div class='col-md-4' style='padding-top:6px'>";
-               ls_htmlPaginador+="Mostrando "+(li_row_inicio+1)+" al "+ (li_row_fin)+ " filas de "+(int)ld_total_reg_tabla;
+               ls_htmlPaginador+="<label style='margin-left:5px;font-size:10px'>Mostrando "+(li_row_inicio+1)+" al "+ (li_row_fin)+ " filas de "+(int)ld_total_reg_tabla+"</label>";
             ls_htmlPaginador+="</div>";
             
             ls_htmlPaginador+="<div class='col-md-8'>";

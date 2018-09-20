@@ -677,9 +677,10 @@ function busquedaTabla()
     }
 }
 /*----------------------------CARGAR DETALLE TABLA----------------------------*/
+var noSaveFilaIDTemp=false
 function cargar_TablaHija(nombreFK, valorFK, ordenTB, lsClassPadre)
-{   var ordenTBFinal=TablasRelacionadas.length-1; 
-    
+{   
+    var ordenTBFinal=TablasRelacionadas.length-1;     
     JsonTablaH = jQuery.parseJSON(ObjsonTablaHija[ordenTB]);   
     JsonTablaH.ls_where = JsonTablaH.ls_where.toString().replace("0", valorFK);
     NomTabla_hija = JsonTablaH.ls_name_tabla.toString();
@@ -723,8 +724,10 @@ function cargar_TablaHija(nombreFK, valorFK, ordenTB, lsClassPadre)
                             if(tr==0)
                             {  
                                 borarTablaHijas(ordenTB,(ordenTBFinal-1));
+                                borarFilaIDTemp(ordenTB,ordenTBFinal);
                             }else{
-                                 $("#R"+ordenTemp+"_0").click(); 
+                                 noSaveFilaIDTemp=true;
+                                 $("#R"+ordenTemp+"_0").click();
                             }
                             //Coloca el Foco de la primera fila de la tabla Hija y retorna el Foco a la Primera tabla 
                             removeLoad();                            
@@ -754,6 +757,11 @@ function borarTablaHijas(ordenTB,ordenTBFinal){
         JsonTabla=jQuery.parseJSON(ObjsonTablaHija[i]);
         $('#' + JsonTabla.ls_IdDivTabla.toString().trim() + " tbody").html(""); 
         $('#' + JsonTabla.ls_IdDivTabla.toString().trim() + " .paginadorTB").html("");
+    }    
+}
+function borarFilaIDTemp(ordenTB,ordenTBFinal){
+    for(var i=ordenTB;i<=ordenTBFinal;i++){
+        FilaIDTemp[i] ="";
     }    
 }
 /*---------------------------------CONFIRM GUARDADO DE DATOS-------------------*/
@@ -927,7 +935,7 @@ function insertRow()
         var nuevaFila = "";
         var Tcolumns = 0;
         //Total de filas de la tabla, se resta -2 filas representa los titulos de la tabla 
-        var trs = $("#" + IdTabla + " tr").length - 2;
+        var trs = $("#" + IdTabla + " tr").length - 1;
         //Total de columnas de toda la tabla x cada fila
         var tds = $("#" + IdTabla + " tr td").length;
         //Se divide para obtener el total de columnas de una sola fila
@@ -1342,8 +1350,13 @@ function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows
        clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect); 
 }
 function clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect)
-{   RowIDSelect[ordenTB]=idRowSelect;//Elemento seleccionado 
-    FilaIDTemp[ordenTB]=filaSelectID[ordenTB];
+{   RowIDSelect[ordenTB]=idRowSelect;//Elemento seleccionado
+    if(noSaveFilaIDTemp==true){
+      FilaIDTemp[ordenTB]="";
+        noSaveFilaIDTemp=false
+    }else{
+      FilaIDTemp[ordenTB]=filaSelectID[ordenTB];
+    }    
     filaSelectID[ordenTB] = IdRowFocu;
 
     ClassRow = ClassRow1;

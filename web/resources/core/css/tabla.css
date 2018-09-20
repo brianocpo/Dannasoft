@@ -10,3 +10,4 @@ body{font-size:12px;line-height: 0.9}
 .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th{padding:3px}
 .table-bordered{margin-bottom:20px}  
 .table-borderedActived{border: 2px solid #97b2c9;margin-bottom:20px;background-color:#dddddd;color:#272626}
+.titulotb h4{ margin: 0px;padding: 0px; font-weight: bold;margin-left: 5px;margin-top: 5px}

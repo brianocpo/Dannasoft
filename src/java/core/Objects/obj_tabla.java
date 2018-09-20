@@ -151,29 +151,29 @@ public class obj_tabla implements Serializable {
     }
 
     public String getTablaHtml() {
-        this.htmlTabla="";
+        this.htmlTabla="<div class='row titulotb'><div class='col-md-12'><h4 class='header smaller lighter blue'>"+getTituloTabla()+"</h4></div></div>";
         getlista_gridColumn_nombre_colPK();
         String ls_classRow = "";
-      
+        //Paginador
+        if(getLb_paginar()){
+            this.htmlTabla+=this.paginador.crearPaginador();
+        }
+        
+        //TABLA
         String ls_width = "0";
-        String htmlTablaHeadTitulo = "<tr><th class='theadTitle' colspan='" + this.lista_gridColumn.size() + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + getTituloTabla() + "</th></tr>";
+//        String htmlTablaHeadTitulo = "<tr><th class='theadTitle' colspan='" + this.lista_gridColumn.size() + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\"></th></tr>";
         String htmlTablaHeadTH = "";
         String htmlTablaBodyTR = "";
         String htmlTablaBodyTD = "";
         String ls_IdRow = "";
         String ls_nombreColumn = "";
         String ls_valor_column = "";
-        //Paginador
-        if(getLb_paginar()){
-            this.htmlTabla=this.paginador.crearPaginador();
-        }
-        
-        
-
+        this.htmlTabla+= "<div class='table-responsive'>";
         this.htmlTabla+= "<table  style='height:" + ls_AltoTabla + "' class='table table-responsive table-bordered Grid-" + this.ls_ordenTB + "' id='" + this.ls_Id_Tabla + "'>";
-        //CABECERA DE LA TABLA
+        
+        //CABECERA TABLA
         this.htmlTabla+= "<thead>";
-        this.htmlTabla+=    htmlTablaHeadTitulo;                
+//        this.htmlTabla+=    htmlTablaHeadTitulo;                
         //Se valida que lista_gridRow tenga filas en caso de no ser así solo se consulta las cabeceras de columnas
         if (0 == this.lista_gridRow.size()) {
             //setear this.ls_nombre_colPK           
@@ -244,7 +244,7 @@ public class obj_tabla implements Serializable {
         this.htmlTabla+= htmlTablaBodyTR;
         this.htmlTabla+= "</tbody>";
         this.htmlTabla +="</table>";  
-       
+        this.htmlTabla+= "</div>";
         
         
         //Data que será pasada para el CRUD en cada TABLA
@@ -257,7 +257,7 @@ public class obj_tabla implements Serializable {
                 + "var ordenTabla" + ls_ordenTB + "='" + ls_ordenTB + "';  "
                 + "TablasRelacionadas[" + ls_ordenTB + "]='" + this.ls_Id_Tabla + "';"
                 + "ObjsonTabla[" + ls_ordenTB + "]='" + this.ObjsonTabla + "';  "
-                + "nombre_campo_padre[" + ls_ordenTB + "]='" + this.ls_nombre_campo_padre + "';  "
+                + "nombre_campo_padre[" + ls_ordenTB + "]='" + this.ls_nombre_campo_padre + "';  "                 
                 + " </script>";
         //Estilo Tabla
         String styleTabla = "<style type='text/css'>"
