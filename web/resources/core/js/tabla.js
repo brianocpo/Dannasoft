@@ -255,7 +255,7 @@ function getColumnasActualizadas(ColumnasActualizada, NomColumna1)
 
 
 function findTypeColumn(nombre_column,ordenTB)
-{   console.log(RowsTableTEMP);
+{   
     var Rows=RowsTableTEMP[ordenTB];
     var Columns=ColumnsTableTEMP[ordenTB];
     var nombre_columnCompare = "";
@@ -679,7 +679,7 @@ function busquedaTabla()
 /*----------------------------CARGAR DETALLE TABLA----------------------------*/
 function cargar_TablaHija(nombreFK, valorFK, ordenTB, lsClassPadre)
 {   var ordenTBFinal=TablasRelacionadas.length-1; 
-   
+    
     JsonTablaH = jQuery.parseJSON(ObjsonTablaHija[ordenTB]);   
     JsonTablaH.ls_where = JsonTablaH.ls_where.toString().replace("0", valorFK);
     NomTabla_hija = JsonTablaH.ls_name_tabla.toString();
@@ -716,10 +716,16 @@ function cargar_TablaHija(nombreFK, valorFK, ordenTB, lsClassPadre)
             })
                     .done(function (data, textStatus, jqXHR) {
                         if (console && console.log) {
-                            
-                            $('#' + JsonTablaH.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);
-                            $("#R"+ordenTemp+"_0").click(); 
-                            console.log(NomTabla_hija+" La solicitud se ha completado correctamente.");                            
+                            console.log(NomTabla_hija+" La solicitud se ha completado correctamente."); 
+                            $('#' + JsonTablaH.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                         
+                           
+                            var tr = $("#" + JsonTablaH.ls_IdDivTabla.toString().trim() + " tbody tr").length;
+                            if(tr==0)
+                            {  
+                                borarTablaHijas(ordenTB,(ordenTBFinal-1));
+                            }else{
+                                 $("#R"+ordenTemp+"_0").click(); 
+                            }
                             //Coloca el Foco de la primera fila de la tabla Hija y retorna el Foco a la Primera tabla 
                             removeLoad();                            
                             if(ordenTBFinal==ordenTemp){
@@ -731,13 +737,6 @@ function cargar_TablaHija(nombreFK, valorFK, ordenTB, lsClassPadre)
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
                         if (console && console.log) {
-                           
-                            borarTablaHijas(ordenTB,(ordenTBFinal-1));
-                    
-                            if(ordenTBFinal==ordenTemp){
-                                fila=$("#"+RowID);
-                                $(fila).click();                                
-                            }
                             console.log("La solicitud a fallado: " + textStatus + errorThrown);
                             removeLoad();
                         }
@@ -1493,10 +1492,13 @@ function actualizarTabla(){
             })
                     .done(function (data, textStatus, jqXHR) {
                         if (console && console.log) {
-                            filaSelectID[1]="";
+                            
+                            setfilaSelectID();
                             $('#' + ObjTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);
                             if(ObjTabla.ls_idFilaSeleccionada.toString().trim()!=""){
                                 $("#"+ObjTabla.ls_idFilaSeleccionada.toString().trim()).click(); 
+                            }else{
+                                 location.reload();
                             }                            
                             removeLoad();                                                      
                         }
@@ -1509,6 +1511,11 @@ function actualizarTabla(){
                         }
                     });
        
+}
+function setfilaSelectID(){
+    for(var i=0;i<filaSelectID.length-1;i++){
+        filaSelectID[i+1]="";
+    }
 }
 function actualizarTablaPaginador(offset1,pagina_actual1,ordenTB)
 {   eliminarObjeto();
