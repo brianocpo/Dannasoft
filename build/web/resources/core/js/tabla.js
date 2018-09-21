@@ -920,7 +920,7 @@ function insertRow()
     {
         console.log(err.message);
     }
-    var styleColumn = "";
+    var styleColumn="";
     var numeracionFila = 0;
     
     if (IdTabla.length > 0)//ID con el nombr de la tabla
@@ -981,7 +981,7 @@ function insertRow()
         filaSelectID[ls_ordenTB] = idNuevaFila;
       
         /*INSERTAR LA NUEVA FILA*/
-        var nuevaFila = "<tr class='rowTabla" + ls_ordenTB + " rowNew " + classNuevaFila + "' id='" + idNuevaFila + "' onclick=' EstiloFilaNueva(this," + ls_ordenTB + "," + trs + "); getRowNueva(\"" + idNuevaFila + "\"," + ls_ordenTB + ",\"" + classNuevaFila + "\",\"" + NombreCampoPKTB + "\",\"" + ls_nombreTabla + "\",\"" + IdTabla + "\")' >";
+        var nuevaFila = "<tr  class='rowTabla" + ls_ordenTB + " rowNew " + classNuevaFila + "' id='" + idNuevaFila + "' onclick=' EstiloFilaNueva(this," + ls_ordenTB + "," + trs + "); getRowNueva(\"" + idNuevaFila + "\"," + ls_ordenTB + ",\"" + classNuevaFila + "\",\"" + NombreCampoPKTB + "\",\"" + ls_nombreTabla + "\",\"" + IdTabla + "\")' >";
         var index_col;
         //Clave primaria temporal
         if (numeracionFila <= 0 || numeracionFila == "") {
@@ -998,14 +998,17 @@ function insertRow()
         if (Tcolumns > 0)
         {  
             for (var j = 0; j < Tcolumns; j++)
-            {   
+            {   styleColumn="";
                 // añadimos las columnas
                 var valor = "";
                 var nombreColumn = "'" + getNameColumn(j) + "'";
-
+                //Campo PK
                 if (NombreCampoPKTB === getNameColumn(j)) {
                       valor =codigoPK;
+                      styleColumn="display:none";  
                 } else if (nombreCampoFK === getNameColumn(j)) { //Valor por defecto de la tabla PADRE                        
+                     styleColumn="display:none";   
+                    
                     //comprobar si la fila de la tabla padre  es una FILA NUEVA (Fila nueva)                    
                     if (PKTablaPadre.indexOf("N") >= 0) {
                         valor = PKTablaPadre;
@@ -1014,6 +1017,7 @@ function insertRow()
                         valor = crearComboDefecto(nombreCampoFK, PKTablaPadre);
                     }
                     FK=true;
+                   
                 }else{
                     FK=false;
                 }
@@ -1022,14 +1026,18 @@ function insertRow()
 
                 if (ColumnsTable[index_col].lb_FK === true && PKTablaPadre.indexOf("N") < 0)
                 {
-                    nuevaFila += '<td style="display:none"' + styleColumn + ' onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',1,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                    nuevaFila += '<td style="' + styleColumn + '"  onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',1,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
 
                 } else if (ColumnsTable[index_col].lb_FK === true && getNameColumn(j) == nombreCampoFK && PKTablaPadre.indexOf("N") >= 0)
                 {
-                    nuevaFila += '<td style="display:none"' + styleColumn + ' class="bloquear"  id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
-                } else
+                    nuevaFila += '<td style="' + styleColumn + '"  class="bloquear"  id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                
+                }else if (ColumnsTable[index_col].lb_PK === true)
                 {
-                    nuevaFila += '<td style="display:none"' + styleColumn + ' onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',0,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                    nuevaFila += '<td style="' + styleColumn + '"  onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',0,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                }else
+                {
+                    nuevaFila += '<td style="padding:10px"  onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',0,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
                 }
                 
                 var IDColumn="col" + ls_ordenTB + "_" + trs + "_" + j;
@@ -1039,20 +1047,23 @@ function insertRow()
         } else //SI no se conoce el total de columnas se consulta al ColumnsTable -  solo en caso de ser una tabla sin registros
         {   
             for (var j = 0; j < ColumnsTable.length; j++)
-            {   
+            {   styleColumn=""; 
                 // añadimos las columnas
                 var valor = "";
                 var nombreColumn = "'" + getNameColumn(j) + "'";
+                //Codigo PK
                 if (NombreCampoPKTB === getNameColumn(j)) {
+                    styleColumn="display:none";
                     valor = "N" + ls_ordenTB + numeracionFila;
                 } else if (getNameColumn(j) == nombreCampoFK) {//Valor por defecto de la tabla PADRE
+                    styleColumn="display:none";
                     //comprobar si la fila de la tabla padre  es una FILA NUEVA (Fila nueva)                     
                     if (PKTablaPadre.indexOf("N") >= 0) {
                         valor = PKTablaPadre;
                     } else {
                         valor = crearComboDefecto(nombreCampoFK, PKTablaPadre);
                     }
-                    FK=true;
+                    FK=true;                   
                 }else{
                      FK=false;
                 }
@@ -1060,13 +1071,19 @@ function insertRow()
                 index_col = findIndexColumn(nombreColumn.replace(/'/g, ""));
                 if (ColumnsTable[index_col].lb_FK === true && PKTablaPadre.indexOf("N") < 0)
                 {
-                    nuevaFila += '<td style="display:none"' + styleColumn + ' onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',1,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                    nuevaFila += '<td style="' + styleColumn + '"  onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',1,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                
                 } else if (ColumnsTable[index_col].lb_FK === true && getNameColumn(j) == nombreCampoFK && PKTablaPadre.indexOf("N") >= 0)
                 {
-                    nuevaFila += '<td style="display:none"' + styleColumn + ' class="bloquear" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                    nuevaFila += '<td style="' + styleColumn + '"  class="bloquear" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                
+                } else if (ColumnsTable[index_col].lb_PK === true){
+                    
+                    nuevaFila += '<td style="' + styleColumn + '"  onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',0,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';    
+                
                 } else
                 {
-                    nuevaFila += '<td style="display:none"' + styleColumn + ' onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',0,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
+                    nuevaFila += '<td style="padding:10px"   onclick="getColumnNueva(' + trs + ',' + j + ',' + nombreColumn + ',0,true,\'' + ls_ordenTB + '\',\'' + IdTabla + '\',\'' + idNuevaFila + '\')" id="col' + ls_ordenTB + '_' + trs + '_' + j + '">' + valor + '</td>';
                 }
                 
                 var IDColumn="col" + ls_ordenTB + "_" + trs + "_" + j;

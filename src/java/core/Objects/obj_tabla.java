@@ -167,6 +167,7 @@ public class obj_tabla implements Serializable {
         String ls_IdRow = "";
         String ls_nombreColumn = "";
         String ls_valor_column = "";
+        String display="";
         this.htmlTabla+= "<div class='table-responsive'>";
         this.htmlTabla+= "<table  style='height:" + ls_AltoTabla + "' class='table table-responsive table-bordered Grid-" + this.ls_ordenTB + "' id='" + this.ls_Id_Tabla + "'>";
         
@@ -176,15 +177,30 @@ public class obj_tabla implements Serializable {
         if (0 == this.lista_gridRow.size()) {
             //setear this.ls_nombre_colPK           
             for (int k = 0; k < this.lista_gridColumn.size(); k++) {
+                display="";
                 ls_width = getWidthColumn(lista_gridColumn.get(k));
-                htmlTablaHeadTH = htmlTablaHeadTH + "<th scope='col'  width='" + ls_width + "' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + lista_gridColumn.get(k).getLs_nombre_column() + "</th>";
+                if (lista_gridColumn.get(k).getLb_PK()) {
+                         display="style='display:none'";
+                }
+                if (lista_gridColumn.get(k).getLb_FK() && lista_gridColumn.get(k).getLs_nombre_column().equals(ls_nombre_campo_padre)) {
+                     display="style='display:none'";
+                }
+                
+                htmlTablaHeadTH = htmlTablaHeadTH + "<th "+display+" scope='col'  width='" + ls_width + "' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + lista_gridColumn.get(k).getLs_nombre_column() + "</th>";
             }
         }
         else {
             for (int i = this.lista_gridRow.size() - 1; i < this.lista_gridRow.size(); i++) {   //setear this.ls_nombre_colPK               
                 for (int k = 0; k < this.lista_gridRow.get(i).getLista_gridColumn().size(); k++) {
+                    display="";
                     ls_width = getWidthColumn(lista_gridRow.get(i).getLista_gridColumn().get(k));
-                    htmlTablaHeadTH = htmlTablaHeadTH + "<th scope='col'  width='" + ls_width + "' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + lista_gridRow.get(i).getLista_gridColumn().get(k).getLs_nombre_column() + "</th>";
+                    if (lista_gridRow.get(i).getLista_gridColumn().get(k).getLb_PK()) {
+                         display="style='display:none'";
+                    }
+                    if (lista_gridRow.get(i).getLista_gridColumn().get(k).getLb_FK() && lista_gridRow.get(i).getLista_gridColumn().get(k).getLs_nombre_column().equals(ls_nombre_campo_padre)) {
+                         display="style='display:none'";
+                    }
+                    htmlTablaHeadTH = htmlTablaHeadTH + "<th "+display+" scope='col'  width='" + ls_width + "' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + lista_gridRow.get(i).getLista_gridColumn().get(k).getLs_nombre_column() + "</th>";
                 }
             }
         }
@@ -195,7 +211,7 @@ public class obj_tabla implements Serializable {
         this.htmlTabla+= "<tbody>";
         String cargar_TablaHija = "";
         String getColumn = "";
-        String display="";
+        
         for (int i = 0; i < this.lista_gridRow.size(); i++) {          
             ls_classRow = this.ls_ordenTB + "_row_"+ i;
             this.ls_classTabla = ls_classRow;
@@ -214,10 +230,14 @@ public class obj_tabla implements Serializable {
                     this.ls_nombre_colPK = lista_gridRow.get(i).getLista_gridColumn().get(j).getLs_nombre_column();
                     display="style='display:none'";
                 }
-                if (lista_gridRow.get(i).getLista_gridColumn().get(j).getLb_FK()) {
+                if (lista_gridRow.get(i).getLista_gridColumn().get(j).getLb_FK() && lista_gridRow.get(i).getLista_gridColumn().get(j).getLs_nombre_column().equals(ls_nombre_campo_padre) ) {
                     ls_codigo_fk_select = lista_gridRow.get(i).getLista_gridColumn().get(j).getData_dropdown().getCodigo_fk_select().trim();
                     ls_valor_column = lista_gridRow.get(i).getLista_gridColumn().get(j).getData_dropdown().getValor_fk_select().trim();
                     display="style='display:none'";
+                }else  if (lista_gridRow.get(i).getLista_gridColumn().get(j).getLb_FK() && lista_gridRow.get(i).getLista_gridColumn().get(j).getLs_nombre_column()!= ls_nombre_campo_padre) {
+                    ls_codigo_fk_select = lista_gridRow.get(i).getLista_gridColumn().get(j).getData_dropdown().getCodigo_fk_select().trim();
+                    ls_valor_column = lista_gridRow.get(i).getLista_gridColumn().get(j).getData_dropdown().getValor_fk_select().trim();
+                    display="";
                 } else {
                     ls_codigo_fk_select = "0";
                     ls_valor_column = lista_gridRow.get(i).getLista_gridColumn().get(j).getLs_valor().trim();
