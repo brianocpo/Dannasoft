@@ -127,6 +127,19 @@ function selectUltimaFilaTabla(){
         $("#" + IdRowFinalTabla).click();
     } 
 }
+function marcarTodos(classcheck,elemento){
+
+    if (elemento.checked) {
+       $("."+classcheck).prop("checked",true);       
+       $("input."+classcheck).each(function(){ 
+           $(this).change(); 
+       });
+       
+    }else{
+       $("."+classcheck).prop("checked",false); 
+    }
+    
+}
 function eliminarFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1)
 {
     var estadoDetalle = false;
@@ -938,6 +951,8 @@ function insertRow()
         var trs = $("#" + IdTabla + " tr").length - 1;
         //Total de columnas de toda la tabla x cada fila
         var tds = $("#" + IdTabla + " tr td").length;
+        //Eliminar las columnas de eliminar y edicion
+        tds=tds - (trs*2);
         //Se divide para obtener el total de columnas de una sola fila
         Tcolumns = tds / trs;
         //se suma mas uno al total de filas, representa la nueva fila
@@ -996,7 +1011,7 @@ function insertRow()
         var FK=false;
         //SI se conoce el total de columnas - en caso de que ya existan registros anteriores
         if (Tcolumns > 0)
-        {  
+        {   nuevaFila +='<td></td><td></td>';
             for (var j = 0; j < Tcolumns; j++)
             {   styleColumn="";
                 // añadimos las columnas

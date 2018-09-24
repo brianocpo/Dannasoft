@@ -162,6 +162,8 @@ public class obj_tabla implements Serializable {
         //TABLA
         String ls_width = "0";
         String htmlTablaHeadTH = "";
+        String htmlTablaCheckElim = "";
+        String htmlTablaCheckEdit = "";
         String htmlTablaBodyTR = "";
         String htmlTablaBodyTD = "";
         String ls_IdRow = "";
@@ -171,7 +173,7 @@ public class obj_tabla implements Serializable {
         this.htmlTabla+= "<div class='table-responsive'>";
         this.htmlTabla+= "<table  style='height:" + ls_AltoTabla + "' class='table table-responsive table-bordered Grid-" + this.ls_ordenTB + "' id='" + this.ls_Id_Tabla + "'>";
         
-        //CABECERA TABLA
+        //CABECERA TABLA        
         this.htmlTabla+= "<thead>";                
         //Se valida que lista_gridRow tenga filas en caso de no ser así solo se consulta las cabeceras de columnas
         if (0 == this.lista_gridRow.size()) {
@@ -187,6 +189,8 @@ public class obj_tabla implements Serializable {
                 }
                 
                 htmlTablaHeadTH = htmlTablaHeadTH + "<th "+display+" scope='col'  width='" + ls_width + "' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + lista_gridColumn.get(k).getLs_nombre_column() + "</th>";
+                htmlTablaCheckElim= "<th scope='col'  width='5px' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\"> <input type='checkbox' onchange=\"marcarTodos('checkEliminar"+ls_ordenTB+"',this)\"> </th>";
+                htmlTablaCheckEdit= "<th scope='col'  width='5px' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\"> </th>";
             }
         }
         else {
@@ -201,17 +205,20 @@ public class obj_tabla implements Serializable {
                          display="style='display:none'";
                     }
                     htmlTablaHeadTH = htmlTablaHeadTH + "<th "+display+" scope='col'  width='" + ls_width + "' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + lista_gridRow.get(i).getLista_gridColumn().get(k).getLs_nombre_column() + "</th>";
+                    htmlTablaCheckElim= "<th scope='col'  width='5px' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\"> <input type='checkbox'  onchange=\"marcarTodos('checkEliminar"+ls_ordenTB+"',this)\"> </th>";
+                    htmlTablaCheckEdit= "<th scope='col'  width='5px' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">  </th>";
                 }
             }
         }
-        this.htmlTabla+= htmlTablaHeadTH;
+
+        this.htmlTabla+= htmlTablaCheckElim + htmlTablaCheckEdit + htmlTablaHeadTH;
         this.htmlTabla+= "</thead>";
         
         //CUERPO DE LA TABLA
         this.htmlTabla+= "<tbody>";
         String cargar_TablaHija = "";
         String getColumn = "";
-        
+        String getRow = "";
         for (int i = 0; i < this.lista_gridRow.size(); i++) {          
             ls_classRow = this.ls_ordenTB + "_row_"+ i;
             this.ls_classTabla = ls_classRow;
@@ -219,6 +226,7 @@ public class obj_tabla implements Serializable {
             ls_IdRow = "CodPK";
             cargar_TablaHija = "";
             getColumn="";
+            getRow="";
             for (int j = 0; j < this.lista_gridRow.get(i).getLista_gridColumn().size(); j++) {
                 display="";
                 ls_width = getWidthColumn(lista_gridRow.get(i).getLista_gridColumn().get(j));
@@ -247,8 +255,7 @@ public class obj_tabla implements Serializable {
                     getColumn="";
                 }else{
                     getColumn="getColumn(" + i + "," + j + ",'" + ls_nombreColumn + "','" + ls_codigo_fk_select + "',false,'" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_IdRow + "','R"+this.ls_ordenTB+"_"+i+"')";
-                }
-                
+                }                
                 htmlTablaBodyTD += "<td scope='col' "+display+"   width='" + ls_width + "' id='col" + this.ls_ordenTB + "_" + i + "_" + j + "' onclick=\""+getColumn+"\">" + ls_valor_column + "</td>";
                 //Carga tabla Hija
                 if (this.lb_cargaHija == true) {
@@ -256,9 +263,13 @@ public class obj_tabla implements Serializable {
                 }else{cargar_TablaHija ="";}
             }
             
+            htmlTablaCheckElim="<td scope='col'   width='5px' id='colE_elim" + this.ls_ordenTB + "_" + i + "'><input type='checkbox' name='check[]' class='checkEliminar"+ls_ordenTB+"' value='"+ls_IdRow+"' onchange=\"eliminarFilaTabla('"+ls_name_tabla+"', '" + this.ls_nombre_colPK + "', '"+ls_ordenTB+"', '"+ls_IdRow+"')\"></td>";
+            htmlTablaCheckEdit="<td scope='col'   width='5px' id='colE_dit" + this.ls_ordenTB + "_" + i + "'> <button  class='btn btn-success btn-xs' style='padding:1px'  type='button' onclick='editarRow("+ls_IdRow+")'> <i class='ace-icon fa fa-pencil align-top bigger-125'></i> </button> </td>";
+            getRow="getRow(this,'" + ls_IdRow + "','" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_classRow + "','R"+this.ls_ordenTB+"_"+i+"') ";
+
             htmlTablaBodyTD=htmlTablaBodyTD.replaceAll("CodPK",ls_IdRow );
-            htmlTablaBodyTR += "<tr id='R" + this.ls_ordenTB + "_" + i + "' scope='row'    onclick=\"getRow(this,'" + ls_IdRow + "','" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_classRow + "','R"+this.ls_ordenTB+"_"+i+"')" + cargar_TablaHija + "\"  class=\"rowTabla" + ls_ordenTB + " " + this.ls_classTabla + " " + this.ls_classTablaPadre + "\">";
-            htmlTablaBodyTR += htmlTablaBodyTD;
+            htmlTablaBodyTR += "<tr id='R" + this.ls_ordenTB + "_" + i + "' scope='row'    onclick=\""+getRow + cargar_TablaHija + "\"  class=\"rowTabla" + ls_ordenTB + " " + this.ls_classTabla + " " + this.ls_classTablaPadre + "\">";
+            htmlTablaBodyTR += htmlTablaCheckElim + htmlTablaCheckEdit + htmlTablaBodyTD;
             htmlTablaBodyTR += "</tr>";
         }
        
