@@ -205,7 +205,7 @@ public class obj_tabla implements Serializable {
                          display="style='display:none'";
                     }
                     htmlTablaHeadTH = htmlTablaHeadTH + "<th "+display+" scope='col'  width='" + ls_width + "' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">" + lista_gridRow.get(i).getLista_gridColumn().get(k).getLs_nombre_column() + "</th>";
-                    htmlTablaCheckElim= "<th scope='col'  width='5px' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\"> <input type='checkbox'  onchange=\"marcarTodos('checkEliminar"+ls_ordenTB+"',this)\"> </th>";
+                    htmlTablaCheckElim= "<th scope='col'  width='5px' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\"> Eliminar<input type='checkbox'  onchange=\"marcarTodos('checkEliminar"+ls_ordenTB+"',this)\"> </th>";
                     htmlTablaCheckEdit= "<th scope='col'  width='5px' class='rowTablaThead" + ls_ordenTB + "' onclick=\"inicializarTabla('" + this.ls_Id_Tabla + "','" + this.ls_nombre_colPK + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + ls_ordenTB + "')\">  </th>";
                 }
             }
@@ -263,7 +263,7 @@ public class obj_tabla implements Serializable {
                 }else{cargar_TablaHija ="";}
             }
             
-            htmlTablaCheckElim="<td scope='col'   width='5px' id='colE_elim" + this.ls_ordenTB + "_" + i + "'><input type='checkbox' name='check[]' class='checkEliminar"+ls_ordenTB+"' value='"+ls_IdRow+"' onchange=\"eliminarFilaTabla('"+ls_name_tabla+"', '" + this.ls_nombre_colPK + "', '"+ls_ordenTB+"', '"+ls_IdRow+"')\"></td>";
+            htmlTablaCheckElim="<td scope='col'   width='5px' id='colE_elim" + this.ls_ordenTB + "_" + i + "'><input type='checkbox' name='check[]' class='checkEliminar"+ls_ordenTB+"' value='"+ls_IdRow+"' onchange=\"checkTrueFilaTabla('"+ls_name_tabla+"', '" + this.ls_nombre_colPK + "', '"+ls_ordenTB+"', '"+ls_IdRow+"',this)\"></td>";
             htmlTablaCheckEdit="<td scope='col'   width='5px' id='colE_dit" + this.ls_ordenTB + "_" + i + "'> <button  class='btn btn-success btn-xs' style='padding:1px'  type='button' onclick='editarRow("+ls_IdRow+")'> <i class='ace-icon fa fa-pencil align-top bigger-125'></i> </button> </td>";
             getRow="getRow(this,'" + ls_IdRow + "','" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_classRow + "','R"+this.ls_ordenTB+"_"+i+"') ";
 

@@ -128,17 +128,62 @@ function selectUltimaFilaTabla(){
     } 
 }
 function marcarTodos(classcheck,elemento){
-
     if (elemento.checked) {
        $("."+classcheck).prop("checked",true);       
-       $("input."+classcheck).each(function(){ 
+       $("input."+classcheck).each(function(){      
            $(this).change(); 
        });
        
     }else{
        $("."+classcheck).prop("checked",false); 
-    }
-    
+       $("input."+classcheck).each(function(){      
+           $(this).change(); 
+       });
+    }    
+}
+function checkTrueFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1,elemento)
+{   
+      if(elemento.checked){
+                console.log("Eliminadar:"+codigoPK1 );
+                var estadoDetalle = false;
+                if (NomTabla_hija.length > 0)//Solo se verifica en caso de tener una tabla detalle
+                {
+                    estadoDetalle = verificarDetalleTabla(NomTabla_hija, ClassRow);
+                } else {
+                    estadoDetalle = true;
+                }
+                if (estadoDetalle == true)
+                {
+                    var BuscarTabla = verificarTabla(NomTabla1);
+                    if (BuscarTabla == 0)//Solo en caso de no estar agregada la Tabla
+                    {
+                        var estado = addTabla(NomTabla1, NomCampoPK1, OredenTabla1); //Se agrega la Tabla 
+                        if (estado === 1) {
+                            eliminarFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1); //Se elimina la fila
+                        }
+                    } else {
+
+                        var FilaEliminada = {"codigoPK": codigoPK1};
+                        var FilaEliminadaAnteriores = BusFilasElimTabla(NomTabla1);
+                        if (FilaEliminadaAnteriores !== 0)
+                        {
+                            FilaEliminadaAnteriores[FilaEliminadaAnteriores.length] = FilaEliminada;
+                            addFilasElimTabla(NomTabla1, FilaEliminadaAnteriores);                              
+                        }
+                    }
+                } 
+      }else{
+          console.log("NO Eliminar:"+codigoPK1);
+      }
+      
+//    return 1;
+}
+function buscarEntreFilasEliminadas(FilaEliminadaAnteriores){
+    if(FilaEliminadaAnteriores!=null){
+        for(var i=0;i<FilaEliminadaAnteriores.length;i++){
+
+        }   
+    }    
 }
 function eliminarFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1)
 {
