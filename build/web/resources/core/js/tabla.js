@@ -1009,9 +1009,11 @@ function insertRow()
             InsertFila(codigoPK,"","");
         }        
         var FK=false;
-        //SI se conoce el total de columnas - en caso de que ya existan registros anteriores
+        //Filas iniciales representan el eliminar y editar
+        nuevaFila +='<td></td><td></td>';
+        //SI se conoce el total de columnas - en caso de que ya existan registros anteriores        
         if (Tcolumns > 0)
-        {   nuevaFila +='<td></td><td></td>';
+        {  
             for (var j = 0; j < Tcolumns; j++)
             {   styleColumn="";
                 // añadimos las columnas
