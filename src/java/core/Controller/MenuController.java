@@ -202,7 +202,7 @@ public class MenuController {
         obj_tabla Tabla2 = new obj_tabla();
         Tabla2.configTabla(ls_catalog, ls_schema, "v_ciudad", ls_query2, "codigo_pai=0", "nombre_ciu ASC");
         Tabla2.setLb_paginar(true);
-        Tabla2.setLi_num_reg_x_pagina(2);
+        Tabla2.setLi_num_reg_x_pagina(5);
         Tabla2.setLb_cargaHija(true);
         Tabla2.setLs_nombre_campo_padre("codigo_pai");       
         Tabla2.setLs_Id_Tabla("v_ciudad");

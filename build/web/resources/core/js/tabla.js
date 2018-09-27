@@ -174,16 +174,23 @@ function checkTrueFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1,elem
                 } 
       }else{
           console.log("NO Eliminar:"+codigoPK1);
+          var FilaEliminadaAnteriores = BusFilasElimTabla(NomTabla1);
+          buscarEntreFilasEliminadas(FilaEliminadaAnteriores,codigoPK1,NomTabla1);
       }
       
-//    return 1;
 }
-function buscarEntreFilasEliminadas(FilaEliminadaAnteriores){
-    if(FilaEliminadaAnteriores!=null){
+function buscarEntreFilasEliminadas(FilaEliminadaAnteriores,codigoPK1,NomTabla1){
+    
+    if(FilaEliminadaAnteriores !== 0){
         for(var i=0;i<FilaEliminadaAnteriores.length;i++){
-
-        }   
-    }    
+            
+            if(FilaEliminadaAnteriores[i].codigoPK==codigoPK1){
+                FilaEliminadaAnteriores.splice(i,1);
+            }                   
+        }
+        addFilasElimTabla(NomTabla1, FilaEliminadaAnteriores); 
+    }
+    
 }
 function eliminarFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1)
 {
