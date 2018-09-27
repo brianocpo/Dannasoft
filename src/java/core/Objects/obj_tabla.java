@@ -263,7 +263,7 @@ public class obj_tabla implements Serializable {
                 }else{cargar_TablaHija ="";}
             }
             
-            htmlTablaCheckElim="<td scope='col'   width='5px' id='colE_elim" + this.ls_ordenTB + "_" + i + "'><input type='checkbox' name='check[]' class='checkEliminar"+ls_ordenTB+"' value='"+ls_IdRow+"' onchange=\"checkTrueFilaTabla('"+ls_name_tabla+"', '" + this.ls_nombre_colPK + "', '"+ls_ordenTB+"', '"+ls_IdRow+"',this)\"></td>";
+            htmlTablaCheckElim="<td scope='col'   width='5px' id='colE_elim" + this.ls_ordenTB + "_" + i + "'><input type='checkbox' name='check[]' class='checkEliminar"+ls_ordenTB+"' value='"+ls_IdRow+"' onchange=\" verificarCambiosControles('"+ls_ordenTB+"','"+ls_IdRow+"');checkTrueFilaTabla('"+ls_name_tabla+"', '" + this.ls_nombre_colPK + "', '"+ls_ordenTB+"', '"+ls_IdRow+"',this,'" + ls_classRow + "')\"></td>";
             htmlTablaCheckEdit="<td scope='col'   width='5px' id='colE_dit" + this.ls_ordenTB + "_" + i + "'> <button  class='btn btn-success btn-xs' style='padding:1px'  type='button' onclick='editarRow("+ls_IdRow+")'> <i class='ace-icon fa fa-pencil align-top bigger-125'></i> </button> </td>";
             getRow="getRow(this,'" + ls_IdRow + "','" + this.ls_nombre_colPK + "','" + this.ls_Id_Tabla + "',jsonRows" + ls_ordenTB + ",jsonColumns" + ls_ordenTB + ",'" + this.ls_name_tabla + "','" + this.ls_ordenTB + "','" + ls_classRow + "','R"+this.ls_ordenTB+"_"+i+"') ";
 

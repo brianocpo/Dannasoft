@@ -127,13 +127,17 @@ function selectUltimaFilaTabla(){
         $("#" + IdRowFinalTabla).click();
     } 
 }
+//Opcion de eliminacion de filas por marcado checkbox
+var filasMarcadasIndividual=true;
 function marcarTodos(classcheck,elemento){
     if (elemento.checked) {
        $("."+classcheck).prop("checked",true);       
-       $("input."+classcheck).each(function(){      
+       $("input."+classcheck).each(function(){
+           filasMarcadasIndividual=false;
            $(this).change(); 
-       });
-       
+       });       
+        mensajeAccion("Peligro", "Las filas marcadas serán eliminadas al Guardar", "");
+        filasMarcadasIndividual=true;
     }else{
        $("."+classcheck).prop("checked",false); 
        $("input."+classcheck).each(function(){      
@@ -141,14 +145,26 @@ function marcarTodos(classcheck,elemento){
        });
     }    
 }
-function checkTrueFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1,elemento)
-{   
+function checkTrueFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1,elemento,ClassRow1)
+{     eliminarObjeto();
       if(elemento.checked){
-                console.log("Eliminadar:"+codigoPK1 );
+                var NomTablaHija ="";
+                var JsonTablaHTEMP ="";
+                var count=0;
+                if(ObjsonTablaHija!=""){                     
+                     count=ObjsonTablaHija.length - 1; //representa el número de tablas con tablas hijas
+                    if(OredenTabla1<=count){
+                        JsonTablaHTEMP = jQuery.parseJSON(ObjsonTablaHija[OredenTabla1]);                       
+                        if(JsonTablaHTEMP!=""){
+                            NomTablaHija = JsonTablaHTEMP.ls_name_tabla.toString();
+                        }   
+                    }                     
+                }
+
                 var estadoDetalle = false;
-                if (NomTabla_hija.length > 0)//Solo se verifica en caso de tener una tabla detalle
+                if (NomTablaHija.length > 0)//Solo se verifica en caso de tener una tabla detalle
                 {
-                    estadoDetalle = verificarDetalleTabla(NomTabla_hija, ClassRow);
+                    estadoDetalle = verificarDetalleTabla(NomTablaHija, ClassRow1);
                 } else {
                     estadoDetalle = true;
                 }
@@ -168,12 +184,15 @@ function checkTrueFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1,elem
                         if (FilaEliminadaAnteriores !== 0)
                         {
                             FilaEliminadaAnteriores[FilaEliminadaAnteriores.length] = FilaEliminada;
-                            addFilasElimTabla(NomTabla1, FilaEliminadaAnteriores);                              
+                            addFilasElimTabla(NomTabla1, FilaEliminadaAnteriores);
+                            if(filasMarcadasIndividual==true){
+                                mensajeAccion("Peligro", "La fila marcada serán eliminada al Guardar", "");
+                            }
                         }
                     }
                 } 
       }else{
-          console.log("NO Eliminar:"+codigoPK1);
+          
           var FilaEliminadaAnteriores = BusFilasElimTabla(NomTabla1);
           buscarEntreFilasEliminadas(FilaEliminadaAnteriores,codigoPK1,NomTabla1);
       }
@@ -252,7 +271,7 @@ function BusFilasElimTabla(NomTabla1)
 function verificarCambiosTablas(ordenTB)
 {
     for (var i = 0; i < Tabla.TablaBDD.length; i++)
-    {   
+    {   //Recorro las tablas con un orden mayor que representan al detalle de la tabla padre seleccionada
         if (parseInt(Tabla.TablaBDD[i].OredenTabla) > parseInt(ordenTB))
         {   
             var NumFilasEliminadas = Tabla.TablaBDD[i].FilasEliminadas.length;
@@ -480,6 +499,7 @@ function inicializarTabla(IdTabla1, NombreCampPK, jsonRows, jsonColumns, nombreT
     setJsonTablas(jsonRows, jsonColumns, nombreTabla);
     addTabla(nombreTabla, NombreCampPK, ordenTB);
     permisoOpciones(ordenTB);
+    
     return 1;
 }
 
@@ -891,7 +911,7 @@ function mensajeAccion(valor, Mensaje, IdElementoAnclaje)
             break;
         case "Peligro":
             var iconoMensaje = '<i class="ace-icon fa fa-times"></i>';
-            Mensaje = '<strong>' + iconoMensaje + ' Peligro: </strong>' + Mensaje;
+            Mensaje = '<strong>' + iconoMensaje + ' Alerta: </strong>' + Mensaje;
             var classMensaje = "alert alert-danger";
             break;
     }
@@ -1432,13 +1452,13 @@ function setToolTip(element, title_tool)
     $(element).tooltip({title: title_tool, placement: "bottom", animation: true});
 }
 function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect)
-{   
+{      //console.log("fila seleccionada"+IdRowFocu);
        clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect); 
 }
 function clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect)
 {   RowIDSelect[ordenTB]=idRowSelect;//Elemento seleccionado
     if(noSaveFilaIDTemp==true){
-      FilaIDTemp[ordenTB]="";
+        FilaIDTemp[ordenTB]="";
         noSaveFilaIDTemp=false
     }else{
       FilaIDTemp[ordenTB]=filaSelectID[ordenTB];
@@ -1451,7 +1471,10 @@ function clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRo
     if (inicializarTabla(IdTabla1, NombreCampPK, jsonRows, jsonColumns, nombreTabla, ordenTB) === 1)
     {
         EstiloFilaActiva();
-    } 
+    }
+    //Inicializar variable que sirve para verificarCambiosTablas()
+    columTablaSelectTEMP[ordenTB]=columTablaSelect[ordenTB];
+    columTablaSelect[ordenTB]=IdRowFocu;
 }
 function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect)
 {   
@@ -1460,20 +1483,22 @@ function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, 
     columTablaSelectTEMP[ordenTB]=columTablaSelect[ordenTB];
     columTablaSelect[ordenTB]=ls_IdRow;
     
-    if ((parseInt(columTablaSelectTEMP[ordenTB]) != parseInt(columTablaSelect[ordenTB])) && parseInt(columTablaSelectTEMP[ordenTB])>0) {
-        if (verificarCambiosTablas(ordenTB) === 1)
-        {   eliminarObjeto();
+    //Verificar si existe algun cambio a nivel de las tablas hijas del Padre
+    if (verificarCambiosTablas(ordenTB) === 1)
+    {   //Verificamos si existe algun cambio de fila en la cabezera por lo existe peligro de perder los registros de la tablas hijas
+        if ((parseInt(columTablaSelectTEMP[ordenTB]) != parseInt(columTablaSelect[ordenTB])) && parseInt(columTablaSelectTEMP[ordenTB])>0){
+            eliminarObjeto();
+            //Crea los objetos nuevos insertados antes de guardar
             if(getValorFilasNuevas()===1){                
                 GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
                 clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect);
             } 
         }else{
             clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect);
-        } 
+        }            
     }else{
-            clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect);
+        clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect);
     } 
-    
 }
 function clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect){
   /*Setear los valores iniciales al seleccionar la columna*/
@@ -1485,6 +1510,21 @@ function clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select
             crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_select, boolNuevo);
         }
     }  
+}
+function verificarCambiosControles(ordenTB,ls_IdRow){
+//    console.log(ls_IdRow);
+//    console.log(columTablaSelectTEMP);
+//     //Verificar si existe algun cambio a nivel de las tablas hijas del Padre
+//    if (verificarCambiosTablas(ordenTB) === 1)
+//    {   console.log("entro ver "+columTablaSelect[ordenTB]+" - "+ls_IdRow);
+//        //Verificamos si existe algun cambio de fila en la cabezera por lo existe peligro de perder los registros de la tablas hijas
+//        if ((parseInt(ls_IdRow) != parseInt(columTablaSelectTEMP[ordenTB]))){
+//           eliminarObjeto();  
+//           if(getValorFilasNuevas()===1){                
+//                GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
+//            }
+//        }        
+//    }
 }
 function getRowNueva(idNuevaFila1, ordenTB, classNuevaFila1, NombreCampoPKTB1, ls_nombreTabla1, IdTabla1)
 {

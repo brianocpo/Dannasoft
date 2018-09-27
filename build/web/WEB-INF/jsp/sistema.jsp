@@ -98,13 +98,14 @@
                             </form>
                         </div>
                     </div>
-
-                    <div class="page-content">
+                    <!-- zona en donde se encuentra todas la TABLAS y controles -->
+                    <div class="page-content" id="arear_tablas">
                         <div class="row">
                             <div class="col-xs-12">
                                
                                  <%@ include file="pantalla_triple.jsp" %>
-                                 <div id="grid-pager"></div>
+                                 
+                                 
                             </div><!-- /.col -->
                         </div><!-- /.row -->
                     </div><!-- /.page-content -->
