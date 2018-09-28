@@ -1511,20 +1511,24 @@ function clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select
         }
     }  
 }
-function verificarCambiosControles(ordenTB,ls_IdRow){
-//    console.log(ls_IdRow);
-//    console.log(columTablaSelectTEMP);
-//     //Verificar si existe algun cambio a nivel de las tablas hijas del Padre
-//    if (verificarCambiosTablas(ordenTB) === 1)
-//    {   console.log("entro ver "+columTablaSelect[ordenTB]+" - "+ls_IdRow);
-//        //Verificamos si existe algun cambio de fila en la cabezera por lo existe peligro de perder los registros de la tablas hijas
-//        if ((parseInt(ls_IdRow) != parseInt(columTablaSelectTEMP[ordenTB]))){
-//           eliminarObjeto();  
-//           if(getValorFilasNuevas()===1){                
-//                GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
-//            }
-//        }        
-//    }
+
+function getColumnAction(ordenTB,IdRow1){
+    eliminarObjeto();
+    RowID=IdRow1;
+    verificarCambiosControles(ordenTB,IdRow1);
+}
+function verificarCambiosControles(ordenTB,IdRow1){
+    //Verificar si existe algun cambio a nivel de las tablas hijas del Padre
+    if (verificarCambiosTablas(ordenTB) === 1)
+    {   console.log("entro ver "+columTablaSelect[ordenTB]+" - "+IdRow1);
+        //Verificamos si existe algun cambio de fila en la cabezera por lo existe peligro de perder los registros de la tablas hijas
+        if ((parseInt(IdRow1) != parseInt(columTablaSelectTEMP[ordenTB]))){
+           eliminarObjeto();  
+           if(getValorFilasNuevas()===1){                
+                GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
+            }
+        }        
+    }
 }
 function getRowNueva(idNuevaFila1, ordenTB, classNuevaFila1, NombreCampoPKTB1, ls_nombreTabla1, IdTabla1)
 {
