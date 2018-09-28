@@ -1,6 +1,41 @@
 <%@ include file="/WEB-INF/jsp/complementosJS.jsp" %>
-<title>${TitlePage}</title>       
+<title>${TitlePage}</title> 
+<!--Eventos del Teclado-->
+<script type="text/javascript">
+            $(document).ready(function() {
+                document.onkeydown = function (e) {
+                    e = e || window.event;//Get event
+                        if (e.ctrlKey) {
+                            var c = e.which || e.keyCode;//Get key code
+                            switch (c) {
+                                case 83://Block Ctrl+S
+                                    e.preventDefault();
+                                case 107://Block Ctrl+ +
+                                    e.preventDefault();    
+                                break;
+                            }
+                        }
+                };
+                
+                $("body").keydown(function(e){
 
+                        if(e.ctrlKey){
+                            var c = e.which || e.keyCode; 
+                            switch (c) {
+                                case 83:
+                                    guardarTabla(1);
+                                    break;
+                                case 46:
+                                    deletRow();
+                                    break;
+                                case 107:
+                                    insertarFilaNueva();
+                                    break;    
+                            }
+                        }
+                });
+            });                       
+</script>
 <div id="mensajeAlerta" class="mensajeFixed"></div>
 <!--Botones Principales-->
 <div class="table-responsive" style="padding-bottom:20px">

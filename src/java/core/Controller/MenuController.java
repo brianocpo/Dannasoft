@@ -41,9 +41,9 @@ public class MenuController {
         return "sistema";
     }
 
-    @RequestMapping("/Prueba")
+    @RequestMapping("/FormularioValidacion")
     public String usuarios(Model model) {
-        return "PruebaSelect";
+        return "FormularioValidacion";
     }
 
     @RequestMapping("/Usuarios")

@@ -242,7 +242,7 @@ function eliminarFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1)
             }
         }
     }else{ return 0;}
-        mensajeAccion("Alerta", "Fila Eliminada", "");
+        mensajeAccion("Peligro", "Fila Eliminada los cambios se aplicarán al Guardar", "");
     return 1;
 }
 function BusFilasActualizadas()
@@ -929,7 +929,7 @@ function mensajeAccion(valor, Mensaje, IdElementoAnclaje)
 
     setTimeout(function () {
         eliminarMensaje(divMensaje);
-    }, 3000);
+    }, 4000);
 }
 function eliminarMensaje(elemento)
 {
@@ -1514,6 +1514,7 @@ function clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select
 
 function getColumnAction(ordenTB,IdRow1){
     eliminarObjeto();
+    IdColumnSelect="";
     RowID=IdRow1;
     verificarCambiosControles(ordenTB,IdRow1);
 }
