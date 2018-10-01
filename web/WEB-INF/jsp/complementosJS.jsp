@@ -18,6 +18,9 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/core/css/tabla.css">
 <!-- Estilo Principal -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/principal.css" />
+<!-- Validador -->
+<script src="${pageContext.request.contextPath}/resources/assets/js/jquery.validate.min.js"></script> 
+<script src="${pageContext.request.contextPath}/resources/assets/js/messages_es.min.js"></script>
 
 
 

@@ -13,60 +13,180 @@
         <meta name="author" content="Brian Montenegro">
 
         <title>Dannasoft - Login</title>
-
-        <!-- bootstrap & fontawesome -->
+        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery-1.12.4.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery.validate.min.js"></script> 
+        <script src="${pageContext.request.contextPath}/resources/assets/js/messages_es.min.js"></script> 
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+        
 
-        <!-- page specific plugin styles -->
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/jquery-ui.min.css" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/bootstrap-datepicker3.min.css" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/ui.jqgrid.min.css" />
-        <!-- text fonts -->
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/fonts.googleapis.com.css" />
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="${pageContext.request.contextPath}/resources/assets/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+               $.validator.setDefaults( {
+			submitHandler: function () {
+				//alert( "submitted!" );
+                                //formulario.resetForm();
+			}
+		} );
 
-        <!-- ace styles -->
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
-        <!--[if lte IE 9]>
-                <link rel="stylesheet" href="assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
-        <![endif]-->
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/ace-skins.min.css" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/ace-rtl.min.css" />
-        <!--[if lte IE 9]>
-            <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
-          <![endif]-->
+		$( document ).ready( function () {
+			var formulario=$( "#signupForm" ).validate( {
+				
+				errorElement: "em",
+				errorPlacement: function ( error, element ) {
+					// Add the `help-block` class to the error element
+					error.addClass( "help-block" );
 
-          <!-- inline styles related to this page -->
+					if ( element.prop( "type" ) === "checkbox" ) {
+						error.insertAfter( element.parent( "label" ) );
+					} else {
+						error.insertAfter( element );
+					}
+				},
+				highlight: function ( element, errorClass, validClass ) {
+					$( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+				},
+				unhighlight: function (element, errorClass, validClass) {
+					$( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+				}
+			} );
 
-          <!-- ace settings handler -->
-          <script src="${pageContext.request.contextPath}/resources/assets/js/ace-extra.min.js"></script>
-
-          <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
-
-          <!--[if lte IE 8]>
-          <script src="assets/js/html5shiv.min.js"></script>
-          <script src="assets/js/respond.min.js"></script>
-        <![endif]-->
-        <title>Dannasoft - Login</title>
+			
+		});
+	</script>
+        </script>
+        <style type="text/css">           
+              #leftSide {
+                background-color: #dbe3ff;
+                height: 600px;
+              }
+              #mainContent {
+                background-color: #fff5d4;
+                height: 600px;
+                padding-top: 20px;
+              }
+              .rsButtons {
+                padding-top: 30px;
+              }
+              /* custom style for  validation method required. See ditails and classes name in developers tool */
+              .error {
+                color: red;
+                font-size: 0.8em;
+              }
+        </style>
     </head>
 
-    <body class="no-skin" >
+    <body>
 
-        <div class="main-container ace-save-state" id="main-container">
-            <script type="text/javascript">
-                try {
-                    ace.settings.loadState('main-container')
-                } catch (e) {
-                }
-            </script>
+        <!-- I get this modal from getbootstrap.com -->
 
-           
+<!-- Button trigger modal -->
 
-            <div class="main-content">
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+ +
+</button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" style="width: 90%" >
+                <div class="modal-content">
+                  <!-- Zona Titulo Modal -->    
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Título</h4>
+                  </div>
+                  <!-- Cuerpo del Modal -->  
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <form id="signupForm" method="post" class="form-horizontal" action="">
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row" style="padding: 2px">
+                                            <div class="col-md-4" style="text-align: right">
+                                                <label for="firstname">First name</label>
+                                            </div>
+                                            <div class="col-sm-8">
+						<input type="text" class="form-control" id="firstname" name="firstname" placeholder="First name" required minlength="2" />
+					    </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-4 right">
+                                                <label for="lastname">Last name</label>
+                                            </div>
+                                            <div class="col-sm-8">
+					    		<input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last name" required />
+					    </div>
+                                        </div>
+                                                       
+
+							<div class="form-group">
+								<label class="col-sm-4 control-label" for="lastname">Last name</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last name" required />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-4 control-label" for="username">Username</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" id="username" name="username" placeholder="Username" required/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-4 control-label" for="email">Email</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" id="email" name="email" placeholder="Email" required email="true" />
+								</div>
+							</div>
+                                        
+                                        
+                                    </div>
+                                    <div class="col-md-6">
+                                                        <div class="form-group">
+								<label class="col-sm-4 control-label" for="password">Password</label>
+								<div class="col-sm-8">
+									<input type="password" class="form-control" id="password" name="password" placeholder="Password" required />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-4 control-label" for="confirm_password">Confirm password</label>
+								<div class="col-sm-8">
+									<input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm password" required equalTo="#password" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-4">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" id="agree" name="agree" value="agree" required />Please agree to our policy
+										</label>
+									</div>
+								</div>
+							</div>
+                                        
+                                    </div>
+                                </div>
+                                
+
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                  <button type="submit" class="btn btn-primary" name="signup" value="Guardar">Guardar</button>
+                                </div>
+			    </form> 
+                      </div>
+                        
+                  </div>
                 
+                </div>
+              </div>
             </div>
-
-        </div><!-- /.main-container -->
-
+        
+        
     </body>
 </html>

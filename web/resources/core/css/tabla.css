@@ -11,3 +11,21 @@ body{font-size:12px;line-height: 0.9}
 .table-bordered{margin-bottom:20px}  
 .table-borderedActived{border: 2px solid #97b2c9;margin-bottom:20px;background-color:#dddddd;color:#272626}
 .titulotb h4{ margin: 0px;padding: 0px; font-weight: bold;margin-left: 5px;margin-top: 5px}
+
+/*Estilo para las validaciones de las tablas*/
+#leftSide {
+background-color: #dbe3ff;
+height: 600px;
+}
+#mainContent {
+background-color: #fff5d4;
+height: 600px;
+padding-top: 20px;
+}
+.rsButtons {
+padding-top: 30px;
+}
+.error {
+color: #FCD76A;
+font-size: 0.8em;
+}

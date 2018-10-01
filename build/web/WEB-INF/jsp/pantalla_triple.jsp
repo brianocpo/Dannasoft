@@ -2,7 +2,14 @@
 <title>${TitlePage}</title> 
 <!--Eventos del Teclado-->
 <script type="text/javascript">
+            //Maneja el evento para validar el formulario
+            $.validator.setDefaults( {
+                submitHandler: function () {
+                        console.log("Validando campo...");
+                }
+	    });
             $(document).ready(function() {
+                //Quita las combinaciones de teclas por defecto
                 document.onkeydown = function (e) {
                     e = e || window.event;//Get event
                         if (e.ctrlKey) {
@@ -10,15 +17,14 @@
                             switch (c) {
                                 case 83://Block Ctrl+S
                                     e.preventDefault();
-                                case 107://Block Ctrl+ +
+                                case 107://Block Ctrl++
                                     e.preventDefault();    
                                 break;
                             }
                         }
                 };
-                
+                //Aplica las acciones correspondientes a las combinaciones de Teclas
                 $("body").keydown(function(e){
-
                         if(e.ctrlKey){
                             var c = e.which || e.keyCode; 
                             switch (c) {
@@ -33,8 +39,31 @@
                                     break;    
                             }
                         }
-                });
-            });                       
+                });                
+                //Validacion del Tabla Formulario
+                var formulario=$( "#TablaForm" ).validate({				
+				errorElement: "em",
+				errorPlacement: function ( error, element ) {
+					// Add the `help-block` class to the error element
+					error.addClass( "help-block" );
+
+					if ( element.prop( "type" ) === "checkbox" ) {
+						error.insertAfter( element.parent( "label" ) );
+					} else {
+						error.insertAfter( element );
+					}
+				},
+				highlight: function ( element, errorClass, validClass ) {
+					$( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+				},
+				unhighlight: function (element, errorClass, validClass) {
+					$( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+				}
+		});
+            }); 
+            function validarObjeto(){
+                $("#btnValidacion").click();
+            }
 </script>
 <div id="mensajeAlerta" class="mensajeFixed"></div>
 <!--Botones Principales-->
@@ -58,10 +87,13 @@
 
 <!--Sección de Tablas-->
 <div id="contenedor_tablas">
-    
-    <div  id="tabla1">${tabla1} </div> <br>    
-    <div  id="tabla2">${tabla2}</div>  <br>
-    <div  id="tabla3">${tabla3}</div>  <br>
+    <form id="TablaForm" method="post" class="form-horizontal" action="">
+        <div  id="tabla1">${tabla1} </div> <br>    
+        <div  id="tabla2">${tabla2}</div>  <br>
+        <div  id="tabla3">${tabla3}</div>  <br>
+        <!--Btn ejecuta la accion de validación-->
+        <button type="submit" class="btn btn-primary" name="signup" value="" id="btnValidacion">AplicarValidacion</button>
+    </form>    
 </div>
 <!--Mensajes Flotantes-->
 <div id="dialog-message" class="hide">

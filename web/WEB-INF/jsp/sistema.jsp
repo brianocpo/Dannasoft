@@ -20,8 +20,7 @@
 
         <!-- page specific plugin styles -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/jquery-ui.min.css" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/bootstrap-datepicker3.min.css" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/ui.jqgrid.min.css" />
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/bootstrap-datepicker3.min.css" />        
         <!-- text fonts -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/css/fonts.googleapis.com.css" />
 
@@ -47,7 +46,6 @@
           <script src="assets/js/html5shiv.min.js"></script>
           <script src="assets/js/respond.min.js"></script>
         <![endif]-->
-        <title>Dannasoft - Login</title>
     </head>
 
     <body class="no-skin" onload="loadTablas()">
@@ -63,11 +61,11 @@
             </script>
 
             <div id="sidebar" class="sidebar                  responsive                    ace-save-state">
-                <script type="text/javascript">
-                    try {
-                        ace.settings.loadState('sidebar')} catch (e) {
-                    }
-                </script>
+            <script type="text/javascript">
+                try {
+                    ace.settings.loadState('sidebar')} catch (e) {
+                }
+            </script>
                 
                 <!--MENU DEL SISTEMA-->
                 <%@ include file="navlist.jsp" %>
@@ -139,16 +137,6 @@
                 document.write("<script src='${pageContext.request.contextPath}/resources/assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
         </script>
         <script src="${pageContext.request.contextPath}/resources/assets/js/bootstrap.min.js"></script>
-
-        <!-- page specific plugin scripts -->
-        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery.dataTables.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/jquery.dataTables.bootstrap.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/dataTables.buttons.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/buttons.flash.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/buttons.html5.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/buttons.print.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/buttons.colVis.min.js"></script>
-        <script src="${pageContext.request.contextPath}/resources/assets/js/dataTables.select.min.js"></script>
         <!-- ace scripts -->
         <script src="${pageContext.request.contextPath}/resources/assets/js/ace-elements.min.js"></script>
         <script src="${pageContext.request.contextPath}/resources/assets/js/ace.min.js"></script>

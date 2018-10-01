@@ -179,6 +179,7 @@ public class CrudGenerico {
                 + "t.table_catalog='" + table_catalog + "' AND\n"
                 + "t.table_schema='" + table_schema + "' ";
         List lst = null;
+        
         try {
             Query query = Conexion.getSession().createSQLQuery(ls_sql);
             lst = query.list();
@@ -210,6 +211,7 @@ public class CrudGenerico {
         //Se rrecorre una lista que contienen toda la información del esquema de la tabla 
         while (it_data_bdd.hasNext()) {   //Asignar el Iterator a un Objeto para recuperar su información
             Object[] data_tb = (Object[]) it_data_bdd.next();
+            System.out.println(data_tb);
             //Recuperar informacion y asignacin a las variables
             ls_table_name = (String) data_tb[0];
             ls_column_name = (String) data_tb[1];

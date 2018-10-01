@@ -342,6 +342,7 @@ function findTypeColumn(nombre_column,ordenTB)
 {   
     var Rows=RowsTableTEMP[ordenTB];
     var Columns=ColumnsTableTEMP[ordenTB];
+    console.log(Columns);
     var nombre_columnCompare = "";
     var TypeData = "";
     if (Rows.length > 0) {
@@ -374,6 +375,43 @@ function findTypeColumn(nombre_column,ordenTB)
         }
     }
     return TypeData;
+}
+function findMaxlengthColumn(nombre_column,ordenTB)
+{   
+    var Rows=RowsTableTEMP[ordenTB];
+    var Columns=ColumnsTableTEMP[ordenTB];
+    var nombre_columnCompare = "";
+    var Maxlength = "";
+    if (Rows.length > 0) {
+
+        for (var i in Rows[0].lista_gridColumn)//Columnas del Objeto
+        {
+            if (Rows[0].lista_gridColumn.hasOwnProperty(i)) //Verificacion de que exista datos
+            {
+                var nombre_columnCompare = Rows[0].lista_gridColumn[i].ls_nombre_column;
+                if (nombre_columnCompare === nombre_column)
+                {
+                    Maxlength = "maxlength='" + Rows[0].lista_gridColumn[i].data_column.longitud + "'";
+                    break;
+                }
+            }
+        }
+    } else
+    {
+        for (var i in Columns)//Columnas del Objeto
+        {
+            if (Columns.hasOwnProperty(i)) //Verificacion de que exista datos
+            {
+                var nombre_columnCompare = Columns[i].ls_nombre_column;
+                if (nombre_columnCompare === nombre_column)
+                {
+                    Maxlength = "maxlength='" + Columns[i].data_column.longitud + "'";
+                    break;
+                }
+            }
+        }
+    }
+    return Maxlength;
 }
 function findIndexColumn(nombre_column)
 {
@@ -608,8 +646,10 @@ function crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_selec
 
     var TypeData = "";
     var campo = "";
+    var MaxLength = "";
     TypeData = findTypeColumn(nombre_column,ls_ordenTB);
-
+    MaxLength = findMaxlengthColumn(nombre_column,ls_ordenTB);
+    
     if (TypeData !== "")
     {
         TypeData = TypeData.toUpperCase();
@@ -619,11 +659,11 @@ function crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_selec
         ValorTemporal = $.trim(textoCampo);
         if (NombreCampoPKTB !== nombre_column)
         {
-            if (TypeData === "CHARACTER" || TypeData === "CHAR" || TypeData === "INTEGER")
+            if (TypeData === "CHARACTER" || TypeData === "CHAR" || TypeData === "VARCHAR" || TypeData === "INTEGER")
             {
                 if (ls_codigo_fk_select == "0")//Verifica si se un campo de (0=Input) (1=Select)
                 {
-                    campo = "<input onkeyup='updateColumn()' class='form-control' type='text' size='20' id='" + nombre_column + "' name='" + nombre_column + "' value='" + $.trim(textoCampo) + "' />";
+                    campo = "<input onkeyup='updateColumn();validarObjeto()' class='form-control' type='text' size='20' id='" + nombre_column + "' name='" + nombre_column + "' value='" + $.trim(textoCampo) + "' required "+MaxLength+" />";
                 } else //CREA UN OBJETO SELECT
                 {
                     var index_col = findIndexColumn(nombre_column);
