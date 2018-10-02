@@ -42,6 +42,8 @@ var offset=0;
 var pagina_actual=0;
 //Paginacion 
 var ObjsonTabla=[];
+//Booleano que indica si el campo que se ingresa esta correcto
+var campoValidado=true;
 function addTabla(NomTabla1, NomCampoPK1, OredenTabla1)
 {
     var TablaBDD_ADD = {"NomTabla": NomTabla1,
@@ -103,22 +105,24 @@ function verificarTabla(NomTabla1)
 }
 function deletRow() //Evento Ejecutado desde los Botones principales
 {
-    if (CodigoCampoPKTB.length > 0)//Verifica si exite una clave Primaria
-    {
-        var codigoCampoTempora = CodigoCampoPKTB.split("=");//en el caso de una fila nueva CodigoCampoPKTB se rescribe
-        if (codigoCampoTempora[0] != "N")//N significa que si es una columna Nueva
+    if(campoValidado==true){ 
+        if (CodigoCampoPKTB.length > 0)//Verifica si exite una clave Primaria
         {
-            if(eliminarFilaTabla(ls_nombreTabla, NombreCampoPKTB, ls_ordenTB, CodigoCampoPKTB)===1){
-                selectUltimaFilaTabla();
-            }            
-        } else
-        {
-            $("." + codigoCampoTempora[1]).remove();            
-            deleteRowCadenaInsert(codigoCampoTempora[2]);
-            //Si se elimina una fila se posiciona el cursor en la ultima fila de la tabla
-            selectUltimaFilaTabla();            
+            var codigoCampoTempora = CodigoCampoPKTB.split("=");//en el caso de una fila nueva CodigoCampoPKTB se rescribe
+            if (codigoCampoTempora[0] != "N")//N significa que si es una columna Nueva
+            {
+                if(eliminarFilaTabla(ls_nombreTabla, NombreCampoPKTB, ls_ordenTB, CodigoCampoPKTB)===1){
+                    selectUltimaFilaTabla();
+                }            
+            } else
+            {
+                $("." + codigoCampoTempora[1]).remove();            
+                deleteRowCadenaInsert(codigoCampoTempora[2]);
+                //Si se elimina una fila se posiciona el cursor en la ultima fila de la tabla
+                selectUltimaFilaTabla();            
+            }
         }
-    }
+    }    
 }
 function selectUltimaFilaTabla(){    
     var IdRowFinalTabla = "";
@@ -146,57 +150,59 @@ function marcarTodos(classcheck,elemento){
     }    
 }
 function checkTrueFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1,elemento,ClassRow1)
-{     eliminarObjeto();
-      if(elemento.checked){
-                var NomTablaHija ="";
-                var JsonTablaHTEMP ="";
-                var count=0;
-                if(ObjsonTablaHija!=""){                     
-                     count=ObjsonTablaHija.length - 1; //representa el número de tablas con tablas hijas
-                    if(OredenTabla1<=count){
-                        JsonTablaHTEMP = jQuery.parseJSON(ObjsonTablaHija[OredenTabla1]);                       
-                        if(JsonTablaHTEMP!=""){
-                            NomTablaHija = JsonTablaHTEMP.ls_name_tabla.toString();
-                        }   
-                    }                     
-                }
+{   
+    if(campoValidado==true){ 
+        eliminarObjeto();
+        if(elemento.checked){
+                  var NomTablaHija ="";
+                  var JsonTablaHTEMP ="";
+                  var count=0;
+                  if(ObjsonTablaHija!=""){                     
+                       count=ObjsonTablaHija.length - 1; //representa el número de tablas con tablas hijas
+                      if(OredenTabla1<=count){
+                          JsonTablaHTEMP = jQuery.parseJSON(ObjsonTablaHija[OredenTabla1]);                       
+                          if(JsonTablaHTEMP!=""){
+                              NomTablaHija = JsonTablaHTEMP.ls_name_tabla.toString();
+                          }   
+                      }                     
+                  }
 
-                var estadoDetalle = false;
-                if (NomTablaHija.length > 0)//Solo se verifica en caso de tener una tabla detalle
-                {
-                    estadoDetalle = verificarDetalleTabla(NomTablaHija, ClassRow1);
-                } else {
-                    estadoDetalle = true;
-                }
-                if (estadoDetalle == true)
-                {
-                    var BuscarTabla = verificarTabla(NomTabla1);
-                    if (BuscarTabla == 0)//Solo en caso de no estar agregada la Tabla
-                    {
-                        var estado = addTabla(NomTabla1, NomCampoPK1, OredenTabla1); //Se agrega la Tabla 
-                        if (estado === 1) {
-                            eliminarFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1); //Se elimina la fila
-                        }
-                    } else {
+                  var estadoDetalle = false;
+                  if (NomTablaHija.length > 0)//Solo se verifica en caso de tener una tabla detalle
+                  {
+                      estadoDetalle = verificarDetalleTabla(NomTablaHija, ClassRow1);
+                  } else {
+                      estadoDetalle = true;
+                  }
+                  if (estadoDetalle == true)
+                  {
+                      var BuscarTabla = verificarTabla(NomTabla1);
+                      if (BuscarTabla == 0)//Solo en caso de no estar agregada la Tabla
+                      {
+                          var estado = addTabla(NomTabla1, NomCampoPK1, OredenTabla1); //Se agrega la Tabla 
+                          if (estado === 1) {
+                              eliminarFilaTabla(NomTabla1, NomCampoPK1, OredenTabla1, codigoPK1); //Se elimina la fila
+                          }
+                      } else {
 
-                        var FilaEliminada = {"codigoPK": codigoPK1};
-                        var FilaEliminadaAnteriores = BusFilasElimTabla(NomTabla1);
-                        if (FilaEliminadaAnteriores !== 0)
-                        {
-                            FilaEliminadaAnteriores[FilaEliminadaAnteriores.length] = FilaEliminada;
-                            addFilasElimTabla(NomTabla1, FilaEliminadaAnteriores);
-                            if(filasMarcadasIndividual==true){
-                                mensajeAccion("Peligro", "La fila marcada serán eliminada al Guardar", "");
-                            }
-                        }
-                    }
-                } 
-      }else{
-          
-          var FilaEliminadaAnteriores = BusFilasElimTabla(NomTabla1);
-          buscarEntreFilasEliminadas(FilaEliminadaAnteriores,codigoPK1,NomTabla1);
-      }
-      
+                          var FilaEliminada = {"codigoPK": codigoPK1};
+                          var FilaEliminadaAnteriores = BusFilasElimTabla(NomTabla1);
+                          if (FilaEliminadaAnteriores !== 0)
+                          {
+                              FilaEliminadaAnteriores[FilaEliminadaAnteriores.length] = FilaEliminada;
+                              addFilasElimTabla(NomTabla1, FilaEliminadaAnteriores);
+                              if(filasMarcadasIndividual==true){
+                                  mensajeAccion("Peligro", "La fila marcada serán eliminada al Guardar", "");
+                              }
+                          }
+                      }
+                  } 
+        }else{
+
+            var FilaEliminadaAnteriores = BusFilasElimTabla(NomTabla1);
+            buscarEntreFilasEliminadas(FilaEliminadaAnteriores,codigoPK1,NomTabla1);
+        }
+    }  
 }
 function buscarEntreFilasEliminadas(FilaEliminadaAnteriores,codigoPK1,NomTabla1){
     
@@ -340,77 +346,62 @@ function getColumnasActualizadas(ColumnasActualizada, NomColumna1)
 
 function findTypeColumn(nombre_column,ordenTB)
 {   
-    var Rows=RowsTableTEMP[ordenTB];
-    var Columns=ColumnsTableTEMP[ordenTB];
-    console.log(Columns);
+    var Columns=ColumnsTableTEMP[ordenTB];  
     var nombre_columnCompare = "";
     var TypeData = "";
-    if (Rows.length > 0) {
-
-        for (var i in Rows[0].lista_gridColumn)//Columnas del Objeto
-        {
-            if (Rows[0].lista_gridColumn.hasOwnProperty(i)) //Verificacion de que exista datos
-            {
-                var nombre_columnCompare = Rows[0].lista_gridColumn[i].ls_nombre_column;
-                if (nombre_columnCompare === nombre_column)
-                {
-                    TypeData = Rows[0].lista_gridColumn[i].data_column.is_nullable;
-                    break;
-                }
-            }
-        }
-    } else
+    for (var i in Columns)//Columnas del Objeto
     {
-        for (var i in Columns)//Columnas del Objeto
+        if (Columns.hasOwnProperty(i)) //Verificacion de que exista datos
         {
-            if (Columns.hasOwnProperty(i)) //Verificacion de que exista datos
+            var nombre_columnCompare = Columns[i].ls_nombre_column;
+            if (nombre_columnCompare === nombre_column)
             {
-                var nombre_columnCompare = Columns[i].ls_nombre_column;
-                if (nombre_columnCompare === nombre_column)
-                {
-                    TypeData = Columns[i].data_column.is_nullable;
-                    break;
-                }
+                TypeData = Columns[i].data_column.data_type;
+                break;
             }
         }
     }
     return TypeData;
 }
-function findMaxlengthColumn(nombre_column,ordenTB)
+function findRequiredColumn(nombre_column,ordenTB)
 {   
-    var Rows=RowsTableTEMP[ordenTB];
-    var Columns=ColumnsTableTEMP[ordenTB];
+    var Columns=ColumnsTableTEMP[ordenTB];    
     var nombre_columnCompare = "";
-    var Maxlength = "";
-    if (Rows.length > 0) {
-
-        for (var i in Rows[0].lista_gridColumn)//Columnas del Objeto
-        {
-            if (Rows[0].lista_gridColumn.hasOwnProperty(i)) //Verificacion de que exista datos
-            {
-                var nombre_columnCompare = Rows[0].lista_gridColumn[i].ls_nombre_column;
-                if (nombre_columnCompare === nombre_column)
-                {
-                    Maxlength = "maxlength='" + Rows[0].lista_gridColumn[i].data_column.longitud + "'";
-                    break;
-                }
-            }
-        }
-    } else
+    var Required = "";
+    for (var i in Columns)//Columnas del Objeto
     {
-        for (var i in Columns)//Columnas del Objeto
+        if (Columns.hasOwnProperty(i)) //Verificacion de que exista datos
         {
-            if (Columns.hasOwnProperty(i)) //Verificacion de que exista datos
+            var nombre_columnCompare = Columns[i].ls_nombre_column;
+            if (nombre_columnCompare === nombre_column)
             {
-                var nombre_columnCompare = Columns[i].ls_nombre_column;
-                if (nombre_columnCompare === nombre_column)
-                {
-                    Maxlength = "maxlength='" + Columns[i].data_column.longitud + "'";
-                    break;
-                }
+                Required = Columns[i].data_column.is_nullable;
+                break;
             }
         }
     }
+    if(Required.toUpperCase()=="YES"){Required="required";}
+    return Required;
+}
+function findMaxlengthColumn(nombre_column,ordenTB)
+{      
+    var Columns=ColumnsTableTEMP[ordenTB];
+    var nombre_columnCompare = "";
+    var Maxlength = "";
+   
+    for (var i in Columns)//Columnas del Objeto
+    {
+        if (Columns.hasOwnProperty(i)) //Verificacion de que exista datos
+        {
+            var nombre_columnCompare = Columns[i].ls_nombre_column;
+            if (nombre_columnCompare === nombre_column)
+            {
+                Maxlength = "maxlength='" + Columns[i].data_column.longitud + "'";
+                break;
+            }
+        }
+    }
+   
     return Maxlength;
 }
 function findIndexColumn(nombre_column)
@@ -477,16 +468,18 @@ function BorrarEstiloFila(ordenRow)
 }
 function EstiloFilaNueva(element, ordenRow, trs)//Actualiza el Estado y rescribe CodigoCampoPKTB
 {
-    //CodigoCampoPKTB: se modifica esta variable para ser validad al momento de la edición de columnas
-    CodigoCampoPKTB = "N=rowActive" + ordenRow + "=N"+ordenRow+""+trs;
-    //Se busca todas las filas con con las clase rowActive y se remplasa por ""
-    var trActivo = document.getElementsByClassName("rowActive" + ordenRow);
-    for (var j = 0; j < trActivo.length; j++)
-    {
-        trActivo[j].className = trActivo[j].className.replace("rowActive" + ordenRow, "");
-    }
-    //se agrega al elemento la nueva clase
-    $(element).addClass("rowTabla" + ordenRow + " rowActive" + ordenRow + " rowNew");
+    if(campoValidado==true){
+        //CodigoCampoPKTB: se modifica esta variable para ser validad al momento de la edición de columnas
+        CodigoCampoPKTB = "N=rowActive" + ordenRow + "=N"+ordenRow+""+trs;
+        //Se busca todas las filas con con las clase rowActive y se remplasa por ""
+        var trActivo = document.getElementsByClassName("rowActive" + ordenRow);
+        for (var j = 0; j < trActivo.length; j++)
+        {
+            trActivo[j].className = trActivo[j].className.replace("rowActive" + ordenRow, "");
+        }
+        //se agrega al elemento la nueva clase
+        $(element).addClass("rowTabla" + ordenRow + " rowActive" + ordenRow + " rowNew");
+    }    
 }
 function EstiloFilaActiva()
 {
@@ -523,21 +516,22 @@ function deleteRowCadenaInsert(Row)
 
 function inicializarTabla(IdTabla1, NombreCampPK, jsonRows, jsonColumns, nombreTabla, ordenTB)
 {
-    IdTabla = IdTabla1;
-    NombreCampoPKTB = NombreCampPK;
-    JSONRowsTabla = jsonRows;
-    JSONColumnsTabla = jsonColumns;
-    RowsTable = jQuery.parseJSON(JSONRowsTabla);
-    ColumnsTable = jQuery.parseJSON(JSONColumnsTabla);
-    RowsTableTEMP[ordenTB] = RowsTable;
-    ColumnsTableTEMP[ordenTB] = ColumnsTable;
-    ls_nombreTabla = nombreTabla;
-    ls_ordenTB = ordenTB;
-    activarTabla();
-    setJsonTablas(jsonRows, jsonColumns, nombreTabla);
-    addTabla(nombreTabla, NombreCampPK, ordenTB);
-    permisoOpciones(ordenTB);
-    
+    if(campoValidado==true){
+        IdTabla = IdTabla1;
+        NombreCampoPKTB = NombreCampPK;
+        JSONRowsTabla = jsonRows;
+        JSONColumnsTabla = jsonColumns;
+        RowsTable = jQuery.parseJSON(JSONRowsTabla);
+        ColumnsTable = jQuery.parseJSON(JSONColumnsTabla);
+        RowsTableTEMP[ordenTB] = RowsTable;
+        ColumnsTableTEMP[ordenTB] = ColumnsTable;
+        ls_nombreTabla = nombreTabla;
+        ls_ordenTB = ordenTB;
+        activarTabla();
+        setJsonTablas(jsonRows, jsonColumns, nombreTabla);
+        addTabla(nombreTabla, NombreCampPK, ordenTB);
+        permisoOpciones(ordenTB);
+    }
     return 1;
 }
 
@@ -629,92 +623,96 @@ function crearComboDefecto(nombre_column, codigoPadreFK1) {
     return comboBox;
 }
 /*-----------CREAR OBJETO EDICION----------------------*/
-function crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_select, boolNuevo)
-{
-    //validacion para bloquear FK en caso de ser una tabla HIJA
-    var bloquearColumn = "";
-    var valorDefctoColumn = "";
-    try {
-        JsonTablaH = jQuery.parseJSON(ObjsonTabla[ls_ordenTB]);
-        if (JsonTablaH.ls_nombre_campo_padre == nombre_column) {
-            bloquearColumn = "disabled";
-            valorDefctoColumn = JsonTablaH.ls_valor_codigo_padre;
+function crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_select, boolNuevo,miCallback)
+{   if(campoValidado==true){    
+        //validacion para bloquear FK en caso de ser una tabla HIJA
+        var bloquearColumn = "";
+        var valorDefctoColumn = "";
+        try {
+            JsonTablaH = jQuery.parseJSON(ObjsonTabla[ls_ordenTB]);
+            if (JsonTablaH.ls_nombre_campo_padre == nombre_column) {
+                bloquearColumn = "disabled";
+                valorDefctoColumn = JsonTablaH.ls_valor_codigo_padre;
+            }
+        } catch (err) {
+            console.log(err.message);
         }
-    } catch (err) {
-        console.log(err.message);
-    }
 
-    var TypeData = "";
-    var campo = "";
-    var MaxLength = "";
-    TypeData = findTypeColumn(nombre_column,ls_ordenTB);
-    MaxLength = findMaxlengthColumn(nombre_column,ls_ordenTB);
-    
-    if (TypeData !== "")
-    {
-        TypeData = TypeData.toUpperCase();
-        //Setea el objeto anterior modificado
-        eliminarObjeto();
-        var textoCampo = $(elementColumn).text();
-        ValorTemporal = $.trim(textoCampo);
-        if (NombreCampoPKTB !== nombre_column)
+        var TypeData = "";
+        var campo = "";
+        var MaxLength = "";
+        var Required = "";
+        TypeData  = findTypeColumn(nombre_column,ls_ordenTB);
+        MaxLength = findMaxlengthColumn(nombre_column,ls_ordenTB);
+        Required  = findRequiredColumn(nombre_column,ls_ordenTB);
+
+        if (TypeData !== "")
         {
-            if (TypeData === "CHARACTER" || TypeData === "CHAR" || TypeData === "VARCHAR" || TypeData === "INTEGER")
+            TypeData = TypeData.toUpperCase();
+            //Setea el objeto anterior modificado
+            eliminarObjeto();
+            var textoCampo = $(elementColumn).text();
+            ValorTemporal = $.trim(textoCampo);
+            if (NombreCampoPKTB !== nombre_column)
             {
-                if (ls_codigo_fk_select == "0")//Verifica si se un campo de (0=Input) (1=Select)
+                if (TypeData === "CHARACTER" || TypeData === "CHAR" || TypeData === "VARCHAR" || TypeData === "INTEGER")
                 {
-                    campo = "<input onkeyup='updateColumn();validarObjeto()' class='form-control' type='text' size='20' id='" + nombre_column + "' name='" + nombre_column + "' value='" + $.trim(textoCampo) + "' required "+MaxLength+" />";
-                } else //CREA UN OBJETO SELECT
-                {
-                    var index_col = findIndexColumn(nombre_column);
-                    //ColumnsTable contiene la estructura en General común de todo el GRID
-                    var codigoSelect = ColumnsTable[index_col].data_dropdown.codigo_dw;
-                    var valorSelect = ColumnsTable[index_col].data_dropdown.valor_dw;
-                    //RowsTable Contiene la data específica de cada fila y columna
-                    var codigoDefectoSelect = "";
-                    if (boolNuevo === false)
+                    if (ls_codigo_fk_select == "0")//Verifica si se un campo de (0=Input) (1=Select)
                     {
-                        codigoDefectoSelect = RowsTable[index_row].lista_gridColumn[index_col].data_dropdown.codigo_fk_select;
-                    } else {
-                        codigoDefectoSelect = valorDefctoColumn;
-                    }
+                        campo = "<input  onkeyup='updateColumn();validarObjeto()' class='form-control' type='text' size='20' id='" + nombre_column + "' name='" + nombre_column + "' value='" + $.trim(textoCampo) + "' "+Required+" "+MaxLength+" />";
+                    } else //CREA UN OBJETO SELECT
+                    {
+                        var index_col = findIndexColumn(nombre_column);
+                        //ColumnsTable contiene la estructura en General común de todo el GRID
+                        var codigoSelect = ColumnsTable[index_col].data_dropdown.codigo_dw;
+                        var valorSelect = ColumnsTable[index_col].data_dropdown.valor_dw;
+                        //RowsTable Contiene la data específica de cada fila y columna
+                        var codigoDefectoSelect = "";
+                        if (boolNuevo === false)
+                        {
+                            codigoDefectoSelect = RowsTable[index_row].lista_gridColumn[index_col].data_dropdown.codigo_fk_select;
+                        } else {
+                            codigoDefectoSelect = valorDefctoColumn;
+                        }
 
-                    campo = "<select " + bloquearColumn + " onchange='updateColumn()' class='form-control'  id='" + nombre_column + "' name='" + nombre_column + "' >";
-                    for (var i = 0; i < valorSelect.length; i++)
-                    {
-                        if (valorDefctoColumn.length > 0 && boolNuevo === true)
+                        campo = "<select " + bloquearColumn + " onchange='updateColumn()' class='form-control'  id='" + nombre_column + "' name='" + nombre_column + "' >";
+                        for (var i = 0; i < valorSelect.length; i++)
                         {
-                            if (codigoSelect[i] == valorDefctoColumn)
+                            if (valorDefctoColumn.length > 0 && boolNuevo === true)
                             {
-                                campo += "<option value='" + codigoSelect[i] + "' selected>" + valorSelect[i] + "</option>";
-                            }
-                        } else
-                        {
-                            if (textoCampo === valorSelect[i])
-                            {
-                                campo += "<option value='" + codigoSelect[i] + "' selected>" + valorSelect[i] + "</option>";
+                                if (codigoSelect[i] == valorDefctoColumn)
+                                {
+                                    campo += "<option value='" + codigoSelect[i] + "' selected>" + valorSelect[i] + "</option>";
+                                }
                             } else
                             {
-                                campo += "<option  value='" + codigoSelect[i] + "'>" + valorSelect[i] + "</option>";
+                                if (textoCampo === valorSelect[i])
+                                {
+                                    campo += "<option value='" + codigoSelect[i] + "' selected>" + valorSelect[i] + "</option>";
+                                } else
+                                {
+                                    campo += "<option  value='" + codigoSelect[i] + "'>" + valorSelect[i] + "</option>";
+                                }
                             }
                         }
+                        campo += "</select>";
                     }
-                    campo += "</select>";
                 }
+                //Limpiar el Elemento
+                $(elementColumn).html("");
+                //Cargar el Elemento
+                elementColumn.append(campo);
+                $("#" + nombre_column).focus();
+                ElementoSelectTemp = elementColumn;
+                IdColumnSelect = nombre_column;
+                IndexSelect_row = index_row;
+            } else {
+                eliminarObjeto();
+                IdColumnSelect = "";
             }
-            //Limpiar el Elemento
-            $(elementColumn).html("");
-            //Cargar el Elemento
-            elementColumn.append(campo);
-            $("#" + nombre_column).focus();
-            ElementoSelectTemp = elementColumn;
-            IdColumnSelect = nombre_column;
-            IndexSelect_row = index_row;
-        } else {
-            eliminarObjeto();
-            IdColumnSelect = "";
         }
-    }
+    }    
+        miCallback();
 }
 function eliminarObjeto()
 {
@@ -732,6 +730,7 @@ function eliminarObjeto()
         {
             $(ElementoSelectTemp).html(valorElemento);
         }
+        IdColumnSelect="";
     }
 }
 /*-----------VERIFICA SI SE PUEDE O NO ELIMINAR UNA FILA----------------------*/
@@ -755,21 +754,34 @@ function verificarDetalleTabla(NomTabla2, ClassRow1)
 }
 /*---------------------BLOQUEAR PANTALLA DURANTE LA CARGA----------------------*/
 function onLoad()
-{
-    $("body").prepend("<div class=\"overlay\"></div>");
-    $(".overlay").css({
-        "position": "absolute",
-        "width": $(document).width(),
-        "height": $(document).height(),
-        "z-index": 99999,
-        "background-color": "#dddddd",
-        "cursor": "progress"
-    }).fadeTo(0, 0.8);
-    $(window).load(function () {
-        removeLoad();
-    });
+{   
+    if(campoValidado==true){
+        $("body").prepend("<div class=\"overlay\"></div>");
+        $(".overlay").css({
+            "position": "absolute",
+            "width": $(document).width(),
+            "height": $(document).height(),
+            "z-index": 99999,
+            "background-color": "#dddddd",
+            "cursor": "progress"
+        }).fadeTo(0, 0.8);
+        $(window).load(function () {
+            removeLoading();
+        });
+    }
 }
-function removeLoad()
+function loading(){
+        $("body").prepend("<div class=\"overlay\"></div>");
+        $(".overlay").css({
+            "position": "absolute",
+            "width": $(document).width(),
+            "height": $(document).height(),
+            "z-index": 99999,
+            "background-color": "#dddddd",
+            "cursor": "progress"
+        }).fadeTo(0, 0.8);
+}
+function removeLoading()
 {
     $(".overlay").remove();
 }
@@ -805,76 +817,78 @@ function busquedaTabla()
 var noSaveFilaIDTemp=false
 function cargar_TablaHija(nombreFK, valorFK, ordenTB, lsClassPadre)
 {   
-    var ordenTBFinal=TablasRelacionadas.length-1;     
-    JsonTablaH = jQuery.parseJSON(ObjsonTablaHija[ordenTB]);   
-    JsonTablaH.ls_where = JsonTablaH.ls_where.toString().replace("0", valorFK);
-    NomTabla_hija = JsonTablaH.ls_name_tabla.toString();
-    //En caso de que sea una FILA nueva la que se seleciona no carga ningún detalle
-    try {
-        if (ls_ordenTB >= 0)
-        {
-            if (filaSelectID[ls_ordenTB].indexOf("N") >= 0) {
-                removeLoad();
-                return 0;
+    if(campoValidado==true){
+        var ordenTBFinal=TablasRelacionadas.length-1;     
+        JsonTablaH = jQuery.parseJSON(ObjsonTablaHija[ordenTB]);   
+        JsonTablaH.ls_where = JsonTablaH.ls_where.toString().replace("0", valorFK);
+        NomTabla_hija = JsonTablaH.ls_name_tabla.toString();
+        //En caso de que sea una FILA nueva la que se seleciona no carga ningún detalle
+        try {
+            if (ls_ordenTB >= 0)
+            {
+                if (filaSelectID[ls_ordenTB].indexOf("N") >= 0) {
+                    removeLoading();
+                    return 0;
+                }
             }
-        }
-    } catch (Error) {
-    }
-   
-    if (FilaIDTemp[ls_ordenTB] != valorFK)
-    {   
-        if (JsonTablaH.ls_IdDivTabla.length)
-        {
-
-            JsonTablaH.ls_valor_codigo_padre = valorFK;
-            JsonTablaH.ls_valor_nombre_padre = nombreFK;
-            JsonTablaH.ls_classTablaPadre = lsClassPadre;
-            var ordenTemp=parseInt(ls_ordenTB) + 1;
-            var jsonString = JSON.stringify(JsonTablaH);
-            var fila;
-            //Equivalente a lo anterior
-            $.ajax({
-                data: jsonString,
-                type: "POST",
-                dataType: "json",
-                contentType: 'application/json',
-                url: "post/json"
-            })
-                    .done(function (data, textStatus, jqXHR) {
-                        if (console && console.log) {
-                            console.log(NomTabla_hija+" La solicitud se ha completado correctamente."); 
-                            $('#' + JsonTablaH.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                         
-                           
-                            var tr = $("#" + JsonTablaH.ls_IdDivTabla.toString().trim() + " tbody tr").length;
-                            if(tr==0)
-                            {  
-                                borarTablaHijas(ordenTB,(ordenTBFinal-1));
-                                borarFilaIDTemp(ordenTB,ordenTBFinal);
-                            }else{
-                                 noSaveFilaIDTemp=true;
-                                 $("#R"+ordenTemp+"_0").click();
-                            }
-                            //Coloca el Foco de la primera fila de la tabla Hija y retorna el Foco a la Primera tabla 
-                            removeLoad();                            
-                            if(ordenTBFinal==ordenTemp){
-                                fila=$("#"+RowID);
-                                $(fila).click();                                
-                            }
-                            
-                        }
-                    })
-                    .fail(function (jqXHR, textStatus, errorThrown) {
-                        if (console && console.log) {
-                            console.log("La solicitud a fallado: " + textStatus + errorThrown);
-                            removeLoad();
-                        }
-                    });
+        } catch (Error) {
         }
 
-    } else {
+        if (FilaIDTemp[ls_ordenTB] != valorFK)
+        {   
+            if (JsonTablaH.ls_IdDivTabla.length)
+            {
 
-        removeLoad();
-    }
+                JsonTablaH.ls_valor_codigo_padre = valorFK;
+                JsonTablaH.ls_valor_nombre_padre = nombreFK;
+                JsonTablaH.ls_classTablaPadre = lsClassPadre;
+                var ordenTemp=parseInt(ls_ordenTB) + 1;
+                var jsonString = JSON.stringify(JsonTablaH);
+                var fila;
+                //Equivalente a lo anterior
+                $.ajax({
+                    data: jsonString,
+                    type: "POST",
+                    dataType: "json",
+                    contentType: 'application/json',
+                    url: "post/json"
+                })
+                        .done(function (data, textStatus, jqXHR) {
+                            if (console && console.log) {
+                                console.log(NomTabla_hija+" La solicitud se ha completado correctamente."); 
+                                $('#' + JsonTablaH.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                         
+
+                                var tr = $("#" + JsonTablaH.ls_IdDivTabla.toString().trim() + " tbody tr").length;
+                                if(tr==0)
+                                {  
+                                    borarTablaHijas(ordenTB,(ordenTBFinal-1));
+                                    borarFilaIDTemp(ordenTB,ordenTBFinal);
+                                }else{
+                                     noSaveFilaIDTemp=true;
+                                     $("#R"+ordenTemp+"_0").click();
+                                }
+                                //Coloca el Foco de la primera fila de la tabla Hija y retorna el Foco a la Primera tabla 
+                                removeLoading();                            
+                                if(ordenTBFinal==ordenTemp){
+                                    fila=$("#"+RowID);
+                                    $(fila).click();                                
+                                }
+
+                            }
+                        })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
+                            if (console && console.log) {
+                                console.log("La solicitud a fallado: " + textStatus + errorThrown);
+                                removeLoading();
+                            }
+                        });
+            }
+
+        } else {
+
+            removeLoading();
+        }
+    }    
 }
 function borarTablaHijas(ordenTB,ordenTBFinal){
     var JsonTabla;
@@ -979,52 +993,53 @@ function eliminarMensaje(elemento)
 
 function guardarTabla(guardadoDirecto)
 {   
-    var jsonString;
-    
-    if(guardadoDirecto==1){
-        eliminarObjeto();
-        if(getValorFilasNuevas()==1){    //En caso de nuevas columnas hay que cargar los valores        
-          jsonString= JSON.stringify(Tabla); 
+    if(campoValidado==true){
+        loading();
+        var jsonString;    
+        if(guardadoDirecto==1){
+            eliminarObjeto();
+            if(getValorFilasNuevas()==1){    //En caso de nuevas columnas hay que cargar los valores        
+              jsonString= JSON.stringify(Tabla); 
+            }
+        }      
+        else{
+            jsonString= JSON.stringify(Tabla) ;
         }
-    }      
-    else{
-        jsonString= JSON.stringify(Tabla) ;
-    }
-        $.ajax({
-            data: jsonString,
-            type: "POST",
-            dataType: "json",
-            contentType: 'application/json',
-            url: "post/jsonTable"
-        })
-                .done(function (data, textStatus, jqXHR) {
-                    eliminarObjeto();
-                    actualizarTabla();
-                    mensajeAccion("Exito", "información guardada", "");
-                    setTablaJson();
-                })
-                .fail(function (jqXHR, textStatus, errorThrown) {
-                    
-                    mensajeAccion("Alerta", "su información no fue procesada", "");
-                    setTablaJson();
-                });
+            $.ajax({
+                data: jsonString,
+                type: "POST",
+                dataType: "json",
+                contentType: 'application/json',
+                url: "post/jsonTable"
+            })
+                    .done(function (data, textStatus, jqXHR) {
+                        eliminarObjeto();
+                        actualizarTabla();
+                        mensajeAccion("Exito", "información guardada", "");
+                        setTablaJson();
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
 
+                        mensajeAccion("Alerta", "su información no fue procesada", "");
+                        setTablaJson();
+                    });
+    }
 }
 function insertarFilaNueva()
-{
-    /*Antes de insertar verificar si la columna Padre es Nueva*/
-    marcarFilaNueva(insertRow());
-    eliminarDetalleSelectN();
-    FilaIDTemp[ls_ordenTB]=filaSelectID[ls_ordenTB];
-    NomelementColumnAnterior="";
-    /*Acciona el evento click de la nueva fila*/
-    try {       
-        $("#" + filaSelectID[ls_ordenTB]).click();
-        IdColumnSelect="";
-    } catch (Error) {
-        console.log("Error Funcion insertarFilaNueva: "+Error);
+{   if(campoValidado==true){
+        /*Antes de insertar verificar si la columna Padre es Nueva*/
+        marcarFilaNueva(insertRow());
+        eliminarDetalleSelectN();
+        FilaIDTemp[ls_ordenTB]=filaSelectID[ls_ordenTB];
+        NomelementColumnAnterior="";
+        /*Acciona el evento click de la nueva fila*/
+        try {       
+            $("#" + filaSelectID[ls_ordenTB]).click();
+            IdColumnSelect="";
+        } catch (Error) {
+            console.log("Error Funcion insertarFilaNueva: "+Error);
+        }
     }
-    
 }
 function insertRow()
 {    
@@ -1492,8 +1507,9 @@ function setToolTip(element, title_tool)
     $(element).tooltip({title: title_tool, placement: "bottom", animation: true});
 }
 function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect)
-{      //console.log("fila seleccionada"+IdRowFocu);
+{   if(campoValidado==true){
        clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect); 
+    }
 }
 function clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect)
 {   RowIDSelect[ordenTB]=idRowSelect;//Elemento seleccionado
@@ -1517,28 +1533,29 @@ function clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRo
     columTablaSelect[ordenTB]=IdRowFocu;
 }
 function getColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect)
-{   
-    RowID=idRowSelect;//Elemento seleccionado 
-    NomelementColumnAnterior = "";
-    columTablaSelectTEMP[ordenTB]=columTablaSelect[ordenTB];
-    columTablaSelect[ordenTB]=ls_IdRow;
-    
-    //Verificar si existe algun cambio a nivel de las tablas hijas del Padre
-    if (verificarCambiosTablas(ordenTB) === 1)
-    {   //Verificamos si existe algun cambio de fila en la cabezera por lo existe peligro de perder los registros de la tablas hijas
-        if ((parseInt(columTablaSelectTEMP[ordenTB]) != parseInt(columTablaSelect[ordenTB])) && parseInt(columTablaSelectTEMP[ordenTB])>0){
-            eliminarObjeto();
-            //Crea los objetos nuevos insertados antes de guardar
-            if(getValorFilasNuevas()===1){                
-                GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
+{   if(campoValidado==true){
+        RowID=idRowSelect;//Elemento seleccionado 
+        NomelementColumnAnterior = "";
+        columTablaSelectTEMP[ordenTB]=columTablaSelect[ordenTB];
+        columTablaSelect[ordenTB]=ls_IdRow;
+
+        //Verificar si existe algun cambio a nivel de las tablas hijas del Padre
+        if (verificarCambiosTablas(ordenTB) === 1)
+        {   //Verificamos si existe algun cambio de fila en la cabezera por lo existe peligro de perder los registros de la tablas hijas
+            if ((parseInt(columTablaSelectTEMP[ordenTB]) != parseInt(columTablaSelect[ordenTB])) && parseInt(columTablaSelectTEMP[ordenTB])>0){
+                eliminarObjeto();
+                //Crea los objetos nuevos insertados antes de guardar
+                if(getValorFilasNuevas()===1){                
+                    GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
+                    clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect);
+                } 
+            }else{
                 clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect);
-            } 
+            }            
         }else{
             clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect);
-        }            
-    }else{
-        clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect);
-    } 
+        }
+    }    
 }
 function clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB,ls_IdRow,idRowSelect){
   /*Setear los valores iniciales al seleccionar la columna*/
@@ -1547,68 +1564,81 @@ function clickColumn(index_row, index_column, nombre_column, ls_codigo_fk_select
         if (IdColumnSelect !== nombre_column || IndexSelect_row !== index_row)
         {
             var elementColumn = $("#col" + ordenTB + "_" + index_row + "_" + index_column);
-            crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_select, boolNuevo);
+            crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_select, boolNuevo,function(){
+               validarObjeto();
+            });
         }
     }  
 }
 
 function getColumnAction(ordenTB,IdRow1){
-    eliminarObjeto();
-    IdColumnSelect="";
-    RowID=IdRow1;
-    verificarCambiosControles(ordenTB,IdRow1);
+    
+    if(campoValidado==true){
+        eliminarObjeto();
+        IdColumnSelect="";
+        RowID=IdRow1;
+        verificarCambiosControles(ordenTB,IdRow1);
+    }    
 }
 function verificarCambiosControles(ordenTB,IdRow1){
-    //Verificar si existe algun cambio a nivel de las tablas hijas del Padre
-    if (verificarCambiosTablas(ordenTB) === 1)
-    {   console.log("entro ver "+columTablaSelect[ordenTB]+" - "+IdRow1);
-        //Verificamos si existe algun cambio de fila en la cabezera por lo existe peligro de perder los registros de la tablas hijas
-        if ((parseInt(IdRow1) != parseInt(columTablaSelectTEMP[ordenTB]))){
-           eliminarObjeto();  
-           if(getValorFilasNuevas()===1){                
-                GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
-            }
-        }        
-    }
+    
+    if(campoValidado==true){
+        //Verificar si existe algun cambio a nivel de las tablas hijas del Padre
+        if (verificarCambiosTablas(ordenTB) === 1)
+        {   console.log("entro ver "+columTablaSelect[ordenTB]+" - "+IdRow1);
+            //Verificamos si existe algun cambio de fila en la cabezera por lo existe peligro de perder los registros de la tablas hijas
+            if ((parseInt(IdRow1) != parseInt(columTablaSelectTEMP[ordenTB]))){
+               eliminarObjeto();  
+               if(getValorFilasNuevas()===1){                
+                    GuardarDataConfirm("Alerta Cambios", "Por favor, para no perder los cambios realizados es necesario guardar la información",ordenTB);
+                }
+            }        
+        }
+    }    
 }
 function getRowNueva(idNuevaFila1, ordenTB, classNuevaFila1, NombreCampoPKTB1, ls_nombreTabla1, IdTabla1)
 {
-    ls_ordenTB = ordenTB;
-    classFilaSelectID[ls_ordenTB] = classNuevaFila1;
-    RowsTable = RowsTableTEMP[ordenTB];
-    ColumnsTable = ColumnsTableTEMP[ordenTB];
-    NombreCampoPKTB = NombreCampoPKTB1;
-    ls_nombreTabla = ls_nombreTabla1;
-    IdTabla = IdTabla1;
+    if(campoValidado==true){
+        ls_ordenTB = ordenTB;
+        classFilaSelectID[ls_ordenTB] = classNuevaFila1;
+        RowsTable = RowsTableTEMP[ordenTB];
+        ColumnsTable = ColumnsTableTEMP[ordenTB];
+        NombreCampoPKTB = NombreCampoPKTB1;
+        ls_nombreTabla = ls_nombreTabla1;
+        IdTabla = IdTabla1;
 
-    //Se verifica si la fila selecionada es diferente borra el detalle de la tabla
-    if (filaSelectID[ordenTB] != FilaIDTemp[ordenTB]) {
-        eliminarDetalleSelectN();
-        filaSelectID[ordenTB] = idNuevaFila1;        
-    }
+        //Se verifica si la fila selecionada es diferente borra el detalle de la tabla
+        if (filaSelectID[ordenTB] != FilaIDTemp[ordenTB]) {
+            eliminarDetalleSelectN();
+            filaSelectID[ordenTB] = idNuevaFila1;        
+        }
+    }    
 }
 
 var NomelementColumnAnterior = "";
 function getColumnNueva(index_row, index_column, nombre_column, ls_codigo_fk_select, boolNuevo, ordenTB, IdTabla1, idNuevaFila1) {
-    ls_ordenTB=ordenTB;
-    if (filaSelectID[ordenTB].length = 0) {
-        filaSelectID[ordenTB] = idNuevaFila1;
-    }
+    if(campoValidado==true){    
+        ls_ordenTB=ordenTB;
+        if (filaSelectID[ordenTB].length = 0) {
+            filaSelectID[ordenTB] = idNuevaFila1;
+        }
 
-    IdTabla = IdTabla1;
-    RowsTable = RowsTableTEMP[ordenTB];
-    ColumnsTable = ColumnsTableTEMP[ordenTB];
-    FilaIDTemp[ordenTB]=filaSelectID[ordenTB];
-    filaSelectID[ordenTB] = 'N' + ordenTB + '' + index_row;
-    NomelementColumn = "#col" + ordenTB + "_" + index_row + "_" + index_column;
-    var elementColumn = $(NomelementColumn);    
-    if (NomelementColumnAnterior != NomelementColumn) {
-        eliminarObjeto();
-        crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_select, boolNuevo);
-        NomelementColumnAnterior = NomelementColumn;
+        IdTabla = IdTabla1;
+        RowsTable = RowsTableTEMP[ordenTB];
+        ColumnsTable = ColumnsTableTEMP[ordenTB];
+        FilaIDTemp[ordenTB]=filaSelectID[ordenTB];
+        filaSelectID[ordenTB] = 'N' + ordenTB + '' + index_row;
+        NomelementColumn = "#col" + ordenTB + "_" + index_row + "_" + index_column;
+        var elementColumn = $(NomelementColumn);    
+        if (NomelementColumnAnterior != NomelementColumn) {
+            eliminarObjeto();
+            crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_select, boolNuevo,function(){
+                console.log("Objeto Creado");
+            });
+            NomelementColumnAnterior = NomelementColumn;
+        }
+        activarTabla();
     }
-    activarTabla();
-    
 }
 function getUltimoIdRowTabla() {
     var ultimoIRRowTabla = "";
@@ -1661,6 +1691,8 @@ function loadTB(NomTabla) {
     }else{console.log(NomTabla+" no tiene filas");}
 }
 function actualizarTabla(){
+      campoValidado=true;
+      loading();
       var ObjTabla = jQuery.parseJSON(ObjsonTabla[1]); 
       ObjTabla.ls_IdDivTabla="tabla1";
       if(RowIDSelect.length>0){
@@ -1683,15 +1715,16 @@ function actualizarTabla(){
                                 $("#"+ObjTabla.ls_idFilaSeleccionada.toString().trim()).click(); 
                             }else{
                                  location.reload();
-                            }                            
-                            removeLoad();                                                      
+                            }
+                            IdColumnSelect="";
+                            removeLoading();                                                      
                         }
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
                         if (console && console.log) {
                             $('#' + ObjTabla.ls_IdDivTabla.toString().trim() + " tbody").html("");                                                      
                             console.log("La solicitud a fallado: " + textStatus + errorThrown);
-                            removeLoad();
+                            removeLoading();
                         }
                     });
        
@@ -1702,38 +1735,41 @@ function setfilaSelectID(){
     }
 }
 function actualizarTablaPaginador(offset1,pagina_actual1,ordenTB)
-{   eliminarObjeto();
-    offset=offset1;
-    pagina_actual=pagina_actual1;
-    var ObjTabla = jQuery.parseJSON(ObjsonTabla[ordenTB]); 
-     
-    ObjTabla.offset=offset1;
-    ObjTabla.li_pagina_actual=pagina_actual1;
-    var jsonString = JSON.stringify(ObjTabla);
-      $.ajax({
-                data: jsonString,
-                type: "POST",
-                dataType: "json",
-                contentType: 'application/json',
-                url: "post/json"
-            })
-                    .done(function (data, textStatus, jqXHR) {
-                        if (console && console.log) {
-                            IdColumnSelect="";
-                            setTablaJson();
-                            $('#' + ObjTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                          
-                            $("#R"+ObjTabla.ls_ordenTB.toString().trim()+"_0").click(); 
-                            removeLoad();                                                      
-                        }
-                    })
-                    .fail(function (jqXHR, textStatus, errorThrown) {
-                        if (console && console.log) {
-                            $('#' + ObjTabla.ls_IdDivTabla.toString().trim() + " tbody").html("");                                                      
-                            console.log("La solicitud a fallado: " + textStatus + errorThrown);
-                            removeLoad();
-                        }
-                    });
-      
+{  
+    if(campoValidado==true){
+        loading();
+        eliminarObjeto();
+        offset=offset1;
+        pagina_actual=pagina_actual1;
+        var ObjTabla = jQuery.parseJSON(ObjsonTabla[ordenTB]); 
+
+        ObjTabla.offset=offset1;
+        ObjTabla.li_pagina_actual=pagina_actual1;
+        var jsonString = JSON.stringify(ObjTabla);
+          $.ajax({
+                    data: jsonString,
+                    type: "POST",
+                    dataType: "json",
+                    contentType: 'application/json',
+                    url: "post/json"
+                })
+                        .done(function (data, textStatus, jqXHR) {
+                            if (console && console.log) {
+                                IdColumnSelect="";
+                                setTablaJson();
+                                $('#' + ObjTabla.ls_IdDivTabla.toString().trim()).html(data.tablaHtml);                          
+                                $("#R"+ObjTabla.ls_ordenTB.toString().trim()+"_0").click(); 
+                                removeLoading();                                                      
+                            }
+                        })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
+                            if (console && console.log) {
+                                $('#' + ObjTabla.ls_IdDivTabla.toString().trim() + " tbody").html("");                                                      
+                                console.log("La solicitud a fallado: " + textStatus + errorThrown);
+                                removeLoading();
+                            }
+                        });
+    }                    
 }
 
 function permisoOpciones(ordenTB){

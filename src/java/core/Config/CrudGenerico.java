@@ -210,13 +210,12 @@ public class CrudGenerico {
         List<obj_column> lista_gridColumn = new ArrayList<obj_column>();
         //Se rrecorre una lista que contienen toda la información del esquema de la tabla 
         while (it_data_bdd.hasNext()) {   //Asignar el Iterator a un Objeto para recuperar su información
-            Object[] data_tb = (Object[]) it_data_bdd.next();
-            System.out.println(data_tb);
+            Object[] data_tb = (Object[]) it_data_bdd.next();          
             //Recuperar informacion y asignacin a las variables
             ls_table_name = (String) data_tb[0];
             ls_column_name = (String) data_tb[1];
-            ls_Data_type = (String) data_tb[2];
-            ls_Is_nullable = (String) data_tb[3];
+            ls_Is_nullable = (String) data_tb[2];
+            ls_Data_type = (String) data_tb[3];            
             ls_nombre_pk_fk = (String) data_tb[4];
             //Validacion valores null en Enteros
             try {

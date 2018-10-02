@@ -5,7 +5,29 @@
             //Maneja el evento para validar el formulario
             $.validator.setDefaults( {
                 submitHandler: function () {
-                        console.log("Validando campo...");
+                    
+                }
+                ,
+                showErrors: function(errorMap, errorList) {
+                    if(this.numberOfInvalids()>0){                       
+                        campoValidado=false;                        
+                        $("#"+IdColumnSelect).css("background","#F8E0E0");
+                        $("table input:checkbox").prop('disabled',true);
+                        $("#btn_insert").prop('disabled',true);
+                        $("#btn_delete").prop('disabled',true);
+                        $("#btn_save").prop('disabled',true);
+                        $("#inp_busqueda").prop('disabled',true);
+                        
+                        this.defaultShowErrors();
+                    }else{
+                        campoValidado=true;
+                        $("#"+IdColumnSelect).css("background","#ffffff");
+                        $("table input:checkbox").prop('disabled',false);
+                        $("#btn_insert").prop('disabled',false);
+                        $("#btn_delete").prop('disabled',false);
+                        $("#btn_save").prop('disabled',false);
+                        $("#inp_busqueda").prop('disabled',false);
+                    }                      
                 }
 	    });
             $(document).ready(function() {
@@ -60,10 +82,13 @@
 					$( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
 				}
 		});
+                
+               
             }); 
-            function validarObjeto(){
+            function validarObjeto(){             
                 $("#btnValidacion").click();
             }
+ 
 </script>
 <div id="mensajeAlerta" class="mensajeFixed"></div>
 <!--Botones Principales-->
@@ -74,7 +99,7 @@
     <button type="button" class="btn btn-primary" onclick="deletRow()" onmouseover="setToolTip(this, 'Eliminar')" id="btn_delete"  >
         <span  class = "glyphicon glyphicon-remove" > </span>
     </button>
-    <button type="button" class="btn btn-primary" onclick="guardarTabla(1)" onmouseover="setToolTip(this, 'Guardar')" id="btn_save">
+    <button type="button" class="btn btn-primary" onclick="guardarTabla(1);" onmouseover="setToolTip(this, 'Guardar')" id="btn_save">
         <span  class = "glyphicon glyphicon-floppy-disk" > </span>
     </button>
     
@@ -92,7 +117,8 @@
         <div  id="tabla2">${tabla2}</div>  <br>
         <div  id="tabla3">${tabla3}</div>  <br>
         <!--Btn ejecuta la accion de validación-->
-        <button type="submit" class="btn btn-primary" name="signup" value="" id="btnValidacion">AplicarValidacion</button>
+        <button type="submit"  name="signup" value="" id="btnValidacion" style="display: none">AplicarValidacion</button>  
+      
     </form>    
 </div>
 <!--Mensajes Flotantes-->
