@@ -88,7 +88,12 @@
             function validarObjeto(){             
                 $("#btnValidacion").click();
             }
- 
+            function validarGuardar()
+            {
+                ValidarCamposCompletos(function(){
+                    guardarTabla(1); 
+                });
+            }
 </script>
 <div id="mensajeAlerta" class="mensajeFixed"></div>
 <!--Botones Principales-->
@@ -99,7 +104,7 @@
     <button type="button" class="btn btn-primary" onclick="deletRow()" onmouseover="setToolTip(this, 'Eliminar')" id="btn_delete"  >
         <span  class = "glyphicon glyphicon-remove" > </span>
     </button>
-    <button type="button" class="btn btn-primary" onclick="guardarTabla(1);" onmouseover="setToolTip(this, 'Guardar')" id="btn_save">
+    <button type="button" class="btn btn-primary" onclick="validarGuardar()" onmouseover="setToolTip(this, 'Guardar')" id="btn_save">
         <span  class = "glyphicon glyphicon-floppy-disk" > </span>
     </button>
     

@@ -15,7 +15,8 @@ public class obj_acciones_columnas_insertadas {
     private String Valor;
     private Boolean FK;
     private String IDColumn;     
-    
+    private String Isnull;
+    private String MaxLength;
     public obj_acciones_columnas_insertadas()
     {
         NomColumna="";
@@ -23,6 +24,8 @@ public class obj_acciones_columnas_insertadas {
         Valor="";
         FK=false;
         IDColumn="";
+        Isnull="";
+        MaxLength="";
     }
 
     public String getNomColumna() {
@@ -63,6 +66,22 @@ public class obj_acciones_columnas_insertadas {
 
     public void setIDColumn(String IDColumn) {
         this.IDColumn = IDColumn;
+    }
+
+    public String getIsnull() {
+        return Isnull;
+    }
+
+    public void setIsnull(String Isnull) {
+        this.Isnull = Isnull;
+    }
+
+    public String getMaxLength() {
+        return MaxLength;
+    }
+
+    public void setMaxLength(String MaxLength) {
+        this.MaxLength = MaxLength;
     }
    
 }

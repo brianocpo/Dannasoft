@@ -305,7 +305,7 @@ function verificarCambiosTablas(ordenTB)
 function transformarDato(TypeData, Dato)
 {
     TypeData = TypeData.toUpperCase();
-    if (TypeData === "CHARACTER" || TypeData === "CHAR" || TypeData === "VARCHAR" || TypeData === "DATE" || TypeData === "DATETIME")
+    if (TypeData === "CHARACTER" || TypeData === "CHAR" || TypeData === "VARCHAR" || TypeData === "VARCHAR2" || TypeData === "DATE" || TypeData === "DATETIME")
     {
         Dato = "\'" + Dato + "\'";
     }
@@ -380,7 +380,7 @@ function findRequiredColumn(nombre_column,ordenTB)
             }
         }
     }
-    if(Required.toUpperCase()=="YES"){Required="required";}
+    if(Required.toUpperCase()=="NO"){Required="required";}
     return Required;
 }
 function findMaxlengthColumn(nombre_column,ordenTB)
@@ -1186,7 +1186,9 @@ function insertRow()
                 
                 var IDColumn="col" + ls_ordenTB + "_" + trs + "_" + j;
                 var NomColumn=nombreColumn.replace(/'/g, "");
-                InsertColumn(NomColumn,"","",FK,IDColumn);                
+                var IsNull=ColumnsTable[index_col]["data_column"].is_nullable;
+                var MaxLength=ColumnsTable[index_col]["data_column"].longitud;
+                InsertColumn(NomColumn,"","",FK,IDColumn,IsNull,MaxLength);               
             }
         } else //SI no se conoce el total de columnas se consulta al ColumnsTable -  solo en caso de ser una tabla sin registros
         {   
@@ -1232,7 +1234,9 @@ function insertRow()
                 
                 var IDColumn="col" + ls_ordenTB + "_" + trs + "_" + j;
                 var NomColumn=nombreColumn.replace(/'/g, "");
-                InsertColumn(NomColumn,"","",FK,IDColumn);    
+                var IsNull=ColumnsTable[index_col]["data_column"].is_nullable;
+                var MaxLength=ColumnsTable[index_col]["data_column"].longitud;
+                InsertColumn(NomColumn,"","",FK,IDColumn,IsNull,MaxLength);    
 
             }
         }
@@ -1329,7 +1333,7 @@ function InsertFila(codigoPK,codigoFK,nombreCampoFK){
     FilaInsertadas.codigoFK=codigoFK; 
     FilaInsertadas.nombreCampoFK=nombreCampoFK; 
 }
-function InsertColumn(NomColumna,TipoValor,Valor,FK,IDColumn)
+function InsertColumn(NomColumna,TipoValor,Valor,FK,IDColumn,IsNull,MaxLength)
 {   var vecColumnaInsertada=[];
     var ColumnaInsertada = {
         "NomColumna": "",
@@ -1337,18 +1341,63 @@ function InsertColumn(NomColumna,TipoValor,Valor,FK,IDColumn)
         "Valor": "",
         "FK": "",
         "IDColumn": "",
+        "Isnull": "",
+        "MaxLength": "",
     }    
     ColumnaInsertada.NomColumna=NomColumna;
     ColumnaInsertada.TipoValor=TipoValor;
     ColumnaInsertada.Valor=Valor;     
     ColumnaInsertada.FK=FK; 
     ColumnaInsertada.IDColumn=IDColumn;
+    ColumnaInsertada.Isnull=IsNull;
+    ColumnaInsertada.MaxLength=MaxLength;
+    
     vecColumnaInsertada=FilaInsertadas.ColumnasInsertadas;
     vecColumnaInsertada[vecColumnaInsertada.length]=ColumnaInsertada;    
     FilaInsertadas.ColumnasInsertadas=vecColumnaInsertada;
 }
 
-
+function ValidarCamposCompletos(Callback){
+    eliminarObjeto();
+    NomelementColumnAnterior="";
+    if(getValorFilasNuevas()==1)
+    {
+        var estado=1;
+        for (var i = 0; i < Tabla.TablaBDD.length; i++)
+        {      console.log(Tabla);
+              //Busca la Fila Insertada
+            if (Tabla.TablaBDD[i].FilasInsertadas.length)
+            {
+                for (var f = 0; f < Tabla.TablaBDD[i].FilasInsertadas.length; f++)
+                {
+                    if (Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas.length)
+                    {
+                         for (var g = 0; g < Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas.length; g++)
+                         {  var Isnull=Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].Isnull;
+                            var Valor=Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].Valor;
+                            var IDColumn=Tabla.TablaBDD[i].FilasInsertadas[f].ColumnasInsertadas[g].IDColumn;
+                            console.log(Isnull);
+                            if(Isnull=="NO" && Valor==""){
+                                estado=0;
+                                $("#"+IDColumn).css("border","red 1px double");
+                            }else{
+                                console.log("Entro");
+                                $("#"+IDColumn).css("border","green 1px double");
+                            }
+                         }	
+                    }
+                }
+           }       
+        } 
+        //Si todos los campos estàn correctos se procede a guardar la informaciòn
+        if(estado==1){
+            Callback();
+        }else{
+          mensajeAccion("Peligro", "Complete los campos marcados,para poder Guardar", "");  
+        }
+    }
+    
+}
 
 function isNumeric(texto){
    var letras="abcdefghyjklmnñopqrstuvwxyzABCDEFGHIJKLMNOPQRTSUVWXYZ,.-_";
@@ -1507,7 +1556,8 @@ function setToolTip(element, title_tool)
     $(element).tooltip({title: title_tool, placement: "bottom", animation: true});
 }
 function getRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect)
-{   if(campoValidado==true){
+{   
+    if(campoValidado==true){
        clickRow(ElementoSeleccionad, IdRowFocu, NombreCampPK, IdTabla1, jsonRows, jsonColumns, nombreTabla, ordenTB, ClassRow1,idRowSelect); 
     }
 }
@@ -1585,7 +1635,7 @@ function verificarCambiosControles(ordenTB,IdRow1){
     if(campoValidado==true){
         //Verificar si existe algun cambio a nivel de las tablas hijas del Padre
         if (verificarCambiosTablas(ordenTB) === 1)
-        {   console.log("entro ver "+columTablaSelect[ordenTB]+" - "+IdRow1);
+        {   
             //Verificamos si existe algun cambio de fila en la cabezera por lo existe peligro de perder los registros de la tablas hijas
             if ((parseInt(IdRow1) != parseInt(columTablaSelectTEMP[ordenTB]))){
                eliminarObjeto();  
@@ -1633,7 +1683,7 @@ function getColumnNueva(index_row, index_column, nombre_column, ls_codigo_fk_sel
         if (NomelementColumnAnterior != NomelementColumn) {
             eliminarObjeto();
             crearObjeto(nombre_column, elementColumn, index_row, ls_codigo_fk_select, boolNuevo,function(){
-                console.log("Objeto Creado");
+               
             });
             NomelementColumnAnterior = NomelementColumn;
         }
